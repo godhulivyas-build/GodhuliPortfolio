@@ -179,7 +179,7 @@ window.PORTFOLIO = {
         'Production 3-agent content system with an LLM judge that blocks its own output below a 75 threshold.',
         'Rebuilt cupshup.co.in around new personas: organic contribution 65% to 92%, Ahrefs health 60 to 99.',
         'Procure-to-pay rebuilt into a 3-step verification chain: 12 to 4 approval steps, 40% less client effort.',
-        '20+ AI tools taken from zero to market with the founder.'
+        '20+ AI tools taken from zero to market with the founder: ran the email GTM, segmented the list into buckets by fit, and took each tool straight to that audience for them to judge and become the first users.'
       ],
       metrics: [{ n: '65→92%', l: 'Organic contribution' }, { n: '12→4', l: 'Approval steps' }],
       stack: ['Claude', 'Ahrefs API', 'n8n', 'Supabase', 'Power BI', 'Mixpanel'],
@@ -393,6 +393,23 @@ window.PORTFOLIO = {
       metrics: [{ n: '65 → 92%', l: 'Organic traffic contribution' }, { n: '60 → 99', l: 'Ahrefs site health' }],
       stack: ['Ahrefs', 'Technical SEO', 'IA & UX', 'Supabase', 'SQL', 'Power BI', 'Mixpanel'],
       links: [{ label: 'Live site', url: 'https://www.cupshup.co.in/' }]
+    },
+    {
+      id: 'aiaccelerators',
+      tier: 'Live',
+      title: '20+ AI Accelerators, GTM',
+      org: 'Product launches · CupShup',
+      preview: 'cupshup',
+      thesis: 'Building an AI tool is the easy half. Getting the first real user to try it is the other half, and nobody hands that to you.',
+      bullets: [
+        'Ran the go-to-market for 20+ AI accelerators across SEO, Social, WhatsApp and Influencer suites, end to end via email.',
+        'Segmented the list into buckets by fit before any send, so each tool reached the audience most likely to actually use it.',
+        'Took each launch straight to that audience to judge, not a curated demo crowd, so the feedback was real from day one.',
+        'That loop became the first-user pipeline for every accelerator since: launch, judge, iterate.'
+      ],
+      metrics: [{ n: '20+', l: 'AI accelerators launched' }, { n: '4', l: 'Suites, segmented GTM' }],
+      stack: ['Email GTM', 'List segmentation', 'Product launches', 'CupShup platform'],
+      links: [{ label: 'cupshup.co.in', url: 'https://www.cupshup.co.in/' }]
     },
     {
       id: 'saarthi',

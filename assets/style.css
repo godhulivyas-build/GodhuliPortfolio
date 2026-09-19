@@ -556,7 +556,7 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-
 
 /* ---------------- systems carousel (distinct from the library grid) ---------------- */
 .sys-carousel{position:relative;display:flex;align-items:center;gap:8px;padding:0 10px}
-.sys-track{flex:1;display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;
+.sys-track{flex:1;display:flex;gap:18px;overflow-x:auto;scroll-snap-type:none;
   scroll-behavior:smooth;padding:6px 14px 22px;-webkit-overflow-scrolling:touch}
 .sys-track::-webkit-scrollbar{height:6px}
 .sys-track::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
@@ -603,14 +603,13 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-
 .asset h3{font-size:17px!important}
 
 /* ---------------- systems carousel: smaller cards, tighter preview ---------------- */
-.syscard{flex:0 0 min(420px,80vw)!important}
-.syscard .pv-frame.big{aspect-ratio:16/7!important}
-.syscard-body{padding:16px 18px 18px!important}
-.syscard-body h3{font-size:19px!important}
-.syscard-body .sys-thesis{font-size:13.5px!important;line-height:1.5!important}
-.syscard-body .sys-foot{margin-top:14px!important;padding-top:12px!important}
-.syscard-body .sys-metric{font-size:19px!important}
-.sys-track{padding:6px 10px 20px!important;gap:14px!important}
+.syscard{flex:0 0 min(300px,70vw)!important}
+.syscard .pv-frame.big{aspect-ratio:16/9!important}
+.syscard-body{padding:14px 16px 16px!important}
+.syscard-body h3{font-size:16px!important;margin-bottom:6px!important}
+.syscard-body .sys-thesis{font-size:12.5px!important;line-height:1.48!important}
+.syscard-body .sys-foot{margin-top:12px!important;padding-top:10px!important;justify-content:flex-start!important}
+.sys-track{padding:6px 10px 20px!important;gap:12px!important}
 
 /* pull preview content toward vertical center so empty space shrinks */
 .pv-saarthi .pv-hero,.pv-ethos .pv-hero,.pv-automon,.pv-timespro .pv-hero{margin-top:auto;margin-bottom:auto}

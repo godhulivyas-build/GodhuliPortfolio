@@ -297,12 +297,9 @@
         '<button class="sys-open" data-id="' + esc(s.id) + '" aria-label="Open build note: ' + esc(s.title) + '"></button>' +
         '<div class="pv-frame big"><span class="pv-dots"></span>' + (PREVIEW[s.preview] || '') + '</div>' +
         '<div class="syscard-body">' +
-          '<p class="sys-tier mono">' + esc(s.tier) + ' <span class="sys-count mono">' + (i + 1) + ' / ' + D.systems.length + '</span></p>' +
           '<h3>' + esc(s.title) + '</h3>' +
-          '<p class="sys-org mono">' + esc(s.org) + '</p>' +
           '<p class="sys-thesis">' + esc(s.thesis) + '</p>' +
           '<div class="sys-foot">' +
-            '<span class="sys-metric">' + esc(s.metrics[0].n) + ' <i>' + esc(s.metrics[0].l) + '</i></span>' +
             (live ? '<a class="sys-live" href="' + esc(live.url) + '" target="_blank" rel="noopener">Open live ↗</a>' : '<span class="sys-live muted">Build note →</span>') +
           '</div>' +
         '</div>';
@@ -347,30 +344,26 @@
     dotsWrap.addEventListener('click', pauseAuto);
     updateDots();
 
-    /* auto-advance, pausing on any user interaction */
-    var autoTimer = null, resumeTimer = null;
-    function stepAuto() {
-      var idx = currentIndex();
-      var next = idx >= D.systems.length - 1 ? 0 : idx + 1;
-      scrollToCard(next);
-    }
-    function startAuto() {
-      if (reduce || autoTimer) return;
-      autoTimer = setInterval(stepAuto, 4200);
-    }
-    function stopAuto() {
-      if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+    /* continuous auto-scroll, pausing on any user interaction */
+    var autoPaused = false, resumeTimer = null;
+    function tick() {
+      if (!autoPaused) {
+        track.scrollLeft += 0.6;
+        var maxScroll = track.scrollWidth - track.clientWidth;
+        if (track.scrollLeft >= maxScroll - 1) track.scrollLeft = 0;
+      }
+      requestAnimationFrame(tick);
     }
     function pauseAuto() {
-      stopAuto();
+      autoPaused = true;
       clearTimeout(resumeTimer);
-      resumeTimer = setTimeout(startAuto, 6000);
+      resumeTimer = setTimeout(function () { autoPaused = false; }, 6000);
     }
     track.addEventListener('pointerdown', pauseAuto);
     track.addEventListener('wheel', pauseAuto, { passive: true });
-    track.addEventListener('mouseenter', stopAuto);
-    track.addEventListener('mouseleave', startAuto);
-    startAuto();
+    track.addEventListener('mouseenter', function () { autoPaused = true; });
+    track.addEventListener('mouseleave', function () { autoPaused = false; });
+    if (!reduce) requestAnimationFrame(tick);
   }
 
   document.addEventListener('click', function (e) {

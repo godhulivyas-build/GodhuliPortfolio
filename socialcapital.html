@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Godhuli Vyas &middot; For Social Capital Inc.</title>
+<meta name="description" content="Godhuli Vyas, applying for Technical Generalist at Social Capital Inc. Evidence against each fit criterion, and AI projects self-graded on the S/A/B rubric." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#f2b84b; --a2:#7c5cff; --a3:#22c98a;
+  --r:16px; --maxw:960px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(242,184,75,.13), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(124,92,255,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a1);margin:0 0 16px}
+h1{font-size:clamp(30px,5vw,50px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:66ch;margin:18px 0 0}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),#ffd27a);border-color:transparent;color:#1a1200}
+
+section{padding:56px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(22px,3.4vw,32px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:66ch;font-size:15.5px;margin:0 0 28px}
+
+/* fit criteria */
+.fit{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;
+  padding:22px;margin-bottom:14px;display:grid;grid-template-columns:38px 1fr;gap:18px}
+@media(max-width:600px){.fit{grid-template-columns:1fr;gap:8px}}
+.fit .n{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:30px;color:var(--a1)}
+.fit h3{font-size:16px;margin-bottom:4px}
+.fit .q{color:var(--dim);font-size:12.5px;margin:0 0 10px;font-style:italic}
+.fit ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:6px;line-height:1.55}
+.fit ul a{color:var(--a1);text-decoration:none;border-bottom:1px solid rgba(242,184,75,.35)}
+.fit ul a:hover{border-color:var(--a1)}
+
+/* tier cards */
+.tier{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;
+  padding:20px;margin-bottom:12px}
+.tier-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.tier h3{font-size:15px}
+.tier-badge{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:22px;
+  width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.tier.s .tier-badge{background:rgba(242,184,75,.16);color:var(--a1)}
+.tier.a .tier-badge{background:rgba(124,92,255,.16);color:var(--a2)}
+.tier.b .tier-badge{background:rgba(34,201,138,.16);color:var(--a3)}
+.tier-row{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px}
+.tier-row:last-child{margin-bottom:0}
+.tier-body{flex:1}
+.tier-body h4{font-size:14.5px;margin-bottom:4px}
+.tier-body p{color:var(--muted);font-size:13px;margin:0 0 6px;line-height:1.55}
+.tier-body a{color:var(--a1);font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-decoration:none}
+.tier-body a:hover{text-decoration:underline}
+.tier-label{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a1);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+footer{padding:52px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html">&#8592; Full portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">For Vijay &middot; Social Capital Inc. &middot; Technical Generalist</p>
+    <h1>You asked four questions. <em>Here's my evidence for each.</em></h1>
+    <p class="dek">Not a cover letter restating the JD back at you &mdash; four claims, each backed by something already shipped and linked, plus my AI projects graded on your own S/A/B rubric so you don't have to do that work yourself.</p>
+    <div class="cta">
+      <a class="btn primary" href="mailto:vijay@socialcap.uk">Email: vijay@socialcap.uk</a>
+      <a class="btn" href="index.html" target="_blank" rel="noopener">Full portfolio <span aria-hidden="true">↗</span></a>
+      <a class="btn" href="https://www.linkedin.com/in/godhuli-vyas-4b7128253/" target="_blank" rel="noopener">LinkedIn <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- FIT CRITERIA -->
+<section id="fit">
+  <div class="wrap">
+    <p class="snum mono">What Makes Me A Fit</p>
+    <h2>Your four questions, answered with receipts.</h2>
+
+    <div class="fit">
+      <span class="n">1</span>
+      <div>
+        <h3>Builder mentality</h3>
+        <p class="q">"Do you resort to building a solution when faced with an inconvenience?"</p>
+        <ul>
+          <li><a href="tulu.html">Tulu</a>: the brief asked for more acquisition marketing; I built a working onboarding prototype instead of a slide, because the inconvenience was a broken first-value path, not a lack of installs.</li>
+          <li><a href="index.html#path">Founded a GDG chapter</a> from zero to 1,000+ members in under a year rather than joining an existing one &mdash; there wasn't a chapter to join.</li>
+          <li>Truck Hai: found a process gap nobody had named between operational and payment records, and built the reconciliation that closed it &mdash; settlement cycle cut by ~15 days.</li>
+          <li><a href="index.html#field">Saarthi</a>: 300+ field conversations pointed at manual phone coordination as the actual bottleneck, so I built the dispatch workflow that removes it, not another feature.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fit">
+      <span class="n">2</span>
+      <div>
+        <h3>First-principles thinker</h3>
+        <p class="q">"Do you constantly question things the way they exist?"</p>
+        <ul>
+          <li><a href="kasparro.html">Kasparro</a>: audited a client-facing AI-visibility report before it shipped, found 20 confirmed errors, three of which quietly inflated the client's best result.</li>
+          <li><a href="cashkaro.html">CashKaro</a>: the brief's own draft asserted a headline lift with zero derivation. I rebuilt the one load-bearing number bottom-up from real push benchmarks instead of accepting it, and the honest number came in far lower.</li>
+          <li><a href="tulu.html">Tulu</a>: caught a 2.4&times; retention relationship being used to justify a decision before checking whether Android was double-counting ~8&ndash;12% of the underlying events.</li>
+          <li><a href="composio.html">Composio pipeline</a>: built the verification stage specifically to catch the research stage lying to itself, then published the two misses instead of only the accuracy number.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fit">
+      <span class="n">3</span>
+      <div>
+        <h3>AI-native</h3>
+        <p class="q">"Do you micro-manage your agents or orchestrate them in the background?"</p>
+        <ul>
+          <li><a href="index.html#systems">Five-Agent Content Harness</a>: Scout, Copywriter, Optimizer, Illustrator and Critic run behind one orchestrator with a hard quality gate &mdash; a draft that fails routes itself back with the exact reason, no manual triage.</li>
+          <li><a href="produscope.html">Produscope AI</a>: five specialist agents plus a reconciler, each remit narrow enough to check independently, which is the actual design skill, not just wiring up agents.</li>
+          <li>Just as important: <a href="cashkaro.html">CashKaro's Recall Engine</a> deliberately uses zero AI in its trigger loop, because the failure mode there needed deterministic, auditable rules, not a model. Knowing when not to reach for AI is part of being AI-native, not the exception to it.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="fit">
+      <span class="n">4</span>
+      <div>
+        <h3>Self-directed</h3>
+        <p class="q">"Given the resources and a direction, what are your odds of navigating a problem?"</p>
+        <ul>
+          <li>Selected into a founding-team seat at a California accelerator: 0-to-1 building with no PM safety net, no one else to hand ambiguity to.</li>
+          <li>Shipped <a href="index.html#field">Saarthi</a> solo through a fellowship, won Demo Day, then carried it into two more programs (Sarvam AI Startup Program, ICAR SHITIJ 2.0) without being told to.</li>
+          <li>Every teardown on this site (<a href="index.html#assets">Library</a>) was self-initiated against real source material, not assigned coursework.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI PROJECTS, SELF-GRADED -->
+<section id="projects">
+  <div class="wrap">
+    <p class="snum mono">AI Projects, Graded On Your Rubric</p>
+    <h2>I've done the sorting for you.</h2>
+    <p class="lede">Your own tiers, applied to what's actually shipped and linked &mdash; not the highest tier I could argue for.</p>
+
+    <div class="tier s">
+      <div class="tier-head"><span class="tier-badge">S</span><h3>Harnesses &amp; multi-modal tools, &gt;1 external API</h3></div>
+      <div class="tier-row">
+        <div class="tier-body">
+          <span class="tier-label">Five-Agent Content Harness</span>
+          <h4>Ahrefs API + Claude + DALL-E/Napkin, orchestrated</h4>
+          <p>Five agents behind one orchestrator, a weighted-rubric judge, and a quality gate that routes failures back with the specific reason. Production cycle time down 90%.</p>
+          <a href="index.html#systems">See it in Things Shipped ↗</a>
+        </div>
+      </div>
+      <div class="tier-row">
+        <div class="tier-body">
+          <span class="tier-label">Produscope AI</span>
+          <h4>Five specialist agents + a reconciler, multi-surface output</h4>
+          <p>Projection, Cost of Living, Affordability, Goal Coach and Life Events, each independently checkable, feeding a Dashboard, Simulator and Goals tracker.</p>
+          <a href="produscope.html">Open the PRD ↗</a>
+        </div>
+      </div>
+      <div class="tier-row" style="margin-bottom:0">
+        <div class="tier-body">
+          <span class="tier-label">Saarthi</span>
+          <h4>Sarvam AI (Indic STT/TTS) + dispatch workflow, voice-native</h4>
+          <p>Multi-modal by necessity, not by design choice &mdash; low-literacy farmers transact by voice through Sarthi Didi, backed by a live price tracker across 36+ crops.</p>
+          <a href="index.html#field">See the flagship ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier a">
+      <div class="tier-head"><span class="tier-badge">A</span><h3>LLM tools connecting to complex context and/or APIs</h3></div>
+      <div class="tier-row">
+        <div class="tier-body">
+          <span class="tier-label">Enquiry-to-CRM Agent</span>
+          <h4>WhatsApp + n8n + Supabase + Brevo</h4>
+          <p>An inbound enquiry is parsed, qualified, routed and nurtured across four connected systems, untouched by a human.</p>
+          <a href="index.html#systems">See it in Things Shipped ↗</a>
+        </div>
+      </div>
+      <div class="tier-row">
+        <div class="tier-body">
+          <span class="tier-label">DocAssist</span>
+          <h4>Mistral via Groq, clinical-notes context</h4>
+          <p>Summarisation and multi-turn Q&amp;A over real clinical notes: 15 minutes down to under 10 seconds at 90% relevance, validated with 15+ hospital users.</p>
+          <a href="index.html#path">See the build note ↗</a>
+        </div>
+      </div>
+      <div class="tier-row" style="margin-bottom:0">
+        <div class="tier-body">
+          <span class="tier-label">SaaS Toolkit Research Pipeline</span>
+          <h4>Tavily + Firecrawl, verified against evidence</h4>
+          <p>Researches, verifies and confidence-scores 100 SaaS apps for integration potential, then reports its own 89% accuracy honestly, misses included.</p>
+          <a href="composio.html">Open the case study ↗</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier b" style="margin-bottom:0">
+      <div class="tier-head"><span class="tier-badge">B</span><h3>LLM multimodal creation, light API surface</h3></div>
+      <div class="tier-row" style="margin-bottom:0">
+        <div class="tier-body">
+          <span class="tier-label">MiniSense</span>
+          <h4>Survey Insights Agent</h4>
+          <p>Answers backed by computed numbers and real quotes from survey data, never a guess dressed up as an answer.</p>
+          <a href="minisense.html">Open the PRD ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section style="border-bottom:0">
+  <div class="wrap">
+    <div class="callout">
+      <p><b>On item 3 of your application ask:</b> I've already got S-tier and A-tier work shipped and linked above, so I haven't built a separate vibe-coded aggregator for this application &mdash; happy to build one on Social Capital's operational data specifically if that's still useful to see once we're talking.</p>
+    </div>
+    <div class="chips" style="margin-top:20px">
+      <span class="chip">Multi-agent orchestration</span>
+      <span class="chip">Evidence-driven, not confident</span>
+      <span class="chip">Ships, then measures</span>
+      <span class="chip">Self-directed</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Godhuli Vyas &middot; godhulivyas@gmail.com &middot; +91 88897 01865 &middot; Bengaluru</p>
+    <a class="back" href="index.html">&#8592; Full portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

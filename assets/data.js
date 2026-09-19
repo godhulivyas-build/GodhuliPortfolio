@@ -241,6 +241,15 @@ window.PORTFOLIO = {
       link: 'peakflo.html'
     },
     {
+      id: 'tulu',
+      type: 'Teardown',
+      title: 'Tulu Health App Growth',
+      note: 'Reframed a growth ask from acquisition to activation, caught a data-integrity trap first, then shipped a working fix.',
+      facts: ['Live prototype, built in Lovable', '42%→26% activation, the real lever'],
+      img: '',
+      link: 'tulu.html'
+    },
+    {
       id: 'cashkaro',
       type: 'Case study',
       title: 'CashKaro Recall Engine',

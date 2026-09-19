@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tulu Health App Growth &middot; Godhuli Vyas</title>
+<meta name="description" content="Health app case study: reframing a growth problem from acquisition to first-value activation, catching a data-integrity trap before it drove a decision, and speccing a minimal First Value Path prototype." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#22c98a; --a2:#7c5cff; --a3:#ff7a59;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(34,201,138,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(124,92,255,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a1);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),var(--a2));border-color:transparent;color:#04150e}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a1);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+
+.pcard{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.pcard .tag{color:var(--a1);margin:0 0 8px}
+.pcard h3{font-size:16px;margin-bottom:10px}
+.pcard ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:6px;line-height:1.5}
+.pcard p{color:var(--muted);font-size:13.5px;margin:0}
+
+/* funnel bar */
+.funnel{display:flex;align-items:flex-end;gap:14px;margin-top:8px;padding:20px;background:linear-gradient(180deg,var(--surface),#0a0a10);
+  border:1px solid var(--line);border-radius:14px}
+.fbar{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px}
+.fbar .bar{width:100%;border-radius:8px 8px 0 0;background:linear-gradient(180deg,var(--a1),var(--a2))}
+.fbar .val{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:18px;color:var(--a1)}
+.fbar .lbl{font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);text-align:center}
+.fbar.drop .bar{background:linear-gradient(180deg,var(--a3),#7a2f1e)}
+.fbar.drop .val{color:var(--a3)}
+
+/* hypothesis table */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--surface),#0a0a10)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:14px 12px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text)}
+.conf{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.08em;padding:3px 9px;border-radius:100px;display:inline-block;white-space:nowrap}
+.conf.high{background:rgba(34,201,138,.14);color:var(--a1);border:1px solid rgba(34,201,138,.3)}
+.conf.medium{background:rgba(245,185,66,.14);color:#f5b942;border:1px solid rgba(245,185,66,.3)}
+.conf.needs{background:rgba(255,122,89,.14);color:var(--a3);border:1px solid rgba(255,122,89,.3)}
+
+/* first value path */
+.flowsteps{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.fstep{display:grid;grid-template-columns:36px 1fr 1fr;gap:16px;background:linear-gradient(180deg,var(--surface),#0a0a10);
+  border:1px solid var(--line);border-radius:12px;padding:16px 18px;align-items:start}
+@media(max-width:700px){.fstep{grid-template-columns:1fr;gap:6px}}
+.fstep .n{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:22px;color:var(--a1)}
+.fstep h4{font-size:14px;margin-bottom:4px}
+.fstep .purpose{color:var(--muted);font-size:13px}
+.fstep .choice{color:var(--dim);font-size:12px;line-height:1.5}
+.fstep .choice b{color:var(--muted);font-weight:500}
+
+/* metrics stack */
+.metric{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:12px}
+.metric-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.metric h3{font-size:16px}
+.metric .num{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.08em;color:var(--dim);
+  border:1px solid var(--line);border-radius:100px;padding:3px 10px}
+.metric p{margin:0;color:var(--muted);font-size:14px}
+
+/* fake win diagram */
+.fakewin{overflow-x:auto;padding-bottom:8px;margin-top:8px}
+.fakewin svg{display:block;min-width:760px}
+.fw-node rect{fill:rgba(255,255,255,.03);stroke:var(--line)}
+.fw-node.engine rect{stroke:var(--a1);fill:rgba(34,201,138,.08)}
+.fw-node.flag rect{stroke:var(--a2);fill:rgba(124,92,255,.1)}
+.fw-node.guard rect{stroke:var(--line-2);fill:rgba(255,255,255,.05)}
+.fw-node.warn rect{stroke:var(--a3);fill:rgba(255,122,89,.1)}
+.fw-node text.t{fill:var(--text);font-family:Inter,sans-serif;font-size:10.5px}
+.fw-node text.d{fill:var(--dim);font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.05em}
+.fw-arrow{stroke:var(--a1);stroke-width:1.4;fill:none}
+.fw-arrowhead{fill:var(--a2)}
+
+/* prioritization */
+.prio{display:grid;grid-template-columns:70px 1fr;gap:16px;background:linear-gradient(180deg,var(--surface),#0a0a10);
+  border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:10px;align-items:start}
+.prio .tag{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;padding:4px 10px;border-radius:100px;text-align:center;white-space:nowrap}
+.prio.p0 .tag{background:rgba(34,201,138,.16);color:var(--a1)}
+.prio.p1 .tag{background:rgba(124,92,255,.16);color:var(--a2)}
+.prio.p2 .tag{background:rgba(245,185,66,.16);color:#f5b942}
+.prio.defer .tag{background:rgba(255,255,255,.06);color:var(--dim)}
+.prio h4{font-size:14.5px;margin-bottom:4px}
+.prio p{color:var(--muted);font-size:13px;margin:0}
+
+/* research questions */
+.qlist{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.qlist li{display:flex;gap:14px;background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);
+  border-radius:12px;padding:14px 18px;color:var(--muted);font-size:14px;align-items:center}
+.qlist .qn{font-family:"Instrument Serif",Georgia,serif;font-style:italic;color:var(--a1);font-size:18px}
+
+/* post launch scorecard */
+.score{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media(max-width:700px){.score{grid-template-columns:1fr}}
+.score div{background:var(--bg-2);padding:18px}
+.score h4{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.score.pos h4{color:var(--a1)}
+.score ul{margin:0;padding-left:16px;color:var(--muted);font-size:13px;display:grid;gap:6px;line-height:1.5}
+.pos h4{color:var(--a1)}
+.unresolved h4{color:#f5b942}
+.negative h4{color:var(--a3)}
+
+/* 30/60/90 */
+.window{display:flex;gap:16px;background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);
+  border-radius:12px;padding:16px 18px;margin-bottom:10px;align-items:flex-start}
+.window .day{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.06em;color:var(--a1);white-space:nowrap;padding-top:2px}
+.window p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.5}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Associate Product Manager Case Submission &middot; Tulu Health App</p>
+    <h1>The problem isn't acquisition. <em>It's the first five minutes.</em></h1>
+    <p class="dek">Installs were up 23% and the team wanted more acquisition. The data said something else: the share of users making it from install to first activity had fallen from 42% to 26%, a 37% relative decline. I built a working prototype of the fix instead of a slide about it.</p>
+    <dl class="meta">
+      <div><dt>Role</dt><dd>Associate PM case study</dd></div>
+      <div><dt>Diagnosis</dt><dd>Activation, not acquisition</dd></div>
+      <div><dt>Fix shipped as</dt><dd>Working Lovable prototype</dd></div>
+      <div><dt>Biggest catch</dt><dd>A 2.4x metric that wasn't real yet</dd></div>
+    </dl>
+    <div class="cta">
+      <a class="btn primary" href="https://tulu-health.lovable.app/" target="_blank" rel="noopener">Open the prototype <span aria-hidden="true">↗</span></a>
+      <a class="btn" href="https://www.loom.com/share/bb0308c186bc416b88144357ffade001" target="_blank" rel="noopener">Watch the walkthrough <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- 01 EXECUTIVE DIAGNOSIS -->
+<section id="diagnosis">
+  <div class="wrap">
+    <p class="snum mono">Executive Diagnosis</p>
+    <h2>Installs went up. Everything after install went down.</h2>
+    <p class="lede"><b style="color:var(--text)">Thesis:</b> the problem is not acquisition, it's the first-value experience. Signup completion and first-activity completion both deteriorated, while retention and NPS declined downstream. The first priority isn't more acquisition &mdash; it's finding exactly where users fail to reach first value, then testing an onboarding fix against that failure point.</p>
+    <div class="funnel">
+      <div class="fbar"><div class="val">+23%</div><div class="bar" style="height:60px"></div><div class="lbl">Installs</div></div>
+      <div class="fbar drop"><div class="val">42%&rarr;26%</div><div class="bar" style="height:44px"></div><div class="lbl">Install &rarr; first activity</div></div>
+      <div class="fbar drop"><div class="val">&darr;</div><div class="bar" style="height:30px"></div><div class="lbl">Retention, NPS</div></div>
+    </div>
+    <div class="g2" style="margin-top:24px">
+      <div class="pcard">
+        <p class="tag mono">What the data says</p>
+        <ul>
+          <li><b style="color:var(--text)">Acquisition:</b> volume up 23%, but installs rising doesn't mean acquisition is healthy &mdash; quality is unverified, and fitness (the largest new-user source) also has the weakest retention, so the mix itself may be shifting.</li>
+          <li><b style="color:var(--text)">Activation:</b> the largest relative deterioration in the entire funnel &mdash; 42% to 26% &mdash; the single biggest lever in the dataset.</li>
+          <li><b style="color:var(--text)">Retention:</b> declines downstream of activation, consistent with, but not yet proof of, activation being the upstream driver.</li>
+        </ul>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Key questions still open</p>
+        <ul>
+          <li>Has the acquisition mix shifted toward lower-retention segments like fitness over this period?</li>
+          <li>Where exactly in onboarding do users drop &mdash; one screen, one step, or distributed friction?</li>
+          <li>Does the reported 2.4x retention relationship survive de-duplication and cohort segmentation?</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 ROOT CAUSE -->
+<section id="rootcause">
+  <div class="wrap">
+    <p class="snum mono">Root Cause Analysis</p>
+    <h2>Three hypotheses, ranked by confidence, not by preference.</h2>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Hypothesis</th><th>Confidence</th><th>Reasoning</th></tr></thead>
+        <tbody>
+          <tr><td>Onboarding friction is suppressing activation</td><td><span class="conf high">High</span></td><td>Signup completion and first-activity completion deteriorated together in the same period &mdash; consistent with a structural funnel problem, not isolated noise.</td></tr>
+          <tr><td>Acquisition mix has shifted toward lower-retention segments</td><td><span class="conf medium">Medium</span></td><td>Fitness is the largest acquisition segment and has the weakest retention; if its install share grew, blended metrics would worsen even with an unchanged product.</td></tr>
+          <tr><td>Technical or performance friction is compounding the loss</td><td><span class="conf needs">Needs validation</span></td><td>Not directly evidenced yet, but performance issues are cheap to check and would compound any onboarding friction if present.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 03 DATA INTEGRITY -->
+<section id="integrity">
+  <div class="wrap">
+    <p class="snum mono">Data Integrity Risk</p>
+    <h2>Caught before it drove a decision.</h2>
+    <p class="lede">The reported 2.4&times; retention relationship should not yet be used for product prioritisation. Android duplicates activity events in an estimated 8&ndash;12% of sessions, so activity-based metrics may be inflated.</p>
+    <div class="callout">
+      <p><b>Before treating the 2.4&times; relationship as causal, in order:</b> (1) de-duplicate activity events, (2) recalculate the relationship on clean data, (3) segment by acquisition channel, platform and cohort to rule out survivorship, and (4) only run a controlled intervention if the relationship still holds after steps 1&ndash;3.</p>
+    </div>
+    <p class="lede" style="margin-top:24px">Same discipline applied to the headline "paid conversion 4.8% to 5.1%" &mdash; it depends entirely on a denominator the brief never specifies. If measured on activated users only, absolute payers likely fell; if measured on all signups, they likely grew. The denominator gets confirmed before this is reported as a win.</p>
+  </div>
+</section>
+
+<!-- 04 FIRST VALUE PATH -->
+<section id="fvp">
+  <div class="wrap">
+    <p class="snum mono">Proposed Intervention</p>
+    <h2>Not a full app. One journey, five screens.</h2>
+    <p class="lede">I deliberately did not build a full app. I built one focused, high-leverage journey: get a new user from install to a completed, meaningful first activity with as little friction as possible. The principle &mdash; don't add more content, reduce the distance between opening the app and experiencing value.</p>
+    <div class="flowsteps">
+      <div class="fstep"><span class="n">1</span><div><h4>Welcome</h4><p class="purpose">Set expectation in one line, single CTA.</p></div><div class="choice"><b>Design choice:</b> no feature list, no home-screen dump on first open.</div></div>
+      <div class="fstep"><span class="n">2</span><div><h4>Goal selection</h4><p class="purpose">"What would you like help with today?" (sleep, fitness, stress, general)</p></div><div class="choice"><b>Design choice:</b> cards, not a form &mdash; reduces choice friction at the highest-risk step.</div></div>
+      <div class="fstep"><span class="n">3</span><div><h4>Recommended first activity</h4><p class="purpose">One matched activity, not a catalog.</p></div><div class="choice"><b>Design choice:</b> removes the choice overload identified in H1.</div></div>
+      <div class="fstep"><span class="n">4</span><div><h4>Activity completion</h4><p class="purpose">"Nice work, you're off to a start," plus a progress signal.</p></div><div class="choice"><b>Design choice:</b> confirms value was delivered, not just that a screen was completed.</div></div>
+      <div class="fstep"><span class="n">5</span><div><h4>Next step</h4><p class="purpose">One lightweight next action, not a full plan.</p></div><div class="choice"><b>Design choice:</b> avoids overwhelming a user who just had one small win.</div></div>
+    </div>
+    <p class="lede" style="margin-top:24px">A working clickable prototype of this flow, built in Lovable, ships with an instrumentation layer and a Control/Treatment toggle, so the onboarding experiment below can be demoed, not just described.</p>
+    <div class="callout">
+      <p><b>Why not an AI coach first.</b> Tulu's platform is built around AI agents and measurable outcomes, which made it tempting to lead with an AI wellness coach. I deliberately didn't. The data identifies an activation problem, not an intelligence problem. AI should be introduced where it removes a demonstrated bottleneck, not because AI itself is the solution. Once the First Value Path is working, AI becomes a way to personalise that journey &mdash; not a standalone feature to bolt on first.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 METRICS -->
+<section id="metrics">
+  <div class="wrap">
+    <p class="snum mono">Metrics</p>
+    <h2>One North Star, one fake-win trap to guard against.</h2>
+    <div class="metric">
+      <div class="metric-head"><h3>Weekly Engaged Users (WEU)</h3><span class="num">North Star</span></div>
+      <p>Unique users completing at least one meaningful core activity on 2+ days within a rolling 7-day period. The exact definition gets validated against the app's primary user value proposition before being finalised.</p>
+    </div>
+    <div class="metric">
+      <div class="metric-head"><h3>Activation rate</h3><span class="num">Primary</span></div>
+      <p>% of new users completing the first meaningful activity within the first X days &mdash; using the existing first-activity event as the initial definition since it's already instrumented, and only introducing a deeper habit metric (e.g. 3 activities in 5 days) after validating that behaviour predicts D30 retention.</p>
+    </div>
+    <div class="metric" style="margin-bottom:0">
+      <div class="metric-head"><h3>Opt-out, uninstall, crash rate</h3><span class="num">Guardrails</span></div>
+      <p>Protect against solving activation by degrading trust or stability.</p>
+    </div>
+
+    <div class="fakewin" style="margin-top:24px">
+      <svg viewBox="0 0 760 220" width="760" height="220">
+        <defs>
+          <marker id="fwah" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" class="fw-arrowhead" />
+          </marker>
+        </defs>
+        <path class="fw-arrow" marker-end="url(#fwah)" d="M132 40 H190" />
+        <path class="fw-arrow" marker-end="url(#fwah)" d="M340 40 H398" />
+        <g class="fw-node engine"><rect x="4" y="18" width="128" height="44" rx="10" /><text class="t" x="18" y="38">Activation</text><text class="d" x="18" y="52">FIRST REAL THING</text></g>
+        <g class="fw-node"><rect x="190" y="18" width="150" height="44" rx="10" /><text class="t" x="204" y="38">Intended path</text><text class="d" x="204" y="52">TOWARD THE REAL GOAL</text></g>
+        <g class="fw-node flag"><rect x="398" y="18" width="180" height="44" rx="10" /><text class="t" x="414" y="38">Weekly Engaged Users</text><text class="d" x="414" y="52">NORTH STAR FLAG</text></g>
+
+        <path class="fw-arrow" marker-end="url(#fwah)" d="M400 100 V70" />
+        <g class="fw-node guard"><rect x="4" y="100" width="180" height="44" rx="10" /><text class="t" x="18" y="120">Opt-out rate</text><text class="d" x="18" y="134">GUARDS AGAINST SPAM</text></g>
+        <g class="fw-node guard"><rect x="200" y="100" width="180" height="44" rx="10" /><text class="t" x="214" y="120">D30 cohort retention</text><text class="d" x="214" y="134">DID THEY STICK AROUND</text></g>
+        <g class="fw-node guard"><rect x="400" y="100" width="200" height="44" rx="10" /><text class="t" x="414" y="120">Crash-free / uninstall</text><text class="d" x="414" y="134">GUARDS AGAINST BREAKAGE</text></g>
+
+        <path class="fw-arrow" marker-end="url(#fwah)" d="M300 178 V158" />
+        <g class="fw-node warn"><rect x="140" y="178" width="320" height="38" rx="10" /><text class="t" x="156" y="201">Activation up, D30 down &rarr; fake win, flagged automatically</text></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 06 EXPERIMENT -->
+<section id="experiment">
+  <div class="wrap">
+    <p class="snum mono">Experiment: Onboarding Redesign</p>
+    <h2>Sized before launch, not adjusted after.</h2>
+    <div class="g2">
+      <div class="pcard">
+        <p class="tag mono">Hypothesis</p>
+        <p>If we reduce onboarding choices and guide users directly to their first meaningful activity, more new users will reach first value without negatively affecting D7 retention or notification opt-outs.</p>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Primary &amp; secondary metrics</p>
+        <ul>
+          <li>Primary: first meaningful activity completion</li>
+          <li>Secondary: time to first activity, signup completion, D7 and D30 retention</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p><b>Sample size, determined before launch:</b> from baseline activation rate, minimum detectable lift, 95% confidence and 80% power &mdash; not assumed in advance. The experiment runs to that pre-set sample size rather than stopping early on a promising interim result.</p>
+    </div>
+    <div class="chips">
+      <span class="chip">Guardrails: opt-out</span>
+      <span class="chip">App uninstall</span>
+      <span class="chip">Crash rate</span>
+      <span class="chip">User complaints</span>
+    </div>
+  </div>
+</section>
+
+<!-- 07 PRIORITIZATION -->
+<section id="prioritization">
+  <div class="wrap">
+    <p class="snum mono">Prioritisation &middot; 12 Engineer-Weeks</p>
+    <h2>What ships, what waits, and why.</h2>
+    <div class="prio p0"><span class="tag">P0</span><div><h4>Onboarding simplification</h4><p>Directly addresses the largest observed funnel loss, install to first activity, and reduces friction across the entire experience at low risk.</p></div></div>
+    <div class="prio p1"><span class="tag">P1</span><div><h4>Performance fixes</h4><p>High potential, sequenced after onboarding data confirms the real friction point.</p></div></div>
+    <div class="prio p2"><span class="tag">P2</span><div><h4>Notification experiment</h4><p>A re-engagement lever, but only after understanding why users disengage in the first place.</p></div></div>
+    <div class="prio defer"><span class="tag">Defer</span><div><h4>Personalised home screen, weekly plan; AI wellness coach</h4><p>High implementation cost and insufficient evidence that lack of AI guidance is the current growth constraint &mdash; not a rejection of the idea, a sequencing call.</p></div></div>
+  </div>
+</section>
+
+<!-- 08 USER RESEARCH -->
+<section id="research">
+  <div class="wrap">
+    <p class="snum mono">User Research</p>
+    <h2>Four questions, asked before building more.</h2>
+    <ul class="qlist">
+      <li><span class="qn">1</span>After your first session, what did you expect to happen next?</li>
+      <li><span class="qn">2</span>Was there a moment where you weren't sure what to do next?</li>
+      <li><span class="qn">3</span>What were you trying to accomplish when you opened the app?</li>
+      <li><span class="qn">4</span>What almost made you leave?</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 09 CEO CHALLENGE -->
+<section id="referrals">
+  <div class="wrap">
+    <p class="snum mono">CEO Challenge &middot; "Referrals Now"</p>
+    <h2>Fast and free isn't the same as smart, yet.</h2>
+    <p class="lede">Referrals feel fast and free, but only 26 of 100 installs reach trying the product today, down from 42. Referring more people into that same funnel means losing most of them too, and spending goodwill and reward budget on users who churn anyway.</p>
+    <div class="callout">
+      <p><b>The call:</b> fix onboarding first, re-measure the funnel in 3&ndash;4 weeks, then launch referrals into a funnel that actually converts &mdash; a better return on the same budget. If timing is non-negotiable, a small capped referral pilot alongside the onboarding fix avoids scaling spend into a leaky bucket.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 POST-LAUNCH -->
+<section id="postlaunch">
+  <div class="wrap">
+    <p class="snum mono">Post-Launch Decision</p>
+    <h2>Partial win. Do not roll back.</h2>
+    <div class="score">
+      <div class="pos"><h4>Positive</h4><ul><li>Behaviour +18%</li><li>D7 retention +6%</li><li>Paid conversion +2%</li></ul></div>
+      <div class="unresolved"><h4>Unresolved</h4><ul><li>D30 retention unchanged</li></ul></div>
+      <div class="negative"><h4>Negative</h4><ul><li>NPS &minus;3</li><li>Opt-outs +14%</li></ul></div>
+    </div>
+    <div class="callout" style="margin-top:20px">
+      <p><b>Decision:</b> keep the onboarding redesign, isolate the notification component, and run a follow-up experiment reducing notification frequency. The goal is to preserve the D7 improvement while recovering NPS and opt-outs &mdash; not to ship-and-forget, and not to panic-revert.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 NEXT 30/60/90 -->
+<section id="next" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">Next 30/60/90 Days</p>
+    <h2>What happens, in order.</h2>
+    <div class="window"><span class="day">Day 0&ndash;30</span><p>Ship the de-duplication fix; launch the onboarding A/B test; begin a 12-interview research pass.</p></div>
+    <div class="window"><span class="day">Day 30&ndash;60</span><p>Read out the onboarding experiment at its first checkpoint; run the notification-cadence follow-up if the post-launch pattern repeats.</p></div>
+    <div class="window" style="margin-bottom:0"><span class="day">Day 60&ndash;90</span><p>Decide ship / iterate / kill on onboarding; revisit the personalised home screen and AI-assisted personalisation only once activation is confirmed fixed.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

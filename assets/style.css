@@ -238,7 +238,6 @@ td.num{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--a2);whi
 .gal .a{grid-column:span 7;aspect-ratio:16/11}
 .gal .b{grid-column:span 5;aspect-ratio:4/3}
 .gal .c,.gal .d,.gal .e{grid-column:span 4;aspect-ratio:1/1}
-.gal .f{grid-column:span 12;aspect-ratio:20/9}
 @media(max-width:760px){.gal figure{grid-column:span 12!important;aspect-ratio:4/3!important}}
 
 /* ---------------- footer ---------------- */

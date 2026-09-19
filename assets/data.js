@@ -233,7 +233,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'peakflo',
-      type: 'Teardown',
+      type: 'Case study',
       title: 'Peakflo AP/AR Product Analysis',
       note: 'AP/AR flows mapped, friction found, fixes scored on RICE.',
       facts: ['14–21 day P2P cycle mapped', '3 fixes, RICE-scored', 'P0 target: 60% shorter approval cycle'],
@@ -242,7 +242,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'tulu',
-      type: 'Teardown',
+      type: 'Case study',
       title: 'Tulu Health App Growth',
       note: 'Reframed a growth ask from acquisition to activation, caught a data-integrity trap first, then shipped a working fix.',
       facts: ['Live prototype, built in Lovable', '42%→26% activation, the real lever'],
@@ -255,7 +255,7 @@ window.PORTFOLIO = {
       title: 'CashKaro Recall Engine',
       note: 'Reframed a missed-cashback problem from awareness to timing, then corrected an earlier draft’s inflated math before speccing the fix.',
       facts: ['Deterministic, no AI in the loop', 'Bot-contamination check built in'],
-      img: '',
+      img: 'assets/img/thumb-cashkaro.webp',
       link: 'cashkaro.html'
     },
     {
@@ -278,7 +278,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'aangan-prd',
-      type: 'Teardown',
+      type: 'Case study',
       title: 'Aangan · Family Circle',
       note: 'Privacy-first elderly care at home. No live tracking, no cameras.',
       facts: ['6 agents', 'Family dashboard + Scam Shield'],
@@ -287,7 +287,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'automon-teardown',
-      type: 'Teardown',
+      type: 'Case study',
       title: 'Automon Dashboard',
       note: 'A no-code monitor that turns triggers into one clear data flow.',
       facts: ['25 triggers', '1,247 data points'],
@@ -296,7 +296,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'crm-teardown',
-      type: 'Teardown',
+      type: 'Case study',
       title: 'Enquiry-to-CRM Agent',
       note: 'A WhatsApp agent that never loses a lead\u2019s context.',
       facts: ['n8n orchestration', '4 systems, 1 loop'],
@@ -305,7 +305,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'ethos-asset',
-      type: 'Teardown',
+      type: 'Case study',
       title: 'ethOS PRD & Teardown',
       note: 'Zero agency spam. A 0–100 quality score on every listing.',
       facts: ['4-stage RAG', '0–100 scoring', 'Live product'],
@@ -432,7 +432,7 @@ window.PORTFOLIO = {
     {
       id: 'saarthi',
       tier: 'Live',
-      title: 'Saarthi Setu',
+      title: 'Saarthi',
       org: 'Voice-first agri logistics · Polygnan Fellowship',
       preview: 'saarthi',
       thesis: '300+ field conversations pointed at one root cause: 70% of observed supply-chain delay was manual phone coordination.',

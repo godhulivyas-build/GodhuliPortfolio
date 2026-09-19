@@ -65,6 +65,11 @@ section{padding:64px 0;border-bottom:1px solid var(--line)}
 h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
 .lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
 
+.shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px;background:#0a0a10}
+.shot img{width:100%;display:block}
+.shot-cap{padding:10px 16px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line);background:var(--bg-2)}
+
 .callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a1);
   border-radius:12px;padding:20px 24px;margin-top:8px}
 .callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
@@ -163,6 +168,7 @@ footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
     </dl>
     <div class="cta">
       <a class="btn primary" href="https://cashback-fidelity-finder.lovable.app/" target="_blank" rel="noopener">Open the visualisation <span aria-hidden="true">↗</span></a>
+      <a class="btn" href="https://docs.google.com/document/d/1VE48XZ-u65LNaOkF8jOBPqZcfgiIvrEEAs12BHaYgAU/edit?usp=sharing" target="_blank" rel="noopener">Read the full submission <span aria-hidden="true">↗</span></a>
     </div>
   </div>
 </header>
@@ -173,7 +179,11 @@ footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
     <p class="snum mono">The Problem</p>
     <h2>CashKaro is built to be checked, not to be present.</h2>
     <p class="lede">Existing users do not have an awareness problem. They have a timing problem. CashKaro is a coupon in a drawer at home &mdash; you know it's there, but by the time you're on the retailer's checkout page, you've forgotten the drawer. You pay. The cashback never happens.</p>
-    <div class="callout">
+    <div class="shot">
+      <img src="assets/img/thumb-cashkaro.webp" alt="CashKaro case study cover: from click-outs to real cashback, understand the drop-off, find the why, design a better nudge" loading="lazy" />
+      <div class="shot-cap">She clicks out, then goes quiet</div>
+    </div>
+    <div class="callout" style="margin-top:20px">
       <p><b>Two different diseases, only one is ours to cure.</b> "I have never heard of CashKaro" is an awareness problem and belongs to marketing. "I know CashKaro, I just didn't think of it while buying" is a timing problem &mdash; and that second one is what this case study is about.</p>
     </div>
     <p class="lede" style="margin-top:28px">But a missed purchase is one of three things, not two. Splitting it into "orders CashKaro saw" versus "orders it lost" is incomplete, and the incompleteness is the most important thing here: the lost journeys hold two populations that look identical in the data and need opposite treatment.</p>

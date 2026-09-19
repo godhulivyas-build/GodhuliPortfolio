@@ -519,6 +519,7 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-
 
 /* ---------------- featured: speaking invites and social mentions, as small badges ---------------- */
 .feat-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.feat-badges.vertical{flex-direction:column;align-items:stretch;margin-top:18px}
 .feat-badge{display:inline-flex;align-items:center;gap:11px;background:linear-gradient(180deg,var(--surface),#0a0a10);
   border:1px solid var(--line);border-radius:100px;padding:6px 18px 6px 6px;text-decoration:none;color:inherit;
   transition:border-color .3s,transform .3s var(--ease)}
@@ -530,6 +531,11 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-
 .feat-badge i{display:block;font-style:normal;font-family:"JetBrains Mono",monospace;font-size:8.5px;
   letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:3px}
 @media(max-width:700px){.feat-badge{padding:5px 14px 5px 5px}.feat-badge img{width:32px;height:32px}}
+
+/* ---------------- contact: two columns, featured fills the empty right side ---------------- */
+.contact-grid{display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:start}
+.contact-featured{padding-top:2px}
+@media(max-width:900px){.contact-grid{grid-template-columns:1fr}.contact-featured{margin-top:8px}}
 
 /* ---------------- timeline: company headline, role secondary, wins ---------------- */
 .vst-main b.vst-org{font-weight:600;font-size:20px;letter-spacing:-.015em;line-height:1.2;color:#fff}

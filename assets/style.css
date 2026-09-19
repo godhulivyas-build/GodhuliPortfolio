@@ -59,7 +59,7 @@ h1,h2,h3,h4{font-weight:400;letter-spacing:-.022em;line-height:1.08;margin:0;tex
 .btn.primary:hover{box-shadow:0 0 80px rgba(124,92,255,.55)}
 
 /* ---------------- masthead ---------------- */
-header{padding:112px 0 0}
+header{padding:84px 0 0}
 .mast{display:grid;grid-template-columns:1.2fr .8fr;gap:52px;align-items:center;padding-bottom:24px}
 @media(max-width:900px){.mast{grid-template-columns:1fr;gap:38px;align-items:start}}
 .dateline{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:100px;
@@ -84,9 +84,9 @@ h1{margin-top:6px;font-size:clamp(44px,7.4vw,88px);letter-spacing:-.03em;line-he
 @media(hover:none){.portrait{cursor:default}}
 
 /* ---------------- sections ---------------- */
-section{padding:72px 0;position:relative;z-index:2;scroll-margin-top:70px}
-.head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;padding-bottom:22px;
-  border-bottom:1px solid var(--line);margin-bottom:32px;
+section{padding:48px 0;position:relative;z-index:2;scroll-margin-top:70px}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:26px;padding-bottom:16px;
+  border-bottom:1px solid var(--line);margin-bottom:22px;
   opacity:0;transform:translateY(20px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
 .head.in{opacity:1;transform:none}
 .head h2{font-size:clamp(28px,4.4vw,46px)}
@@ -242,7 +242,7 @@ td.num{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--a2);whi
 @media(max-width:760px){.gal figure{grid-column:span 12!important;aspect-ratio:4/3!important}}
 
 /* ---------------- footer ---------------- */
-footer{padding:76px 0 56px;border-top:1px solid var(--line);position:relative;z-index:2}
+footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-index:2}
 .big{font-size:clamp(32px,6vw,62px);line-height:1.05;margin:0 0 24px}
 .big .serif{background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
 .links{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
@@ -293,7 +293,7 @@ footer{padding:76px 0 56px;border-top:1px solid var(--line);position:relative;z-
   .sheet-back,.sheet-panel{opacity:1;transform:none}
 }
 
-@media(max-width:860px){section{padding:56px 0}.path-sticky>.wrap{padding-top:0}footer{padding:60px 0 48px}}
+@media(max-width:860px){section{padding:40px 0}.path-sticky>.wrap{padding-top:0}footer{padding:48px 0 36px}}
 
 /* ---------------- saarthi block ---------------- */
 .saarthi{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
@@ -412,11 +412,11 @@ footer{padding:76px 0 56px;border-top:1px solid var(--line);position:relative;z-
    that photo's own entry */
 .path-wrap{display:flex;align-items:flex-start;gap:32px}
 .path-wrap .vtl{flex:1;min-width:0}
-.path-collage{position:sticky;top:110px;width:210px;flex-shrink:0;height:min(560px,70vh);display:flex;gap:10px;
-  overflow:hidden;border-radius:16px;border:1px solid var(--line);background:var(--sunk)}
+.path-collage{position:sticky;top:110px;width:300px;flex-shrink:0;height:min(640px,72vh);display:flex;gap:12px;
+  overflow:hidden;border-radius:18px;border:1px solid var(--line);background:var(--sunk)}
 .path-collage:empty{display:none}
-.path-collage .vcol{flex:1;display:flex;flex-direction:column;gap:10px;will-change:transform}
-.path-collage .vcol img{width:100%;height:96px;object-fit:cover;border-radius:10px;display:block;flex-shrink:0;
+.path-collage .vcol{flex:1;display:flex;flex-direction:column;gap:12px;will-change:transform}
+.path-collage .vcol img{width:100%;height:140px;object-fit:cover;border-radius:12px;display:block;flex-shrink:0;
   cursor:pointer;filter:grayscale(.2) contrast(1.05);transition:filter .3s var(--ease)}
 .path-collage .vcol img:hover{filter:none}
 .path-collage .vcol.up{animation:vcolUp 26s linear infinite}
@@ -424,7 +424,7 @@ footer{padding:76px 0 56px;border-top:1px solid var(--line);position:relative;z-
 @keyframes vcolUp{from{transform:translateY(0)}to{transform:translateY(-50%)}}
 @keyframes vcolDown{from{transform:translateY(-50%)}to{transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.path-collage .vcol{animation:none}}
-@media(max-width:1100px){.path-collage{width:160px}.path-collage .vcol img{height:76px}}
+@media(max-width:1200px){.path-collage{width:220px}.path-collage .vcol img{height:104px}}
 @media(max-width:900px){.path-wrap{flex-direction:column}.path-collage{display:none}}
 
 /* saarthi replica, english build */

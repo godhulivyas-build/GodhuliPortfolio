@@ -228,16 +228,16 @@ td:first-child{color:var(--text);min-width:190px}
 td.num{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--a2);white-space:nowrap}
 
 /* ---------------- gallery ---------------- */
-.gal{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+.gal{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;max-width:720px}
 .gal figure{margin:0;position:relative;overflow:hidden;border-radius:14px;border:1px solid var(--line);background:#0b0b11;
   opacity:0;transform:translateY(20px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
 .gal figure.in{opacity:1;transform:none}
 .gal img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.55) contrast(1.05);
   transition:filter .6s var(--ease),transform .9s var(--ease)}
 .gal figure:hover img{filter:none;transform:scale(1.04)}
-.gal .a{grid-column:span 7;aspect-ratio:16/11}
-.gal .b{grid-column:span 5;aspect-ratio:4/3}
-.gal .c,.gal .d,.gal .e{grid-column:span 4;aspect-ratio:1/1}
+.gal .a{grid-column:span 7;aspect-ratio:16/8}
+.gal .b{grid-column:span 5;aspect-ratio:16/11}
+.gal .c,.gal .d,.gal .e{grid-column:span 4;aspect-ratio:4/3}
 @media(max-width:760px){.gal figure{grid-column:span 12!important;aspect-ratio:4/3!important}}
 
 /* ---------------- footer ---------------- */

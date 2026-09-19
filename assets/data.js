@@ -250,6 +250,15 @@ window.PORTFOLIO = {
       link: 'tulu.html'
     },
     {
+      id: 'composio',
+      type: 'Case study',
+      title: 'SaaS Toolkit Research Pipeline',
+      note: 'A 4-stage pipeline that researches, verifies and scores 100 SaaS apps, then reports its own 89% accuracy honestly.',
+      facts: ['100 apps, ~65s end to end', '70 buildable today, no blockers'],
+      img: 'assets/img/thumb-composio.webp',
+      link: 'composio.html'
+    },
+    {
       id: 'cashkaro',
       type: 'Case study',
       title: 'CashKaro Recall Engine',

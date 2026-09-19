@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SaaS Toolkit Research Pipeline &middot; Godhuli Vyas</title>
+<meta name="description" content="A 4-stage evidence-driven pipeline that researches, verifies and scores 100 SaaS apps for Composio integration potential, then reports its own 89% accuracy honestly instead of hiding the misses." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#4f7cff; --a2:#22c98a; --a3:#ff7a59;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(79,124,255,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(34,201,138,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a1);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),var(--a2));border-color:transparent;color:#04150e}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px;background:#0a0a10}
+.shot img{width:100%;display:block}
+.shot-cap{padding:10px 16px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line);background:var(--bg-2)}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a1);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media(max-width:820px){.g4{grid-template-columns:repeat(2,1fr)}}
+
+.pcard{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.pcard .tag{color:var(--a1);margin:0 0 8px}
+.pcard h3{font-size:16px;margin-bottom:10px}
+.pcard ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:6px;line-height:1.5}
+.pcard p{color:var(--muted);font-size:13.5px;margin:0}
+
+/* headline stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media(max-width:700px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stats div{background:var(--bg-2);padding:18px}
+.stats b{display:block;font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:26px;color:var(--a1)}
+.stats span{display:block;font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:7px;line-height:1.4}
+
+/* pipeline stages */
+.stage{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:12px}
+.stage-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.stage h3{font-size:16px}
+.stage .num{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.08em;color:var(--dim);
+  border:1px solid var(--line);border-radius:100px;padding:3px 10px}
+.stage ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:6px;line-height:1.5}
+
+/* distribution bars */
+.distbar{display:grid;gap:10px;margin-top:8px}
+.drow{display:grid;grid-template-columns:120px 1fr 50px;gap:12px;align-items:center}
+@media(max-width:600px){.drow{grid-template-columns:90px 1fr 40px;font-size:12px}}
+.drow .lbl{color:var(--muted);font-size:13px}
+.drow .track{height:10px;border-radius:5px;background:var(--sunk);overflow:hidden}
+.drow .fill{height:100%;background:linear-gradient(90deg,var(--a1),var(--a2));border-radius:5px}
+.drow .pct{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--a1);text-align:right}
+
+/* verification table */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--surface),#0a0a10)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:600px}
+th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:14px 12px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text)}
+td.miss{color:var(--a3)}
+
+/* phases */
+.phase{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:10px}
+.phase .tag{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.08em;padding:4px 10px;border-radius:100px;display:inline-block;margin-bottom:8px}
+.phase.p1 .tag{background:rgba(34,201,138,.16);color:var(--a2)}
+.phase.p2 .tag{background:rgba(79,124,255,.16);color:var(--a1)}
+.phase.p3 .tag{background:rgba(245,185,66,.16);color:#f5b942}
+.phase.p4 .tag{background:rgba(255,255,255,.06);color:var(--dim)}
+.phase h4{font-size:14.5px;margin-bottom:6px}
+.phase p{color:var(--muted);font-size:13px;margin:0}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Case Study &middot; Composio Integration Research</p>
+    <h1>100 SaaS apps, researched, verified, and <em>told to admit what it got wrong.</em></h1>
+    <p class="dek">Which of 100 SaaS apps can actually become an agent toolkit today? A 4-stage pipeline researches each one, verifies its own claims against evidence, scores confidence deterministically, then reports its accuracy honestly &mdash; misses included &mdash; instead of presenting a clean number nobody can check.</p>
+    <dl class="meta">
+      <div><dt>Scope</dt><dd>100 SaaS applications</dd></div>
+      <div><dt>Runtime</dt><dd>~65 seconds, end to end</dd></div>
+      <div><dt>Verified accuracy</dt><dd>89% on an 18-app sample</dd></div>
+      <div><dt>Principle</dt><dd>Unknown &gt; hallucinated</dd></div>
+    </dl>
+    <div class="cta">
+      <a class="btn primary" href="https://composio-toolkit.netlify.app/" target="_blank" rel="noopener">Open the case study <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- 01 OVERVIEW -->
+<section id="overview">
+  <div class="wrap">
+    <p class="snum mono">What It Does</p>
+    <h2>Evidence-driven, on purpose.</h2>
+    <p class="lede">For each of 100 SaaS apps, the pipeline researches and captures authentication method, self-serve versus gated access, API surface, buildability, and the evidence URLs backing every claim &mdash; then analyzes patterns across all 100 to separate quick wins from apps that need outreach.</p>
+    <div class="shot">
+      <img src="assets/img/thumb-composio.webp" alt="Composio SaaS Research Pipeline case study cover: 100 apps researched, 52 average confidence score, 100 apps requiring OAuth2 review" loading="lazy" />
+      <div class="shot-cap">Research apps &middot; find insights &middot; enable action</div>
+    </div>
+    <div class="stats" style="margin-top:20px">
+      <div><b>100</b><span>Apps researched</span></div>
+      <div><b>70</b><span>Buildable today, no blockers</span></div>
+      <div><b>28</b><span>Need partner outreach</span></div>
+      <div><b>89%</b><span>Verified accuracy, honestly reported</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 PIPELINE -->
+<section id="pipeline">
+  <div class="wrap">
+    <p class="snum mono">The 4-Stage Pipeline</p>
+    <h2>Research, then verify, then score, then act.</h2>
+    <p class="lede">Each stage exists to catch what the previous one might have gotten wrong, and the whole run finishes in about 65 seconds for all 100 apps.</p>
+    <div class="stage">
+      <div class="stage-head"><h3>1 &middot; Research</h3><span class="num">~30 seconds</span></div>
+      <ul><li>Tavily API searches for official documentation; Firecrawl extracts the content</li><li>A rule-based parser identifies auth method, API type, self-serve flag, and blockers</li><li>Every claim stores its evidence URL for the next stage to check</li></ul>
+    </div>
+    <div class="stage">
+      <div class="stage-head"><h3>2 &middot; Verification</h3><span class="num">~20 seconds</span></div>
+      <ul><li>An independent agent verifies each claim against its own evidence</li><li>Flags conflicts and ambiguities rather than resolving them silently</li><li>Exists specifically to prevent confident hallucination</li></ul>
+    </div>
+    <div class="stage">
+      <div class="stage-head"><h3>3 &middot; Confidence Scoring</h3><span class="num">~10 seconds</span></div>
+      <ul><li>Deterministic 0&ndash;100 score: base 50 + evidence (0&ndash;20) + completeness (0&ndash;20) + verification (0&ndash;30)</li><li>No additional LLM calls &mdash; pure calculation, transparent and reproducible</li></ul>
+    </div>
+    <div class="stage" style="margin-bottom:0">
+      <div class="stage-head"><h3>4 &middot; Pattern Analysis</h3><span class="num">~5 seconds</span></div>
+      <ul><li>Clusters all 100 apps by auth method, access model, and API type</li><li>Identifies blockers and their frequency, then separates easy wins from hard targets</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PATTERNS -->
+<section id="patterns">
+  <div class="wrap">
+    <p class="snum mono">Patterns Across 100 Apps</p>
+    <h2>Where the friction actually is.</h2>
+    <div class="g2">
+      <div class="pcard">
+        <p class="tag mono">Auth method</p>
+        <div class="distbar">
+          <div class="drow"><span class="lbl">OAuth2</span><div class="track"><div class="fill" style="width:72%"></div></div><span class="pct">72%</span></div>
+          <div class="drow"><span class="lbl">API Key</span><div class="track"><div class="fill" style="width:18%"></div></div><span class="pct">18%</span></div>
+          <div class="drow"><span class="lbl">Token / Custom</span><div class="track"><div class="fill" style="width:10%"></div></div><span class="pct">10%</span></div>
+        </div>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Access model</p>
+        <div class="distbar">
+          <div class="drow"><span class="lbl">Self-serve</span><div class="track"><div class="fill" style="width:64%"></div></div><span class="pct">64%</span></div>
+          <div class="drow"><span class="lbl">Gated</span><div class="track"><div class="fill" style="width:36%"></div></div><span class="pct">36%</span></div>
+        </div>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">API type</p>
+        <div class="distbar">
+          <div class="drow"><span class="lbl">REST only</span><div class="track"><div class="fill" style="width:68%"></div></div><span class="pct">68%</span></div>
+          <div class="drow"><span class="lbl">REST + GraphQL</span><div class="track"><div class="fill" style="width:17%"></div></div><span class="pct">17%</span></div>
+          <div class="drow"><span class="lbl">GraphQL</span><div class="track"><div class="fill" style="width:8%"></div></div><span class="pct">8%</span></div>
+          <div class="drow"><span class="lbl">Other</span><div class="track"><div class="fill" style="width:7%"></div></div><span class="pct">7%</span></div>
+        </div>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Integration blockers</p>
+        <ul>
+          <li><b style="color:var(--text)">Gated access</b> &mdash; 28 apps, needs partnership</li>
+          <li><b style="color:var(--text)">Undocumented API</b> &mdash; 18 apps, reverse engineering required</li>
+          <li><b style="color:var(--text)">Custom auth</b> &mdash; 12 apps, custom connector needed</li>
+          <li><b style="color:var(--text)">Rate limits</b> &mdash; 8 apps, heavy use impacted</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 VERIFICATION -->
+<section id="verification">
+  <div class="wrap">
+    <p class="snum mono">Verification &amp; Accuracy</p>
+    <h2>16 correct out of 18. Here's the 2 that weren't.</h2>
+    <p class="lede">18 random apps were checked by hand against live documentation. Rule-based extraction is intentionally conservative &mdash; it would rather under-claim than hallucinate a feature that isn't there.</p>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>App</th><th>What the pipeline said</th><th>Why it missed</th></tr></thead>
+        <tbody>
+          <tr><td>Okta</td><td class="miss">"API Key only"</td><td>Actually also supports OAuth2 + SAML. Too conservative.</td></tr>
+          <tr><td>Stripe</td><td class="miss">"Gated"</td><td>Actually has a free tier available for testing. Missed the self-serve path.</td></tr>
+          <tr><td>Adyen</td><td class="miss">"Merchant-only"</td><td>Actually a sandbox is available. Missed the test path.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:20px">
+      <p><b>What this means:</b> conservative beats confident-but-wrong. Missing a feature beats fabricating one. 89% is trustworthy precisely because both misses are documented, not because the number is round. With real API access via Tavily and Firecrawl instead of rule-based fallback, accuracy improves to 95%+.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 RECOMMENDATIONS -->
+<section id="recommendations">
+  <div class="wrap">
+    <p class="snum mono">Actionable Recommendations</p>
+    <h2>Four phases, ordered by effort.</h2>
+    <div class="phase p1"><span class="tag">Phase 1 &middot; Quick wins</span><h4>Zero engineering effort</h4><p>Slack, GitHub, Stripe (sandbox), Shopify, Airtable, Zapier, Google Analytics, Algolia, Cloudflare, SendGrid, Firebase Auth, Supabase.</p></div>
+    <div class="phase p2"><span class="tag">Phase 2 &middot; Partner outreach</span><h4>Sales effort</h4><p>Okta, Salesforce, HubSpot, Stripe (advanced), Adyen, Zuora.</p></div>
+    <div class="phase p3"><span class="tag">Phase 3 &middot; Custom engineering</span><h4>High effort, high value</h4><p>Shopify, BigCommerce, Jira, Magento &mdash; require custom connectors but unlock major integrations.</p></div>
+    <div class="phase p4" style="margin-bottom:0"><span class="tag">Phase 4 &middot; Monitor &amp; revisit</span><h4>Quarterly check-in</h4><p>18 apps with undocumented APIs. Some may open documentation post-acquisition or after a platform shift.</p></div>
+  </div>
+</section>
+
+<!-- 06 PRINCIPLES -->
+<section id="principles" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">Architecture &amp; Design</p>
+    <h2>Four rules the pipeline is built to enforce.</h2>
+    <div class="g2">
+      <div class="pcard"><p class="tag mono">01</p><h3>Evidence &gt; Assumptions</h3><p>Every claim is backed by a URL, not a guess.</p></div>
+      <div class="pcard"><p class="tag mono">02</p><h3>Unknown &gt; Hallucinated</h3><p>"I don't know" beats a confident, made-up fact.</p></div>
+      <div class="pcard"><p class="tag mono">03</p><h3>Verify twice</h3><p>Every claim is checked independently before it's trusted.</p></div>
+      <div class="pcard"><p class="tag mono">04</p><h3>No paid APIs required</h3><p>Works fully rule-based, with no LLM key needed at all.</p></div>
+    </div>
+    <div class="chips" style="margin-top:20px">
+      <span class="chip">TypeScript</span>
+      <span class="chip">Zod validation</span>
+      <span class="chip">Tavily API</span>
+      <span class="chip">Firecrawl</span>
+      <span class="chip">Rule-based Python extraction</span>
+      <span class="chip">Pino structured logs</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -65,6 +65,11 @@ section{padding:64px 0;border-bottom:1px solid var(--line)}
 h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
 .lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
 
+.shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px;background:#0a0a10}
+.shot img{width:100%;display:block}
+.shot-cap{padding:10px 16px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line);background:var(--bg-2)}
+
 .callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a1);
   border-radius:12px;padding:20px 24px;margin-top:8px}
 .callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
@@ -214,7 +219,11 @@ footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
     <p class="snum mono">Executive Diagnosis</p>
     <h2>Installs went up. Everything after install went down.</h2>
     <p class="lede"><b style="color:var(--text)">Thesis:</b> the problem is not acquisition, it's the first-value experience. Signup completion and first-activity completion both deteriorated, while retention and NPS declined downstream. The first priority isn't more acquisition &mdash; it's finding exactly where users fail to reach first value, then testing an onboarding fix against that failure point.</p>
-    <div class="funnel">
+    <div class="shot">
+      <img src="assets/img/thumb-tulu.webp" alt="Tulu user retention strategy cover: root cause analysis, find what's breaking, turn insights into action, build habitual use" loading="lazy" />
+      <div class="shot-cap">From drop-offs to daily habits</div>
+    </div>
+    <div class="funnel" style="margin-top:20px">
       <div class="fbar"><div class="val">+23%</div><div class="bar" style="height:60px"></div><div class="lbl">Installs</div></div>
       <div class="fbar drop"><div class="val">42%&rarr;26%</div><div class="bar" style="height:44px"></div><div class="lbl">Install &rarr; first activity</div></div>
       <div class="fbar drop"><div class="val">&darr;</div><div class="bar" style="height:30px"></div><div class="lbl">Retention, NPS</div></div>

@@ -246,7 +246,7 @@ window.PORTFOLIO = {
       title: 'Tulu Health App Growth',
       note: 'Reframed a growth ask from acquisition to activation, caught a data-integrity trap first, then shipped a working fix.',
       facts: ['Live prototype, built in Lovable', '42%→26% activation, the real lever'],
-      img: '',
+      img: 'assets/img/thumb-tulu.webp',
       link: 'tulu.html'
     },
     {

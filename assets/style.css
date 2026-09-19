@@ -520,20 +520,21 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-
 /* ---------------- featured: speaking invites and social mentions, as small badges ---------------- */
 .feat-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
 .feat-badges.vertical{flex-direction:column;align-items:stretch;margin-top:18px}
-.feat-badge{display:inline-flex;align-items:center;gap:11px;background:linear-gradient(180deg,var(--surface),#0a0a10);
-  border:1px solid var(--line);border-radius:100px;padding:6px 18px 6px 6px;text-decoration:none;color:inherit;
+.feat-badge{display:inline-flex;align-items:center;gap:16px;background:linear-gradient(180deg,var(--surface),#0a0a10);
+  border:1px solid var(--line);border-radius:100px;padding:10px 26px 10px 10px;text-decoration:none;color:inherit;
   transition:border-color .3s,transform .3s var(--ease)}
 .feat-badge:hover{border-color:var(--line-2);transform:translateY(-2px)}
-.feat-badge img{width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0;
+.feat-badge img{width:58px;height:58px;border-radius:50%;object-fit:cover;flex-shrink:0;
   filter:grayscale(.3) contrast(1.05);transition:filter .3s var(--ease)}
 .feat-badge:hover img{filter:none}
-.feat-badge b{display:block;font-weight:500;font-size:12.5px;color:var(--text)}
-.feat-badge i{display:block;font-style:normal;font-family:"JetBrains Mono",monospace;font-size:8.5px;
-  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:3px}
-@media(max-width:700px){.feat-badge{padding:5px 14px 5px 5px}.feat-badge img{width:32px;height:32px}}
+.feat-badge b{display:block;font-weight:500;font-size:15px;color:var(--text)}
+.feat-badge i{display:block;font-style:normal;font-family:"JetBrains Mono",monospace;font-size:10px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:5px}
+@media(max-width:700px){.feat-badge{padding:8px 18px 8px 8px;gap:12px}.feat-badge img{width:46px;height:46px}
+  .feat-badge b{font-size:13.5px}.feat-badge i{font-size:9px}}
 
 /* ---------------- contact: two columns, featured fills the empty right side ---------------- */
-.contact-grid{display:grid;grid-template-columns:1fr 300px;gap:40px;align-items:start}
+.contact-grid{display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start}
 .contact-featured{padding-top:2px}
 @media(max-width:900px){.contact-grid{grid-template-columns:1fr}.contact-featured{margin-top:8px}}
 

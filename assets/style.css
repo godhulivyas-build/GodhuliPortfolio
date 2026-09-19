@@ -517,22 +517,19 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-
   .lifeband{aspect-ratio:4/3}
 }
 
-/* ---------------- featured: speaking invites and social mentions ---------------- */
-.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:8px}
-@media(max-width:900px){.feat-grid{grid-template-columns:1fr}}
-.feat-card{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);
-  border-radius:16px;overflow:hidden;transition:border-color .3s,transform .3s var(--ease)}
-.feat-card:hover{border-color:var(--line-2);transform:translateY(-3px)}
-.feat-shot{display:block;aspect-ratio:4/5;overflow:hidden;background:#0b0b11}
-.feat-shot img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.35) contrast(1.05);
-  transition:filter .5s var(--ease)}
-.feat-card:hover .feat-shot img{filter:none}
-.feat-body{padding:18px 20px 20px}
-.feat-kind{color:var(--a2);margin:0 0 8px}
-.feat-body h3{font-size:17px;margin-bottom:8px;font-weight:400;letter-spacing:-.01em}
-.feat-note{color:var(--muted);font-size:13.5px;line-height:1.5;margin:0 0 14px}
-.feat-link{color:var(--a3);font-size:10.5px;letter-spacing:.1em;text-decoration:none}
-.feat-link:hover{color:var(--text)}
+/* ---------------- featured: speaking invites and social mentions, as small badges ---------------- */
+.feat-badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px}
+.feat-badge{display:inline-flex;align-items:center;gap:11px;background:linear-gradient(180deg,var(--surface),#0a0a10);
+  border:1px solid var(--line);border-radius:100px;padding:6px 18px 6px 6px;text-decoration:none;color:inherit;
+  transition:border-color .3s,transform .3s var(--ease)}
+.feat-badge:hover{border-color:var(--line-2);transform:translateY(-2px)}
+.feat-badge img{width:38px;height:38px;border-radius:50%;object-fit:cover;flex-shrink:0;
+  filter:grayscale(.3) contrast(1.05);transition:filter .3s var(--ease)}
+.feat-badge:hover img{filter:none}
+.feat-badge b{display:block;font-weight:500;font-size:12.5px;color:var(--text)}
+.feat-badge i{display:block;font-style:normal;font-family:"JetBrains Mono",monospace;font-size:8.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:3px}
+@media(max-width:700px){.feat-badge{padding:5px 14px 5px 5px}.feat-badge img{width:32px;height:32px}}
 
 /* ---------------- timeline: company headline, role secondary, wins ---------------- */
 .vst-main b.vst-org{font-weight:600;font-size:20px;letter-spacing:-.015em;line-height:1.2;color:#fff}

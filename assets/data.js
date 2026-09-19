@@ -128,11 +128,12 @@ window.PORTFOLIO = {
       bullets: [
         '200+ feedback signals into a RICE-prioritised backlog; the top 3 changes shipped for a 9-point NPS lift.',
         'Interfaces designed in Figma and taken through implementation: release velocity up 26%.',
-        '10+ institutional B2B clients onboarded through demos and UAT.'
+        '10+ institutional B2B clients onboarded through demos and UAT.',
+        'Recorded end-to-end video tutorials explaining the platform and its AI workflows for a non-technical audience, onboarding school administrators, teachers and K-12 students directly.'
       ],
       metrics: [{ n: '+9 NPS', l: 'Across 2 releases' }, { n: '50 sites', l: 'Beta deployment' }],
       stack: ['RICE', 'Figma', 'UAT', 'B2B onboarding'],
-      links: []
+      links: [{ label: 'Tutorial drive', url: 'https://drive.google.com/drive/folders/1OiKNqnKCCPey-JwO0_TizhRg0W4c4ue6?usp=sharing' }]
     },
     {
       id: 'truckhai',
@@ -257,6 +258,51 @@ window.PORTFOLIO = {
       facts: ['100 apps, ~65s end to end', '70 buildable today, no blockers'],
       img: 'assets/img/thumb-composio.webp',
       link: 'composio.html'
+    },
+    {
+      id: 'paperboat',
+      type: 'Case study',
+      title: 'Paper Boat Zero Prebiotic Soda Launch',
+      note: 'CupShup client case study for the Paper Boat Zero prebiotic soda launch.',
+      facts: ['Client campaign', 'Published on cupshup.co.in'],
+      img: '',
+      link: 'https://www.cupshup.co.in/case-studies/paper-boat-zero-prebiotic-soda-launch'
+    },
+    {
+      id: 'optimist',
+      type: 'Case study',
+      title: 'Optimist Smart AC Canter Campaign',
+      note: 'CupShup client case study for a smart AC canter activation across Delhi NCR.',
+      facts: ['Client campaign', 'Delhi NCR'],
+      img: '',
+      link: 'https://www.cupshup.co.in/case-studies/optimist-smart-ac-canter-campaign-delhi-ncr'
+    },
+    {
+      id: 'deconstruct',
+      type: 'Case study',
+      title: 'Deconstruct Sunscreen Mall Activation',
+      note: 'CupShup client case study for a mall-based sampling activation in Bangalore.',
+      facts: ['Client campaign', 'Bangalore'],
+      img: '',
+      link: 'https://www.cupshup.co.in/case-studies/deconstruct-sunscreen-mall-activation-bangalore'
+    },
+    {
+      id: 'pintola',
+      type: 'Case study',
+      title: 'Pintola Canter Activation',
+      note: 'CupShup client case study for an FMCG sampling canter activation across India.',
+      facts: ['Client campaign', 'FMCG sampling'],
+      img: '',
+      link: 'https://www.cupshup.co.in/case-studies/pintola-canter-activation-fmcg-sampling-india'
+    },
+    {
+      id: 'quickcommerce-blog',
+      type: 'Case study',
+      title: 'Bridging the 10-Minute Delivery Loop',
+      note: 'How D2C brands turn offline sampling into trackable quick-commerce conversions: QR checkouts, habit-zone targeting, and geotagged sales lift.',
+      facts: ['Written for cupshup.co.in', 'Quick-commerce playbook'],
+      img: '',
+      link: 'https://www.cupshup.co.in/blog/ai-tools-that-will-change-marketing-all-over-again'
     },
     {
       id: 'cashkaro',
@@ -397,7 +443,8 @@ window.PORTFOLIO = {
       bullets: [
         'Built and positioned the platform product pages for CupShup’s AI Marketing Platform across SEO, SMM, Email and WhatsApp automation modules.',
         'Sat directly with brand stakeholders to diagnose their marketing gaps, demo the tool mechanics, and record custom video walkthroughs for each client.',
-        'This high-touch onboarding lowered user friction, accelerated client activation, and drove feature adoption among early adopters.'
+        'This high-touch onboarding lowered user friction, accelerated client activation, and drove feature adoption among early adopters.',
+        'Drafted the product pitch email sent to D2C founders explaining how the platform’s automated crawl diagnostics work, for the SEO Site Audit tool.'
       ],
       metrics: [{ n: '20+', l: 'Tools positioned' }, { n: '4', l: 'Automation modules' }],
       stack: ['Product positioning', 'Client enablement', 'Video walkthroughs', 'CupShup platform'],
@@ -468,13 +515,15 @@ window.PORTFOLIO = {
         'Scoped the MVP to dispatch and deliberately cut price discovery.',
         'Indic speech-to-text and TTS via Sarvam AI, so low-literacy users transact by voice instead of by form.',
         'Sarthi Didi, a voice assistant that guides a first-time user through the flow, plus Sarthi Bazaar and a live price tracker across 36+ crops.',
-        'Won Polygnan Demo Day. 318+ registered farmers, 80% Week-2 retention, and entry into ICAR SHITIJ 2.0 and the Sarvam AI Startup Program.'
+        'Won Polygnan Demo Day. 318+ registered farmers, 80% Week-2 retention, and entry into ICAR SHITIJ 2.0 and the Sarvam AI Startup Program.',
+        'Built a community of 300+ farmers around real market-price data, using a short walkthrough video to explain the product and its AI-assisted workflow directly to them.'
       ],
       metrics: [{ n: '318+', l: 'Registered farmers' }, { n: '80%', l: 'Week-2 retention' }],
       stack: ['Sarvam AI (Indic STT/TTS)', 'React', 'Vercel', 'Dispatch workflow'],
       links: [
         { label: 'Live product', url: 'https://saarthimvp.vercel.app/' },
-        { label: 'Pitch deck', url: 'https://canva.link/ekqtdk11n8zd097' }
+        { label: 'Pitch deck', url: 'https://canva.link/ekqtdk11n8zd097' },
+        { label: 'Farmer walkthrough video', url: 'https://youtu.be/AYJJxBXKOrc?si=y-hs5BQlVFcPH-Sf' }
       ]
     },
     {

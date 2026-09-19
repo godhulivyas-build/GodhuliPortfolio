@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Zomato Case Study &middot; Godhuli Vyas</title>
+<meta name="description" content="Zomato Product Strategy Case Study, pan-India: boosting orders for new and small restaurants. 1st Runner-Up. Built into a live hyperlocal prototype." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#e8384f; --a2:#ff8a3d; --a3:#00e0c6;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(232,56,79,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(255,138,61,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a2);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),#c22a3d);border-color:transparent;color:#fff}
+
+.winner{display:inline-flex;align-items:center;gap:9px;margin:20px 0 0;padding:9px 16px;border-radius:100px;
+  color:#0d0a06;background:linear-gradient(100deg,#ffb35c,var(--a1));font-size:10px;letter-spacing:.14em;
+  box-shadow:0 0 32px rgba(232,56,79,.28);width:fit-content}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a2);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+
+.pillar{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:22px}
+.pillar .tag{color:var(--a2);margin:0 0 10px}
+.pillar h3{font-size:18px;margin-bottom:8px}
+.pillar p{color:var(--muted);font-size:14px;margin:0;line-height:1.6}
+
+/* app screen replica */
+.screenshot{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;
+  padding:18px;margin-top:8px}
+.screenshot .row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.screenshot .card{flex:1;min-width:150px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:10px;padding:12px}
+.screenshot .card .badge{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.08em;
+  background:var(--a1);color:#fff;border-radius:100px;padding:2px 7px;margin-bottom:8px}
+.screenshot .card b{display:block;font-size:13px}
+.screenshot .card span{display:block;color:var(--dim);font-size:10.5px;margin-top:3px}
+.screenshot .card .off{color:var(--a2);font-size:10.5px;margin-top:6px;display:block}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.filters span{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;
+  border:1px solid var(--line);border-radius:100px;padding:5px 11px;color:var(--muted)}
+.filters span.on{background:var(--a1);color:#fff;border-color:transparent}
+
+/* badges */
+.badges{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.badgepill{display:flex;align-items:center;gap:8px;background:linear-gradient(180deg,var(--surface),#0a0a10);
+  border:1px solid var(--line);border-radius:100px;padding:9px 16px;font-size:12.5px;color:var(--muted)}
+.badgepill i{width:8px;height:8px;border-radius:50%;background:var(--a2)}
+
+/* why it won */
+.verdict{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:8px}
+@media(max-width:700px){.verdict{grid-template-columns:1fr}}
+.verdict div{background:var(--bg-2);padding:20px 22px}
+.verdict h4{font-size:14px;margin-bottom:8px;color:var(--a2)}
+.verdict p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.6}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+.notedbox{background:rgba(255,138,61,.06);border:1px solid rgba(255,138,61,.25);border-radius:12px;padding:16px 20px;margin-top:20px}
+.notedbox p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Product Strategy Case Study &middot; Pan-India Competition</p>
+    <h1>Zomato &mdash; boosting orders for<br /><em>new and small</em> restaurants.</h1>
+    <p class="dek">A rating-sorted marketplace has a cold-start problem built into its ranking: a new or small restaurant with genuinely good food has no reviews, no order history, and no way to out-rank an established name on the default feed. The strategy, and later a working prototype, is built around fixing that specific failure.</p>
+    <div class="winner"><span aria-hidden="true">&#9733;</span> 1st Runner-Up, Pan-India</div>
+    <dl class="meta">
+      <div><dt>Format</dt><dd>Product strategy case study</dd></div>
+      <div><dt>Scope</dt><dd>Discovery, retention, community</dd></div>
+      <div><dt>Result</dt><dd>1st Runner-Up, pan-India</dd></div>
+      <div><dt>Later</dt><dd>Built into a live prototype</dd></div>
+    </dl>
+    <div class="cta">
+      <a class="btn primary" href="https://ujain-foodie-quest.lovable.app/home" target="_blank" rel="noopener">Open the live prototype <span aria-hidden="true">↗</span></a>
+      <a class="btn" href="https://www.canva.com/design/DAG8mu7o9rY/DTWzUeCL7TMKbI49mBdh3A/view" target="_blank" rel="noopener">Original case study deck <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- 01 PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <p class="snum mono">01 &middot; The Problem</p>
+    <h2>Good food, zero visibility.</h2>
+    <p class="lede">The default sort on any food delivery app rewards restaurants that already have volume: more orders produce more ratings, which produce more visibility, which produce more orders. A new listing starts every one of those loops at zero, regardless of food quality.</p>
+    <div class="callout">
+      <p>For the restaurant, this means the first weeks after joining the platform are the hardest, exactly when they can least afford low order volume. For the platform, it means a shrinking base of newly onboarded restaurants ever break through, which quietly narrows the marketplace to whoever was already winning.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 STRATEGY -->
+<section id="strategy">
+  <div class="wrap">
+    <p class="snum mono">02 &middot; Strategy</p>
+    <h2>Don't fix the ranking. Build a second door.</h2>
+    <p class="lede">Rather than trying to out-game an algorithm tuned for scale, the strategy adds a separate, parallel discovery surface built specifically for restaurants that don't have volume yet &mdash; and gives users a reason to walk through that door.</p>
+    <div class="g3">
+      <div class="pillar">
+        <p class="tag mono">Pillar 01</p>
+        <h3>Trust, not stars</h3>
+        <p>New restaurants get a <b style="color:var(--text)">"New &middot; Verified"</b> badge instead of an empty star rating, so the absence of reviews reads as "just joined," not "unproven."</p>
+      </div>
+      <div class="pillar">
+        <p class="tag mono">Pillar 02</p>
+        <h3>First-order economics</h3>
+        <p>Steep, front-loaded discounts (30% off the first 50 orders, buy-2-get-1) absorb the acquisition cost onto the platform for a short window, not onto the new restaurant's thin margins.</p>
+      </div>
+      <div class="pillar">
+        <p class="tag mono">Pillar 03</p>
+        <h3>Hyperlocal framing</h3>
+        <p>A city-specific edition surfaces what a citywide app buries: late-night options, student-priced picks, and "local favourites" that only make sense at neighbourhood scale.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 PROTOTYPE -->
+<section id="prototype">
+  <div class="wrap">
+    <p class="snum mono">03 &middot; The Prototype</p>
+    <h2>Built as Zomato &mdash; Ujjain Edition.</h2>
+    <p class="lede">The case study became a working product later: a city-scoped discovery app that puts the strategy's three pillars directly on the home screen, live at the link above.</p>
+
+    <div class="screenshot">
+      <div class="filters">
+        <span class="on">New &amp; Trusted</span><span>Trending Now</span><span>Open till 4 AM</span><span>Student Picks</span><span>Chef Specials</span>
+      </div>
+      <div class="row">
+        <div class="card"><span class="badge">NEW</span><b>Caf&eacute; Nirvana</b><span>Caf&eacute;s, Desserts &middot; 0.2 km</span><span class="off">30% off &mdash; first 50 orders</span></div>
+        <div class="card"><span class="badge">NEW</span><b>The Spice Corner</b><span>North Indian, Chinese &middot; 0.4 km</span><span class="off">10% off &mdash; first 100 orders</span></div>
+        <div class="card"><span class="badge">NEW</span><b>Mahakal Street Food</b><span>Street Food, Chaat &middot; 0.7 km</span><span class="off">Buy 2 Get 1 Free</span></div>
+      </div>
+      <div class="filters">
+        <span class="on">Recommended</span><span>Closest</span><span>Cheapest</span><span>Trusted</span>
+      </div>
+    </div>
+
+    <div class="g2" style="margin-top:20px">
+      <div class="pillar">
+        <p class="tag mono">Discovery</p>
+        <h3>A "New &amp; Trusted" home row</h3>
+        <p>Sits above the default feed, not buried in a filter menu &mdash; the first thing a user sees is the newest listings, each with a live first-order incentive attached.</p>
+      </div>
+      <div class="pillar">
+        <p class="tag mono">Retention loop</p>
+        <h3>Food Community</h3>
+        <p>Users tag photos to a restaurant under <b style="color:var(--text)">#UjjainEats</b> and earn badges for doing it &mdash; the review problem is solved by making early advocacy a game, not a chore.</p>
+      </div>
+    </div>
+
+    <p class="lede" style="margin-top:28px;margin-bottom:10px">The badge set rewards exactly the behaviour the strategy needs: people trying and vouching for restaurants before the algorithm would have surfaced them on its own.</p>
+    <div class="badges">
+      <div class="badgepill"><i></i>Local Explorer</div>
+      <div class="badgepill"><i></i>Top Reviewer</div>
+      <div class="badgepill"><i></i>Late-Night Foodie</div>
+      <div class="badgepill"><i></i>New Restaurant Supporter</div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 WHY IT WON -->
+<section id="why" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">04 &middot; Why It Placed</p>
+    <h2>The judged strength, and the honest gap.</h2>
+    <div class="verdict">
+      <div>
+        <h4>What the case study got right</h4>
+        <p>It reframed a ranking problem as a discovery-surface problem, which sidesteps rebuilding Zomato's core algorithm entirely. The fix ships as a new section of the app, not a rewrite of how every restaurant is ranked.</p>
+      </div>
+      <div>
+        <h4>What I'd want real data on</h4>
+        <p>The discount economics only work if the lift in repeat orders from a "New &amp; Trusted" placement outweighs the margin given up in the first-order window &mdash; a number the case study format doesn't let you test.</p>
+      </div>
+    </div>
+    <div class="chips">
+      <span class="chip">Cold-start design</span>
+      <span class="chip">Discovery surface</span>
+      <span class="chip">Retention loop</span>
+      <span class="chip">Hyperlocal strategy</span>
+      <span class="chip">Lovable prototype</span>
+    </div>
+    <div class="notedbox">
+      <p>The original submission was a slide deck built for a pan-India judged competition, not a written PRD &mdash; this page describes the strategy in prose and rebuilds its screens from the live prototype, rather than reproducing the deck itself.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

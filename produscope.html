@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Produscope AI PRD &middot; Godhuli Vyas</title>
+<meta name="description" content="Produscope AI: a five-agent financial planning product that answers 'can I afford this?' without ever touching your bank account. Full PRD with architecture, surfaces and live product." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#7c5cff; --a2:#00e0c6; --a3:#ff7a59;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(124,92,255,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(0,224,198,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a2);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),var(--a2));border-color:transparent;color:#04150e}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+/* product mockup panel (recreated from the live app, since it sits behind auth) */
+.mock{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px;
+  background:radial-gradient(600px 300px at 15% 20%, rgba(124,92,255,.18), transparent 60%),
+             radial-gradient(500px 260px at 85% 90%, rgba(0,224,198,.14), transparent 60%), #0a0a10;
+  padding:36px 32px}
+.mock-brand{display:flex;align-items:center;gap:10px;margin-bottom:34px}
+.mock-dot{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--a1),var(--a2))}
+.mock-brand span{font-size:13px;color:var(--text)}
+.mock-hero h3{font-size:clamp(20px,3.4vw,30px);color:var(--text);max-width:20ch}
+.mock-hero h3 b{font-weight:400;color:transparent;background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text}
+.mock-hero p{color:var(--muted);font-size:13.5px;margin:10px 0 0}
+.mock-foot{margin-top:30px;color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase}
+.shot-cap{padding:10px 16px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line);background:var(--bg-2);border-radius:0 0 14px 14px;margin-top:-1px}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+
+.pcard{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.pcard .tag{color:var(--a2);margin:0 0 8px}
+.pcard h3{font-size:16px;margin-bottom:10px}
+.pcard ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:6px;line-height:1.5}
+.pcard p{color:var(--muted);font-size:13.5px;margin:0}
+
+/* architecture flow */
+.flow{overflow-x:auto;padding-bottom:8px;margin-top:8px}
+.flow svg{display:block;min-width:1000px}
+.flow-node rect{fill:rgba(255,255,255,.03);stroke:var(--line)}
+.flow-node.agent rect{stroke:var(--a1);fill:rgba(124,92,255,.08)}
+.flow-node.coord rect{stroke:var(--a2);fill:rgba(0,224,198,.1)}
+.flow-node.surface rect{stroke:var(--line-2);fill:rgba(255,255,255,.05)}
+.flow-node text.t{fill:var(--text);font-family:Inter,sans-serif;font-size:11px}
+.flow-node text.d{fill:var(--dim);font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.06em}
+.flow-arrow{stroke:var(--a1);stroke-width:1.4;fill:none}
+.flow-arrowhead{fill:var(--a2)}
+.flow-label{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:14px 0 0}
+
+/* surfaces */
+.surface{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:12px}
+.surface-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.surface h3{font-size:16px}
+.surface .num{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.08em;color:var(--dim);
+  border:1px solid var(--line);border-radius:100px;padding:3px 10px}
+.surface p{margin:0;color:var(--muted);font-size:13.5px}
+
+/* metrics */
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media(max-width:700px){.stats{grid-template-columns:1fr}}
+.stats div{background:var(--bg-2);padding:18px}
+.stats b{display:block;font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:17px;color:var(--a2)}
+.stats span{display:block;font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:6px;line-height:1.4}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a2);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#systems">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Product Requirements Document &middot; Multi-Agent Financial Planning</p>
+    <h1>Produscope AI &mdash; <em>"can I afford this?"</em><br />answered honestly, five agents at a time.</h1>
+    <p class="dek">"Can I afford this?" is really four questions stacked on top of each other: what do I save, what do I already spend, what would this cost me, and what does it delay. One long prompt handles that badly. Produscope splits it across five narrow specialist agents and a coordinator that reconciles their output &mdash; and it never asks for bank or UPI access to do it.</p>
+    <dl class="meta">
+      <div><dt>Product type</dt><dd>Personal finance, multi-agent</dd></div>
+      <div><dt>Stage</dt><dd>Shipped, live</dd></div>
+      <div><dt>Presented at</dt><dd>IIT Guwahati, PM Fellowship</dd></div>
+      <div><dt>Data access</dt><dd>Manual entry only, zero bank link</dd></div>
+    </dl>
+    <div class="cta">
+      <a class="btn primary" href="https://finance-buddyai.lovable.app/auth" target="_blank" rel="noopener">Open Produscope live <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- 01 THE PRODUCT -->
+<section id="pitch">
+  <div class="wrap">
+    <p class="snum mono">01 &middot; The Pitch</p>
+    <h2>Financial planning, without financial surveillance.</h2>
+    <p class="lede">The landing screen states the constraint before it states the feature: five AI advisors, honest forecasts, zero bank access.</p>
+    <div class="mock">
+      <div class="mock-brand"><span class="mock-dot"></span><span>Produscope AI</span></div>
+      <div class="mock-hero">
+        <h3>See where your money is <b>taking you</b>.</h3>
+        <p>Five AI advisors. Honest forecasts. Zero bank access.</p>
+      </div>
+      <p class="mock-foot">Financial planning without financial surveillance</p>
+    </div>
+    <div class="shot-cap">Recreated from the live sign-in screen &middot; finance-buddyai.lovable.app</div>
+  </div>
+</section>
+
+<!-- 02 ARCHITECTURE -->
+<section id="architecture">
+  <div class="wrap">
+    <p class="snum mono">02 &middot; Architecture</p>
+    <h2>Five narrow remits, one reconciler.</h2>
+    <p class="lede">Each agent's job is small enough that its output can be checked independently &mdash; that constraint is the entire reason the decomposition works, and the same principle later became the judge layer at CupShup.</p>
+    <div class="flow">
+      <svg viewBox="0 0 1000 260" width="1000" height="260">
+        <defs>
+          <marker id="psah" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" class="flow-arrowhead" />
+          </marker>
+        </defs>
+        <path class="flow-arrow" marker-end="url(#psah)" d="M124 40 H180 M124 90 H180 M124 140 H180 M124 190 H180 M124 230 H180" />
+        <path class="flow-arrow" marker-end="url(#psah)" d="M320 130 H380" />
+        <g class="flow-node agent"><rect x="4" y="18" width="120" height="44" rx="10" /><text class="t" x="16" y="38">Projection</text><text class="d" x="16" y="52">12-MO SAVINGS PATH</text></g>
+        <g class="flow-node agent"><rect x="4" y="68" width="120" height="44" rx="10" /><text class="t" x="16" y="88">Cost of Living</text><text class="d" x="16" y="102">BASELINE BURN</text></g>
+        <g class="flow-node agent"><rect x="4" y="118" width="120" height="44" rx="10" /><text class="t" x="16" y="138">Affordability</text><text class="d" x="16" y="152">THE SPECIFIC PURCHASE</text></g>
+        <g class="flow-node agent"><rect x="4" y="168" width="120" height="44" rx="10" /><text class="t" x="16" y="188">Goal Coach</text><text class="d" x="16" y="202">ETAs vs REAL SURPLUS</text></g>
+        <g class="flow-node agent"><rect x="4" y="208" width="120" height="44" rx="10" /><text class="t" x="16" y="228">Life Events</text><text class="d" x="16" y="242">WHAT A CHANGE SHIFTS</text></g>
+        <g class="flow-node coord"><rect x="180" y="108" width="140" height="44" rx="10" /><text class="t" x="196" y="128">Coordinator</text><text class="d" x="196" y="142">RECONCILES OUTPUT</text></g>
+        <path class="flow-arrow" marker-end="url(#psah)" d="M380 100 V60 H460 M380 130 H460 M380 160 V200 H460" />
+        <g class="flow-node surface"><rect x="460" y="38" width="150" height="44" rx="10" /><text class="t" x="472" y="58">Dashboard</text><text class="d" x="472" y="72">SAVINGS · SURPLUS · RUNWAY</text></g>
+        <g class="flow-node surface"><rect x="460" y="108" width="150" height="44" rx="10" /><text class="t" x="472" y="128">Simulator</text><text class="d" x="472" y="142">"CAN I AFFORD AN IPHONE 16"</text></g>
+        <g class="flow-node surface"><rect x="460" y="178" width="150" height="44" rx="10" /><text class="t" x="472" y="198">Goals Tracker</text><text class="d" x="472" y="212">HONEST ETAs</text></g>
+        <path class="flow-arrow" marker-end="url(#psah)" d="M610 60 H700 M610 130 H700 M610 200 H700" />
+        <g class="flow-node coord"><rect x="700" y="38" width="290" height="44" rx="10" /><text class="t" x="716" y="58">Savings-after + yes/no</text><text class="d" x="716" y="72">SIMULATOR RESULT</text></g>
+        <g class="flow-node coord"><rect x="700" y="108" width="290" height="44" rx="10" /><text class="t" x="716" y="128">Delay to an existing goal</text><text class="d" x="716" y="142">TRADE-OFF, NAMED</text></g>
+        <g class="flow-node coord"><rect x="700" y="178" width="290" height="44" rx="10" /><text class="t" x="716" y="198">ETA that moves with reality</text><text class="d" x="716" y="212">NOT MOTIVATIONAL</text></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 03 SURFACES -->
+<section id="surfaces">
+  <div class="wrap">
+    <p class="snum mono">03 &middot; Three Surfaces</p>
+    <h2>One question, three ways to ask it.</h2>
+    <div class="surface">
+      <div class="surface-head"><h3>Dashboard</h3><span class="num">Where am I now</span></div>
+      <p>Savings, surplus and runway, read at a glance &mdash; the baseline every other surface reasons from.</p>
+    </div>
+    <div class="surface">
+      <div class="surface-head"><h3>Simulator</h3><span class="num">What if</span></div>
+      <p>"Can I afford an iPhone 16" resolves to a savings-after number, a plain yes or no, and the delay it causes to an existing goal &mdash; never just a chart to interpret.</p>
+    </div>
+    <div class="surface" style="margin-bottom:0">
+      <div class="surface-head"><h3>Goals Tracker</h3><span class="num">Am I on track</span></div>
+      <p>ETAs computed against actual surplus, not motivational rounding &mdash; if the number moved, the date moves with it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 CONSTRAINT -->
+<section id="constraint" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">04 &middot; The Deliberate Constraint</p>
+    <h2>No bank connection. No UPI linkage. On purpose.</h2>
+    <p class="lede">Manual entry only, everywhere in the product &mdash; which costs convenience and automatic categorisation, on the bet that an Indian user will try a finance tool that never asks for account access.</p>
+    <div class="callout">
+      <p><b>Trade-off, stated plainly:</b> less auto-categorisation and more manual upkeep, in exchange for a product that can say, truthfully, that it has never seen your bank account.</p>
+    </div>
+    <div class="stats" style="margin-top:20px">
+      <div><b>5 agents</b><span>Specialists, plus a reconciler</span></div>
+      <div><b>IIT-G</b><span>Presented, PM Fellowship cohort</span></div>
+    </div>
+    <div class="chips">
+      <span class="chip">Multi-agent reasoning</span>
+      <span class="chip">Output reconciliation</span>
+      <span class="chip">Runway modelling</span>
+      <span class="chip">Privacy-first design</span>
+      <span class="chip">Lovable</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#systems">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

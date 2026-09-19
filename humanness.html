@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>HumanNessAI PRD &middot; Godhuli Vyas</title>
+<meta name="description" content="HumanNessAI, by Josh Talks: a nationwide image-collection platform for India-representative AI training data. Full PRD with metrics and personas." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#6c63ff; --a2:#8f88ff; --a3:#ff7a59;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(108,99,255,.16), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(143,136,255,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a2);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),#4a42c9);border-color:transparent;color:#fff}
+.tagrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tagrow span{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--a2);border:1px solid rgba(143,136,255,.3);background:rgba(108,99,255,.08);border-radius:100px;padding:5px 11px}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px;background:#0a0a10}
+.shot img{width:100%;display:block}
+.shot-cap{padding:10px 16px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line);background:var(--bg-2)}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a2);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+
+.assume{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.assume .tag{color:var(--a2);margin:0 0 10px}
+.assume h3{font-size:17px;margin-bottom:10px}
+.assume p{color:var(--muted);font-size:14px;margin:0;line-height:1.6}
+
+/* metrics table */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--surface),#0a0a10)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:14px 12px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text)}
+td.cat{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--a2)}
+td.target{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:15px;color:var(--text)}
+
+/* personas */
+.persona{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.persona .role mono{color:var(--a3)}
+.persona h4{font-size:17px;margin-bottom:12px}
+.persona dl{margin:0;display:grid;gap:10px}
+.persona dt{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:0}
+.persona dd{margin:3px 0 0;font-size:13px;color:var(--muted);line-height:1.5}
+.persona.partial{opacity:.75;border-style:dashed}
+
+.notedbox{background:rgba(255,122,89,.06);border:1px solid rgba(255,122,89,.25);border-radius:12px;padding:16px 20px;margin-top:20px}
+.notedbox p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Task 1 &middot; Image Collection Platform PRD</p>
+    <h1>HumanNessAI &mdash; teaching models<br />what <em>India</em> actually looks like.</h1>
+    <p class="dek">Modern AI models perform well on global datasets, but often fail to recognise culturally and geographically relevant elements from India: rural infrastructure, regional practices, local environments. Humanness, by Josh Talks, closes that gap by building large-scale vision datasets sourced directly from every district.</p>
+    <dl class="meta">
+      <div><dt>Category</dt><dd>AI, Community, Startup, Featured</dd></div>
+      <div><dt>Skills</dt><dd>Resume-ready</dd></div>
+      <div><dt>Theme</dt><dd>Startups &amp; MVPs</dd></div>
+      <div><dt>Type</dt><dd>Startup</dd></div>
+    </dl>
+    <div class="tagrow">
+      <span>Live MVP</span><span>PRD</span><span>Success metrics</span><span>User personas</span>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="https://humannessai.lovable.app/" target="_blank" rel="noopener">Open the live MVP <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- 01 PROBLEM & GOAL -->
+<section id="problem">
+  <div class="wrap">
+    <p class="snum mono">01 &middot; Problem &amp; Goal</p>
+    <h2>A gap driven by missing data, not missing models.</h2>
+    <p class="lede">The gap is primarily driven by the lack of high-quality, structured datasets that represent India's diversity at scale &mdash; so the fix has to be a data platform, not a smarter model.</p>
+    <div class="callout">
+      <p><b>Goal.</b> Design a scalable, inclusive, quality-driven system that supports contributors in low-resource environments, enables efficient validation by internal teams, and ensures the creation of reliable datasets for training AI models.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 USERS -->
+<section id="users">
+  <div class="wrap">
+    <p class="snum mono">02 &middot; Assumptions About Users</p>
+    <h2>Two very different operating conditions.</h2>
+    <p class="lede">The entire design has to hold across both ends of this gap at once.</p>
+    <div class="g2">
+      <div class="assume">
+        <p class="tag mono">Contributors</p>
+        <h3>Field agents, NGO volunteers, citizens</h3>
+        <p>Operate on low-end Android phones, often on 2G/3G networks, with limited technical literacy and in their native regional language.</p>
+      </div>
+      <div class="assume">
+        <p class="tag mono">Reviewers / Admins</p>
+        <h3>Internal JoshTalksAI team</h3>
+        <p>Work on web browsers with full connectivity, reviewing and validating submissions at scale.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 METRICS -->
+<section id="metrics">
+  <div class="wrap">
+    <p class="snum mono">03 &middot; PRD Success Metrics</p>
+    <h2>Eight numbers, across six categories.</h2>
+    <p class="lede">Every metric is tied to why it matters, not just what it measures.</p>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Category</th><th>Metric</th><th>Target</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td class="cat">Supply</td><td>Daily uploads</td><td class="target">50,000</td><td>Indicates platform scale and contributor activity.</td></tr>
+          <tr><td class="cat">Coverage</td><td>District completion</td><td class="target">100% in 12 months</td><td>Measures mission completion and geographic reach.</td></tr>
+          <tr><td class="cat">Coverage</td><td>Images per village</td><td class="target">1,000</td><td>Ensures dataset depth for training.</td></tr>
+          <tr><td class="cat">Quality</td><td>Approval rate</td><td class="target">&gt; 85%</td><td>Maintains dataset accuracy and reliability.</td></tr>
+          <tr><td class="cat">Quality</td><td>Auto-rejection rate</td><td class="target">&lt; 15%</td><td>Indicates input quality and contributor guidance.</td></tr>
+          <tr><td class="cat">Efficiency</td><td>Review time / submission</td><td class="target">&lt; 45 sec</td><td>Ensures scalable review operations.</td></tr>
+          <tr><td class="cat">Engagement</td><td>Contributor retention, week 2</td><td class="target">&gt; 40%</td><td>Measures stickiness and long-term engagement.</td></tr>
+          <tr><td class="cat">Reliability</td><td>Offline sync success rate</td><td class="target">&gt; 95%</td><td>Ensures usability in low-connectivity regions.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 04 PERSONAS -->
+<section id="personas">
+  <div class="wrap">
+    <p class="snum mono">04 &middot; User Personas</p>
+    <h2>Contributor first, agent second.</h2>
+    <div class="g2">
+      <div class="persona">
+        <p class="tag mono" style="color:var(--a2)">Persona 1</p>
+        <h4>Contributor</h4>
+        <dl>
+          <div><dt>Profile</dt><dd>Rural student or gig worker</dd></div>
+          <div><dt>Device</dt><dd>Low-end Android phone</dd></div>
+          <div><dt>Connectivity</dt><dd>Intermittent internet</dd></div>
+          <div><dt>Motivation</dt><dd>Earn money or contribute to meaningful work</dd></div>
+          <div><dt>Goal</dt><dd>Upload images quickly and get approvals</dd></div>
+          <div><dt>Pain points</dt><dd>Low connectivity, language barriers, unclear instructions</dd></div>
+        </dl>
+      </div>
+      <div class="persona partial">
+        <p class="tag mono" style="color:var(--a2)">Persona 2</p>
+        <h4>NGO Field Agent</h4>
+        <dl>
+          <div><dt>Profile</dt><dd>Works in rural programs</dd></div>
+          <div><dt>Device</dt><dd>Mid-range smartphone</dd></div>
+          <div><dt>Connectivity</dt><dd>Moderate</dd></div>
+          <div><dt>Motivation</dt><dd>Impact-driven, structured work</dd></div>
+        </dl>
+      </div>
+    </div>
+    <div class="notedbox">
+      <p>The source PRD continues past Persona 2 with more detail (a full contributor journey map and further personas). This page reflects what was cleanly extracted from the document; the rest is available in the original PRD on request.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 LIVE ADMIN -->
+<section id="admin" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">05 &middot; The Admin Side</p>
+    <h2>What the review team actually watches.</h2>
+    <p class="lede">The counterpart to a low-bandwidth contributor app: a dashboard built for the reviewers described above, tracking supply, coverage and quality in one view.</p>
+    <div class="shot">
+      <img src="assets/img/thumb-humanness.webp" alt="JoshTalks PM Admin Dashboard showing images collected, districts covered, pending review, approval rate, and state-wise coverage chart" loading="lazy" />
+      <div class="shot-cap">Admin Dashboard, live</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

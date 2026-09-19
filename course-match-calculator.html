@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Course Match Calculator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F1620; --panel:#161F2C; --panel-2:#1D2837; --line:#2A3647;
+    --text:#E9ECF2; --muted:#8C96AC;
+    --teal:#2DD4BF; --amber:#F5A623; --coral:#FF6B5C; --violet:#8B7CF6;
+    --mono:'IBM Plex Mono', monospace; --display:'Space Grotesk', sans-serif; --body:'Inter', sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:var(--body); line-height:1.5; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:980px; margin:0 auto; padding:48px 24px 80px;}
+  h1{font-family:var(--display); font-weight:700; font-size:clamp(24px,3.4vw,32px); margin-bottom:8px;}
+  .sub{color:var(--muted); font-size:14.5px; margin-bottom:36px; max-width:600px;}
+
+  .persona-row{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px;}
+  .persona-btn{background:var(--panel-2); border:1px solid var(--line); color:var(--text); font-size:12.5px; padding:8px 14px; border-radius:20px; cursor:pointer;}
+  .persona-btn:hover{border-color:var(--teal);}
+
+  .layout{display:grid; grid-template-columns:1fr 1.2fr; gap:24px; align-items:start;}
+  .controls{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:26px;}
+  .slider-block{margin-bottom:22px;}
+  .slider-block:last-child{margin-bottom:0;}
+  .slider-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+  .slider-head .sname{font-size:13px; font-weight:600;}
+  .slider-head .sweight{font-family:var(--mono); font-size:10.5px; color:var(--muted);}
+  .slider-value{font-family:var(--mono); font-size:12.5px; color:var(--teal); margin-top:6px; display:block;}
+  input[type=range]{-webkit-appearance:none; width:100%; height:4px; border-radius:2px; background:var(--line); outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--teal); cursor:pointer; border:2px solid var(--bg);}
+  input[type=range]::-moz-range-thumb{width:16px; height:16px; border-radius:50%; background:var(--teal); cursor:pointer; border:2px solid var(--bg);}
+
+  .results{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:22px;}
+  .results-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px;}
+  .results-head h2{font-family:var(--display); font-size:15px; font-weight:600;}
+  .results-head span{font-family:var(--mono); font-size:11px; color:var(--muted);}
+  .course-row{padding:14px 0; border-top:1px solid var(--line);}
+  .course-row:first-child{border-top:none;}
+  .course-row-top{display:flex; align-items:center; gap:10px; margin-bottom:8px;}
+  .rank-badge{font-family:var(--mono); font-size:11px; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--panel-2); color:var(--muted); border:1px solid var(--line);}
+  .course-row.rank1 .rank-badge{background:var(--teal); color:#06231F; border-color:var(--teal); font-weight:700;}
+  .course-row.rank2 .rank-badge{background:var(--violet); color:#1B1435; border-color:var(--violet); font-weight:700;}
+  .course-row.rank3 .rank-badge{background:var(--amber); color:#2E1D00; border-color:var(--amber); font-weight:700;}
+  .course-name{font-size:13.5px; font-weight:600; flex:1;}
+  .course-pct{font-family:var(--mono); font-size:14px; font-weight:600;}
+  .course-bar{height:8px; border-radius:4px; background:var(--panel-2); overflow:hidden; margin-bottom:8px;}
+  .course-bar div{height:100%; border-radius:4px; transition:width .2s ease;}
+  .calc-line{font-family:var(--mono); font-size:11px; color:var(--muted); line-height:1.6; word-break:break-word;}
+  .calc-line b{color:var(--text);}
+
+  @media (max-width:760px){ .layout{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Course Match Calculator</h1>
+  <p class="sub">Set your answers below. All 6 courses are scored and ranked instantly, with the full calculation shown for each.</p>
+
+  <div class="persona-row" id="personaRow"></div>
+
+  <div class="layout">
+    <div class="controls" id="controls"></div>
+    <div class="results">
+      <div class="results-head"><h2>Ranked matches</h2><span>6 of 6 scored</span></div>
+      <div id="resultsList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const factorMeta = [
+  {key:'experience', label:'Experience Level', weight:0.15, hex:'#2DD4BF'},
+  {key:'industry',   label:'Industry',         weight:0.10, hex:'#8B7CF6'},
+  {key:'goal',       label:'Career Goal',      weight:0.20, hex:'#F5A623'},
+  {key:'skill',      label:'Skill to Learn',   weight:0.25, hex:'#FF6B5C'},
+  {key:'style',      label:'Learning Style',   weight:0.15, hex:'#2DD4BF'},
+  {key:'investment', label:'Investment Readiness', weight:0.15, hex:'#2DD4BF'},
+];
+
+const options = {
+  experience: ['Student','0-2 Years','2-5 Years','5-10 Years','10+ Years'],
+  industry:   ['Technology','Finance','Marketing','Healthcare','Operations','Other'],
+  goal:       ['Leadership','Promotion','Career Switch','AI Ready','Business Growth'],
+  skill:      ['Leadership','AI/Data','Project Management','Strategy','Data Analytics','Product Management'],
+  style:      ['Self-Paced','Live Online','Bootcamp','Weekend'],
+  investment: ['0% Exploring','25% Casual','50% Considering','75% Ready','100% Committed'],
+};
+const investmentValue = [0,25,50,75,100];
+
+const courses = [
+  {name:'AI Leadership Accelerator', experience:['2-5 Years','5-10 Years','10+ Years'], industry:['Technology','Finance','Operations'], goal:['AI Ready','Leadership'], skill:['AI/Data','Leadership'], style:['Live Online','Bootcamp'], invRange:[50,100]},
+  {name:'Strategic Business Innovation', experience:['5-10 Years','10+ Years'], industry:['Finance','Marketing','Operations','Other'], goal:['Business Growth','Leadership'], skill:['Strategy','Leadership'], style:['Live Online','Weekend'], invRange:[75,100]},
+  {name:'Product Leadership Bootcamp', experience:['2-5 Years','5-10 Years'], industry:['Technology','Marketing'], goal:['Promotion','AI Ready'], skill:['AI/Data','Product Management','Project Management'], style:['Bootcamp','Live Online'], invRange:[50,100]},
+  {name:'Data Analytics Mastery', experience:['Student','0-2 Years','2-5 Years'], industry:['Technology','Finance','Healthcare','Other'], goal:['Career Switch','AI Ready'], skill:['Data Analytics','AI/Data'], style:['Self-Paced','Bootcamp'], invRange:[0,75]},
+  {name:'Executive Leadership Program', experience:['5-10 Years','10+ Years'], industry:['Technology','Finance','Marketing','Healthcare','Operations','Other'], goal:['Leadership','Business Growth'], skill:['Leadership','Strategy'], style:['Weekend','Live Online'], invRange:[75,100]},
+  {name:'Career Transition Bootcamp', experience:['Student','0-2 Years','2-5 Years'], industry:['Marketing','Operations','Healthcare','Other'], goal:['Career Switch','Promotion'], skill:['Project Management','Product Management','Data Analytics'], style:['Bootcamp','Self-Paced'], invRange:[0,50]},
+];
+
+const state = {experience:2, industry:0, goal:1, skill:1, style:2, investment:3};
+
+const controls = document.getElementById('controls');
+factorMeta.forEach(f=>{
+  const optList = options[f.key];
+  const block = document.createElement('div');
+  block.className = 'slider-block';
+  block.innerHTML = `<div class="slider-head"><span class="sname">${f.label}</span><span class="sweight">counts for ${(f.weight*100)}%</span></div>
+    <input type="range" min="0" max="${optList.length-1}" step="1" value="${state[f.key]}" id="slider-${f.key}" style="accent-color:${f.hex}">
+    <span class="slider-value" id="val-${f.key}">${optList[state[f.key]]}</span>`;
+  controls.appendChild(block);
+});
+
+function experienceDistanceScore(userExp, targetList){
+  if(targetList.includes(userExp)) return 100;
+  const order = options.experience;
+  const ui = order.indexOf(userExp);
+  let minDist = Infinity;
+  targetList.forEach(t=>{ minDist = Math.min(minDist, Math.abs(ui - order.indexOf(t))); });
+  return Math.max(20, 100 - minDist*30);
+}
+function includeScore(userVal, targetList, missPenalty){
+  return targetList.includes(userVal) ? 100 : missPenalty;
+}
+function investmentScoreFn(userVal, range){
+  const [lo,hi] = range;
+  if(userVal>=lo && userVal<=hi) return 100;
+  if(userVal<lo) return Math.max(20, 100-(lo-userVal));
+  return 90;
+}
+
+function computeAll(){
+  const userExp = options.experience[state.experience];
+  const userIndustry = options.industry[state.industry];
+  const userGoal = options.goal[state.goal];
+  const userSkill = options.skill[state.skill];
+  const userStyle = options.style[state.style];
+  const userInv = investmentValue[state.investment];
+
+  factorMeta.forEach(f=>{
+    document.getElementById('val-'+f.key).textContent = options[f.key][state[f.key]];
+  });
+
+  const scored = courses.map(c=>{
+    const expS = experienceDistanceScore(userExp, c.experience);
+    const indS = includeScore(userIndustry, c.industry, 40);
+    const goalS = includeScore(userGoal, c.goal, 35);
+    const skillS = includeScore(userSkill, c.skill, 25);
+    const styleS = includeScore(userStyle, c.style, 45);
+    const invS = investmentScoreFn(userInv, c.invRange);
+    const total = expS*0.15 + indS*0.10 + goalS*0.20 + skillS*0.25 + styleS*0.15 + invS*0.15;
+    return {name:c.name, total, expS, indS, goalS, skillS, styleS, invS};
+  }).sort((a,b)=>b.total-a.total);
+
+  const list = document.getElementById('resultsList');
+  list.innerHTML = '';
+  scored.forEach((s,i)=>{
+    const rankClass = i===0?'rank1':i===1?'rank2':i===2?'rank3':'';
+    const barColor = i===0?'#2DD4BF':i===1?'#8B7CF6':i===2?'#F5A623':'#3A4658';
+    const row = document.createElement('div');
+    row.className = 'course-row '+rankClass;
+    row.innerHTML = `
+      <div class="course-row-top">
+        <div class="rank-badge">${i+1}</div>
+        <div class="course-name">${s.name}</div>
+        <div class="course-pct" style="color:${barColor}">${Math.round(s.total)}%</div>
+      </div>
+      <div class="course-bar"><div style="width:${s.total}%; background:${barColor}"></div></div>
+      <div class="calc-line">(<b>${s.expS}</b>×0.15) + (<b>${s.indS}</b>×0.10) + (<b>${s.goalS}</b>×0.20) + (<b>${s.skillS}</b>×0.25) + (<b>${s.styleS}</b>×0.15) + (<b>${s.invS}</b>×0.15) = <b>${s.total.toFixed(1)}%</b></div>
+    `;
+    list.appendChild(row);
+  });
+}
+factorMeta.forEach(f=>{
+  document.getElementById('slider-'+f.key).addEventListener('input', e=>{
+    state[f.key] = Number(e.target.value);
+    computeAll();
+  });
+});
+
+const personas = [
+  {label:'Priya · Tech, wants promotion', state:{experience:2, industry:0, goal:1, skill:1, style:2, investment:3}},
+  {label:'Student exploring AI', state:{experience:0, industry:0, goal:3, skill:1, style:0, investment:0}},
+  {label:'Marketing pro switching careers', state:{experience:2, industry:2, goal:2, skill:4, style:0, investment:1}},
+  {label:'Healthcare, senior, wants leadership', state:{experience:3, industry:3, goal:0, skill:0, style:3, investment:3}},
+  {label:'Finance exec, ready to invest', state:{experience:4, industry:1, goal:0, skill:3, style:3, investment:4}},
+  {label:'Ops manager, 0-2 yrs, budget-light', state:{experience:1, industry:4, goal:1, skill:2, style:1, investment:0}},
+];
+const personaRow = document.getElementById('personaRow');
+personas.forEach(p=>{
+  const btn = document.createElement('button');
+  btn.className = 'persona-btn';
+  btn.textContent = p.label;
+  btn.addEventListener('click', ()=>{
+    Object.assign(state, p.state);
+    factorMeta.forEach(f=>{ document.getElementById('slider-'+f.key).value = state[f.key]; });
+    computeAll();
+  });
+  personaRow.appendChild(btn);
+});
+
+computeAll();
+</script>
+</body>
+</html>

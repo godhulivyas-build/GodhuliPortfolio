@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MiniSense PRD &amp; Build &middot; Godhuli Vyas</title>
+<meta name="description" content="MiniSense: a survey-insights agent that answers plain-English questions with computed numbers and real quotes, never a guess. Full PRD, architecture and trade-offs." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#7c5cff; --a2:#00e0c6; --a3:#ff7a59; --warn:#ffb84d;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(124,92,255,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(0,224,198,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a2);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),#5b4bd6);border-color:transparent;color:#fff}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px;background:#0a0a10}
+.shot img{width:100%;display:block}
+.shot-cap{padding:10px 16px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line);background:var(--bg-2)}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a2);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+
+.persona{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.persona .tag{color:var(--a2);margin:0 0 8px}
+.persona h4{font-size:16px;margin-bottom:10px}
+.persona p{color:var(--muted);font-size:13.5px;margin:0;line-height:1.6}
+
+.jtbd{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.jtbd li{background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:14px 18px;
+  color:var(--muted);font-size:14px;font-style:italic;line-height:1.55}
+
+/* two-layer */
+.layer{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:22px}
+.layer .tag{color:var(--a1);margin:0 0 10px}
+.layer h3{font-size:19px;margin-bottom:10px}
+.layer p{color:var(--muted);font-size:14px;margin:0;line-height:1.6}
+
+/* pipeline flow */
+.flow{overflow-x:auto;padding-bottom:8px;margin-top:8px}
+.flow svg{display:block;min-width:820px}
+.flow-node rect{fill:rgba(255,255,255,.03);stroke:var(--line)}
+.flow-node.code rect{stroke:var(--a2);fill:rgba(0,224,198,.06)}
+.flow-node.ai rect{stroke:var(--a1);fill:rgba(124,92,255,.08)}
+.flow-node.gate rect{stroke:var(--a3);fill:rgba(255,122,89,.08)}
+.flow-node text.t{fill:var(--text);font-family:Inter,sans-serif;font-size:11px}
+.flow-node text.d{fill:var(--dim);font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.06em}
+.flow-arrow{stroke:var(--a1);stroke-width:1.4;fill:none}
+.flow-arrowhead{fill:var(--a2)}
+.flow-legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:16px}
+.flow-legend span{display:inline-flex;align-items:center;gap:7px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.flow-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.flow-legend .c-code{background:rgba(0,224,198,.5);border:1px solid var(--a2)}
+.flow-legend .c-ai{background:rgba(124,92,255,.5);border:1px solid var(--a1)}
+.flow-legend .c-gate{background:rgba(255,122,89,.5);border:1px solid var(--a3)}
+
+/* clarifying Qs */
+.qcard{border-bottom:1px solid var(--line);padding:16px 0;display:grid;grid-template-columns:1fr 1.4fr;gap:20px}
+.qcard:last-child{border-bottom:0}
+@media(max-width:680px){.qcard{grid-template-columns:1fr;gap:6px}}
+.qcard h4{font-size:14.5px;color:var(--text);font-weight:500}
+.qcard p{margin:6px 0 0;color:var(--dim);font-size:13px;line-height:1.5}
+.qcard .ex{margin:0;color:var(--muted);font-size:13.5px;line-height:1.6;font-style:italic}
+
+/* assumptions */
+.assume{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.assume li{background:var(--bg-2);padding:14px 18px;font-size:13.5px;color:var(--muted);line-height:1.6}
+
+/* goals table */
+.goalgrid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media(max-width:700px){.goalgrid{grid-template-columns:1fr}}
+.goalgrid > div{background:var(--bg-2);padding:20px 22px}
+.goalgrid h4{font-size:14px;margin-bottom:12px;color:var(--a2)}
+.goalgrid.non h4{color:var(--a3)}
+.goalgrid ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:8px;line-height:1.5}
+
+/* FR list */
+.frlist{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.frlist li{background:var(--bg-2);padding:14px 18px;display:flex;gap:12px;font-size:13.5px;color:var(--muted)}
+.frlist b{font-family:"JetBrains Mono",monospace;color:var(--a2);flex:0 0 34px;font-size:11px}
+
+/* NFR + tables */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--surface),#0a0a10)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:16px 14px 10px;border-bottom:1px solid var(--line)}
+td{padding:14px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text)}
+td.target{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:16px;color:var(--a2)}
+
+/* verdict */
+.verdict{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:16px}
+@media(max-width:700px){.verdict{grid-template-columns:1fr}}
+.verdict div{background:var(--bg-2);padding:20px 22px}
+.verdict h4{font-size:14px;margin-bottom:8px}
+.verdict p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.6}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Product Requirements Document &middot; Survey Insights Agent</p>
+    <h1>MiniSense &mdash; an answer<br />that <em>never guesses</em> to fill the silence.</h1>
+    <p class="dek">Every month, a business collects hundreds of survey responses. Understanding what they actually say means someone scrolling a spreadsheet, hoping to notice a pattern. MiniSense's job is narrow: let anyone ask a plain-English question and get back an answer backed by exact numbers and real quotes, not a chart they have to interpret themselves.</p>
+    <dl class="meta">
+      <div><dt>Author</dt><dd>Godhuli Vyas</dd></div>
+      <div><dt>Status</dt><dd>Draft for engineering review</dd></div>
+      <div><dt>Bar for success</dt><dd>Defensible, not just plausible</dd></div>
+      <div><dt>Product</dt><dd>MiniSense, Survey Insights Agent</dd></div>
+    </dl>
+    <div class="cta">
+      <a class="btn primary" href="https://minisense.lovable.app/insights" target="_blank" rel="noopener">Open MiniSense live <span aria-hidden="true">↗</span></a>
+      <a class="btn" href="https://drive.google.com/drive/folders/1FaJIkZMVSQB0h1p4wMhIMx2J3MTDTdzA?usp=sharing" target="_blank" rel="noopener">All docs, on Drive <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="shot" style="margin-top:32px">
+      <img src="assets/img/thumb-minisense.webp" alt="MiniSense insights dashboard: overall satisfaction, response volume, follow-up rate, topic sentiment, and ask-in-plain-English suggestions" loading="lazy" />
+      <div class="shot-cap">MiniSense, turning feedback into insight</div>
+    </div>
+  </div>
+</header>
+
+<!-- 01 WHY -->
+<section id="why">
+  <div class="wrap">
+    <p class="snum mono">01 &middot; Why It Needs to Exist</p>
+    <h2>The bar isn't "produces an answer."</h2>
+    <p class="lede">It's "produces an answer a non-technical person would act on, and could defend if challenged." Real problems &mdash; a wait-time complaint quietly doubling, a new issue getting flagged repeatedly &mdash; sit unnoticed until they surface somewhere worse: a bad review, a churned customer, a failed audit.</p>
+    <div class="shot">
+      <img src="assets/img/minisense-live.png" alt="MiniSense live dashboard: Good morning Alex, overall satisfaction 4.2/5, 1,284 responses, 38% follow-up rate, with an auto-generated insight and ask-in-plain-English box" loading="lazy" />
+      <div class="shot-cap">MiniSense, live</div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 PERSONAS -->
+<section id="personas">
+  <div class="wrap">
+    <p class="snum mono">02 &middot; Who It's For</p>
+    <h2>Three readers, three different answers.</h2>
+    <div class="g3">
+      <div class="persona">
+        <p class="tag mono">Primary</p>
+        <h4>Ops / CX Manager</h4>
+        <p>Checks survey results weekly. Needs a fast, trustworthy answer to "what should I fix this week," no spreadsheets, no BI training.</p>
+      </div>
+      <div class="persona">
+        <p class="tag mono">Secondary</p>
+        <h4>Business Owner / Exec</h4>
+        <p>Asks ad hoc, high-level questions before a leadership conversation. Wants a short, quotable answer with real numbers they can defend.</p>
+      </div>
+      <div class="persona">
+        <p class="tag mono">Future</p>
+        <h4>Enterprise Analyst</h4>
+        <p>Works at an omniXM enterprise customer, wants MiniSense output in their own reporting: structured data with citations, not a chat transcript.</p>
+      </div>
+    </div>
+    <p class="lede" style="margin:28px 0 12px">Jobs to be done</p>
+    <ul class="jtbd">
+      <li>"When I open the dashboard, I want to ask in plain English what is going wrong, so I can decide what to fix without reading hundreds of comments."</li>
+      <li>"When leadership asks how CX is trending, I want a short, trustworthy narrative I can report up with confidence."</li>
+      <li>"When I see a claim like 'wait time complaints are up,' I want to see the real responses behind it before I act on it."</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 03 SOLVED -->
+<section id="solved">
+  <div class="wrap">
+    <p class="snum mono">03 &middot; What "Solved" Looks Like</p>
+    <h2>Two layers, one source of truth.</h2>
+    <p class="lede">Not a single chatbot &mdash; two layers built on the same underlying data, so a number never quietly differs between the auto-generated summary, the dashboard, and a chat answer.</p>
+    <div class="g2">
+      <div class="layer">
+        <p class="tag mono">Layer 1</p>
+        <h3>Business Insights</h3>
+        <p>Without being asked anything, the system surfaces the handful of metrics and issues a decision-maker actually needs this week: an executive summary and a few KPI cards, not a wall of fifty numbers.</p>
+      </div>
+      <div class="layer">
+        <p class="tag mono">Layer 2</p>
+        <h3>Q&amp;A</h3>
+        <p>Ask "what are our top 3 complaints this month and how do they compare to last month," get back a short answer, the exact numbers in a small table, and real comments that support it &mdash; each clickable to the source record.</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p>If the data is too thin to answer confidently, or a question doesn't make sense, <b>MiniSense says so</b>. It never guesses just to have something to say.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 04 HOW IT WORKS -->
+<section id="howitworks">
+  <div class="wrap">
+    <p class="snum mono">04 &middot; How It Works</p>
+    <h2>Three things happen before a question is ever asked.</h2>
+    <p class="lede">Data enters through upload or a live pull; fields are classified automatically; a question is answered through two paths that meet at generation: computed numbers, and topic-matched or semantically retrieved context (diversified with MMR so quotes aren't near-duplicates). A verification agent checks the draft before anything is shown.</p>
+    <div class="flow">
+      <svg viewBox="0 0 1180 230" width="1180" height="230">
+        <defs>
+          <marker id="msah2" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" class="flow-arrowhead" />
+          </marker>
+        </defs>
+        <path class="flow-arrow" marker-end="url(#msah2)" d="M150 40 H180" />
+        <path class="flow-arrow" marker-end="url(#msah2)" d="M330 40 H360" />
+        <path class="flow-arrow" marker-end="url(#msah2)" d="M330 40 V130 H360" />
+        <path class="flow-arrow" marker-end="url(#msah2)" d="M540 40 H700" />
+        <path class="flow-arrow" marker-end="url(#msah2)" d="M540 130 H700" />
+        <path class="flow-arrow" marker-end="url(#msah2)" d="M860 40 V95 H890" />
+        <path class="flow-arrow" marker-end="url(#msah2)" d="M860 130 V95 H890" />
+        <path class="flow-arrow" marker-end="url(#msah2)" d="M1050 95 H1070" />
+
+        <g class="flow-node"><rect x="10" y="18" width="140" height="44" rx="10" /><text class="t" x="24" y="38">Ingest</text><text class="d" x="24" y="52">UPLOAD OR LIVE PULL</text></g>
+        <g class="flow-node"><rect x="180" y="18" width="150" height="44" rx="10" /><text class="t" x="194" y="38">Classify fields</text><text class="d" x="194" y="52">ID · TIME · METRIC · TEXT</text></g>
+
+        <g class="flow-node code"><rect x="360" y="18" width="180" height="44" rx="10" /><text class="t" x="374" y="38">Compute numbers</text><text class="d" x="374" y="52">CODE, NEVER GENERATED</text></g>
+        <g class="flow-node ai"><rect x="360" y="108" width="180" height="44" rx="10" /><text class="t" x="374" y="128">Topic match + MMR search</text><text class="d" x="374" y="142">DIVERSE, NOT DUPLICATE</text></g>
+
+        <g class="flow-node ai"><rect x="700" y="18" width="160" height="44" rx="10" /><text class="t" x="714" y="38">Narrative</text><text class="d" x="714" y="52">GEMINI 2.5 FLASH</text></g>
+        <g class="flow-node ai"><rect x="700" y="108" width="160" height="44" rx="10" /><text class="t" x="714" y="128">Cite quotes</text><text class="d" x="714" y="142">EXACT EXCERPTS ONLY</text></g>
+
+        <g class="flow-node gate"><rect x="890" y="73" width="160" height="44" rx="10" /><text class="t" x="904" y="93">Verification</text><text class="d" x="904" y="107">NUMBERS + QUOTES CHECKED</text></g>
+        <g class="flow-node"><rect x="1070" y="73" width="100" height="44" rx="10" /><text class="t" x="1084" y="93">Shown</text><text class="d" x="1084" y="107">OR REDONE</text></g>
+      </svg>
+    </div>
+    <div class="flow-legend">
+      <span><i class="c-code"></i>Deterministic (code)</span>
+      <span><i class="c-ai"></i>AI model (wording / retrieval)</span>
+      <span><i class="c-gate"></i>Mandatory gate</span>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p>If either check fails &mdash; a number doesn't match the calculation, or a quote isn't copied exactly &mdash; <b>the answer is redone, not patched</b>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 05 CLARIFYING QUESTIONS -->
+<section id="questions">
+  <div class="wrap">
+    <p class="snum mono">05 &middot; Clarifying Questions</p>
+    <h2>Every question here changes what gets built.</h2>
+    <p class="lede">Not just how it's worded &mdash; each one is stated with a plain example so the stakes are clear to the business side, not only to engineers.</p>
+    <div class="qcard">
+      <h4>Can one user ever see another business's data?</h4>
+      <p class="ex">A security boundary, not a preference &mdash; has to be right before launch. An agency managing five clients: could a staff member accidentally pull up the wrong client's numbers?</p>
+    </div>
+    <div class="qcard">
+      <h4>What does "this month" or "recently" mean by default?</h4>
+      <p class="ex">Get this wrong and a comparison becomes misleading without anyone noticing. Asked on June 3rd: does "this month" mean 3 days of June, or all of May?</p>
+    </div>
+    <div class="qcard">
+      <h4>How fresh does the data need to be?</h4>
+      <p class="ex">Directly decides the ingestion design. A response submitted this morning: does it need to show by lunchtime, or is next-day fine?</p>
+    </div>
+    <div class="qcard">
+      <h4>Must every number be exactly correct, or is a labelled estimate acceptable when data is thin?</h4>
+      <p class="ex">The line between "ship and iterate" and "must be provably correct." Only 3 responses this week: is a caveated estimate okay, or should the system decline to answer?</p>
+    </div>
+    <div class="qcard">
+      <h4>Could a comment contain private information, like a phone number?</h4>
+      <p class="ex">Decides whether text needs cleaning before reaching any outside AI service. A comment reads "call me back at 555-1234" &mdash; should that number ever leave the business's own systems?</p>
+    </div>
+    <div class="qcard">
+      <h4>How many questions per day, and what's the acceptable cost per question?</h4>
+      <p class="ex">The single biggest input to the model-cost decision. 100 questions a day at 10 cents each is a very different budget than 10,000 a day.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 ASSUMPTIONS -->
+<section id="assumptions">
+  <div class="wrap">
+    <p class="snum mono">06 &middot; Assumptions Until Answered</p>
+    <h2>What the build proceeds on for now.</h2>
+    <ul class="assume">
+      <li>Numbers are always calculated directly from the data. The AI never generates a number from memory.</li>
+      <li>Data is kept for as long as the business needs it &mdash; no arbitrary short window, pending a retention policy answer.</li>
+      <li>New responses are reflected within minutes to a couple of hours, not overnight, pending an exact target from stakeholders.</li>
+      <li>One business's data is never visible in another business's answer, under any circumstance.</li>
+      <li>English is the primary language at launch. Other languages are a later-phase investment.</li>
+      <li>Free text may contain personal information and is treated accordingly before reaching any outside AI service.</li>
+      <li>MiniSense reports and explains. It does not automatically trigger business actions at launch.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 07 GOALS -->
+<section id="goals">
+  <div class="wrap">
+    <p class="snum mono">07 &middot; Goals &amp; Non-Goals</p>
+    <h2>What this is, stated against what it isn't.</h2>
+    <div class="goalgrid">
+      <div>
+        <h4>Goals</h4>
+        <ul>
+          <li>Answer plain-English questions, backed by exact numbers and real quotes.</li>
+          <li>Make it one click from any claim to the raw evidence.</li>
+          <li>Say plainly when data is too thin or a question is unclear &mdash; never guess to fill the silence.</li>
+        </ul>
+      </div>
+      <div class="non">
+        <h4>Non-Goals, For Now</h4>
+        <ul>
+          <li>Not a full BI or reporting replacement.</li>
+          <li>Not a general business advisor &mdash; answers only from survey data and the business's own policy documents.</li>
+          <li>Not multi-language at launch.</li>
+          <li>No automatic actions or write-back into other systems.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 08 FR -->
+<section id="fr">
+  <div class="wrap">
+    <p class="snum mono">08 &middot; Functional Requirements</p>
+    <h2>Eleven requirements, FR1&ndash;FR11.</h2>
+    <ul class="frlist">
+      <li><b>FR1</b>User asks a natural-language question, scoped to one business and a time range.</li>
+      <li><b>FR2</b>The question is parsed into a structured intent: metric, time range, whether it's a comparison.</li>
+      <li><b>FR3</b>All numbers are computed directly from the data, never generated by the AI model.</li>
+      <li><b>FR4</b>Every response is first matched against known topics; anything that doesn't fit falls through to semantic search, never dropped.</li>
+      <li><b>FR5</b>The written answer cites exact numbers and quotes real excerpts, never a paraphrase presented as a quote.</li>
+      <li><b>FR6</b>Every answer shows a confidence signal (sample size, data recency) with the reason, not just a score.</li>
+      <li><b>FR7</b>An unanswerable question gets a plain explanation and, where useful, a rephrase suggestion &mdash; never a guess.</li>
+      <li><b>FR8</b>Any number in an answer is one click from the exact underlying records it was computed from.</li>
+      <li><b>FR9</b>Comparisons are supported: this period vs. the previous one, by default, everywhere relevant.</li>
+      <li><b>FR10</b>New data is ingested continuously, not a once-a-day batch job.</li>
+      <li><b>FR11</b>Every answer can be flagged as wrong, routing to a review queue.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 09 NFR -->
+<section id="nfr">
+  <div class="wrap">
+    <p class="snum mono">09 &middot; Non-Functional Requirements</p>
+    <h2>The bar each dimension has to clear.</h2>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Dimension</th><th>Bar</th></tr></thead>
+        <tbody>
+          <tr><td>Numeric accuracy</td><td class="target">100%</td></tr>
+          <tr><td>Answer latency</td><td>Target &lt;8s, hard ceiling 20s before a partial-state fallback</td></tr>
+          <tr><td>Data freshness</td><td>Continuous ingestion, minutes to a couple of hours</td></tr>
+          <tr><td>Data retention</td><td>Full history by default, no arbitrary rolling window</td></tr>
+          <tr><td>Cost per question</td><td class="target">5&ndash;15&cent;</td></tr>
+          <tr><td>Privacy &amp; isolation</td><td>Strict per-business isolation; PII scrubbed before any outside AI service</td></tr>
+          <tr><td>Availability</td><td class="target">99.5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 10 UNDERSTANDING COMMENTS -->
+<section id="approach">
+  <div class="wrap">
+    <p class="snum mono">10 &middot; The Core Technical Decision</p>
+    <h2>Fixed categories, or smart search? Both.</h2>
+    <p class="lede">"Wait time was too long," "took forever," and "line out the door" all mean the same thing, worded differently. A system needs a way to group these to answer "what are our top complaints" at all.</p>
+    <div class="verdict">
+      <div>
+        <h4 style="color:var(--a2)">Option A &middot; Fixed categories</h4>
+        <p>Fast, cheap, fully predictable. Shortcoming: a comment about something nobody made a folder for has nowhere to go &mdash; missed or miscategorised until a person manually adds one.</p>
+      </div>
+      <div>
+        <h4 style="color:var(--a3)">Option B &middot; Smart search (RAG)</h4>
+        <p>Handles new topics without being told about them first. Plain similarity search alone tends to return near-duplicates; MiniSense applies MMR on top, favouring comments that are relevant <i>and</i> different from each other.</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p><b>Recommendation: use both.</b> Sort into known topics for speed on expected questions; anything that doesn't confidently match falls through to smart search automatically. Nothing depends on a human remembering to update a topic list. The trade-off accepted knowingly: two systems instead of one, worth it because the two options fail in opposite ways.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 ARCHITECTURE -->
+<section id="architecture">
+  <div class="wrap">
+    <p class="snum mono">11 &middot; Technical Architecture</p>
+    <h2>Modest and CPU-based, on purpose.</h2>
+    <p class="lede">The numeric side of the product is ordinary code, not a model. The model is only asked to do the two things a model is actually good at: writing a clear explanation, and selecting which retrieved evidence matters.</p>
+    <div class="chips">
+      <span class="chip">Schema classifier on ingest</span>
+      <span class="chip">Python / SQL metrics engine</span>
+      <span class="chip">Postgres + pgvector / Qdrant</span>
+      <span class="chip">MMR retrieval</span>
+      <span class="chip">Gemini 2.5 Flash</span>
+      <span class="chip">CPU-only, 16&ndash;32GB RAM</span>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p>Sized for an initial user base in the tens of concurrent users, consistent with an early rollout &mdash; revisited only against real production volume and cost data, not an upfront guess.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 SUCCESS METRICS -->
+<section id="metrics" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">12 &middot; Success Metrics</p>
+    <h2>Five numbers that decide if it worked.</h2>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Metric</th><th>Target</th></tr></thead>
+        <tbody>
+          <tr><td>Numeric accuracy</td><td class="target">100% on a standing test set</td></tr>
+          <tr><td>Narrative quality, human-rated</td><td class="target">&ge;90% acceptable</td></tr>
+          <tr><td>Weekly adoption</td><td class="target">1+ question / licensed user / week</td></tr>
+          <tr><td>Trust signal</td><td>Healthy "viewed evidence" to "flagged wrong" ratio</td></tr>
+          <tr><td>Cost per question</td><td class="target">5&ndash;15&cent;</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

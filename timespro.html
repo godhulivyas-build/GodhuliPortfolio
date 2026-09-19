@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TimesPro Visionary Corner &middot; Godhuli Vyas</title>
+<meta name="description" content="TimesPro Visionary Corner: the matching engine behind a two-minute AI career check-in, explained technically with weighted scoring, per-factor logic and a live calculator." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#f5a623; --a2:#2dd4bf; --a3:#ff6b5c;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(245,166,35,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(45,212,191,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a2);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),var(--a2));border-color:transparent;color:#160f00}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+
+.pcard{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.pcard .tag{color:var(--a2);margin:0 0 8px}
+.pcard h3{font-size:16px;margin-bottom:10px}
+.pcard ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:6px;line-height:1.5}
+.pcard p{color:var(--muted);font-size:13.5px;margin:0}
+
+/* weight table */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--surface),#0a0a10)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:480px}
+th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:14px 12px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text)}
+td.w{font-family:"JetBrains Mono",monospace;color:var(--a2)}
+.wbar{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden;margin-top:6px;width:120px}
+.wbar div{height:100%;background:linear-gradient(90deg,var(--a1),var(--a2))}
+
+/* scoring method cards */
+.method{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:12px}
+.method-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.method h3{font-size:16px}
+.method .num{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.08em;color:var(--dim);
+  border:1px solid var(--line);border-radius:100px;padding:3px 10px}
+.method p{margin:0 0 10px;color:var(--muted);font-size:14px}
+.formula{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--a2);background:var(--sunk);
+  border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto;margin-bottom:8px}
+.method .example{font-size:12.5px;color:var(--dim)}
+.method .example b{color:var(--muted)}
+
+/* flow */
+.flow{overflow-x:auto;padding-bottom:8px;margin-top:8px}
+.flow svg{display:block;min-width:1040px}
+.flow-node rect{fill:rgba(255,255,255,.03);stroke:var(--line)}
+.flow-node.in rect{stroke:var(--line-2);fill:rgba(255,255,255,.05)}
+.flow-node.score rect{stroke:var(--a1);fill:rgba(245,166,35,.08)}
+.flow-node.out rect{stroke:var(--a2);fill:rgba(45,212,191,.1)}
+.flow-node text.t{fill:var(--text);font-family:Inter,sans-serif;font-size:10.5px}
+.flow-node text.d{fill:var(--dim);font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.05em}
+.flow-arrow{stroke:var(--a1);stroke-width:1.4;fill:none}
+.flow-arrowhead{fill:var(--a2)}
+
+/* worked example */
+.calc{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:10px}
+.calc-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}
+.calc-head b{font-size:14.5px}
+.calc-head span{font-family:"JetBrains Mono",monospace;font-size:15px;color:var(--a2)}
+.calc-bar{height:7px;border-radius:4px;background:var(--sunk);overflow:hidden;margin-bottom:10px}
+.calc-bar div{height:100%;background:linear-gradient(90deg,var(--a1),var(--a2))}
+.calc-line{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--dim);line-height:1.6}
+.calc-line b{color:var(--muted)}
+.rank1 .calc-head span{color:var(--a2)}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a2);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#systems">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Client Build &middot; Matching Product &middot; Technical Deep Dive</p>
+    <h1>TimesPro Visionary Corner &mdash; <em>the two minutes</em><br />that pick one course out of six.</h1>
+    <p class="dek">The visitor-facing product is a two-minute AI career check-in that ends in a Future Career Card. Underneath it is a small recommendation engine: six weighted questions, six scoring functions, one ranked list. This page is the technical breakdown of that engine &mdash; not the pitch, the actual math.</p>
+    <dl class="meta">
+      <div><dt>Stack</dt><dd>React, Vercel</dd></div>
+      <div><dt>Model</dt><dd>Weighted multi-factor scoring</dd></div>
+      <div><dt>Factors</dt><dd>6, independently scored</dd></div>
+      <div><dt>Built for</dt><dd>Live at an event, not a demo</dd></div>
+    </dl>
+    <div class="cta">
+      <a class="btn primary" href="https://timespro-vision-cafe.vercel.app/" target="_blank" rel="noopener">Open TimesPro live <span aria-hidden="true">↗</span></a>
+      <a class="btn" href="course-match-calculator.html" target="_blank" rel="noopener">Try the matching engine <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- 01 THE MODEL -->
+<section id="model">
+  <div class="wrap">
+    <p class="snum mono">01 &middot; The Model</p>
+    <h2>It's not a filter. It's a weighted average.</h2>
+    <p class="lede">There's no permutation search over "all combinations of course × answer" &mdash; that would explode combinatorially for no benefit. Instead, every course gets scored against your answers on 6 independent factors, each factor contributes a fixed share of the final number, and the shares add up to exactly 100%. It's the same logic as a report card weighting a final exam more than a homework set.</p>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Factor</th><th>Weight</th><th></th></tr></thead>
+        <tbody>
+          <tr><td>Skill you want to learn</td><td class="w">25%</td><td><div class="wbar"><div style="width:100%"></div></div></td></tr>
+          <tr><td>Career goal</td><td class="w">20%</td><td><div class="wbar"><div style="width:80%"></div></div></td></tr>
+          <tr><td>Experience level</td><td class="w">15%</td><td><div class="wbar"><div style="width:60%"></div></div></td></tr>
+          <tr><td>Learning format</td><td class="w">15%</td><td><div class="wbar"><div style="width:60%"></div></div></td></tr>
+          <tr><td>Investment readiness (budget)</td><td class="w">15%</td><td><div class="wbar"><div style="width:60%"></div></div></td></tr>
+          <tr><td>Industry</td><td class="w">10%</td><td><div class="wbar"><div style="width:40%"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 02 SCORING FUNCTIONS -->
+<section id="scoring">
+  <div class="wrap">
+    <p class="snum mono">02 &middot; Per-Factor Scoring</p>
+    <h2>Three different ways to score a "match," not one.</h2>
+    <p class="lede">Treating every factor as a simple yes/no would throw away information &mdash; a 5-10 year professional isn't a total mismatch for a 2-5 year course the way a total beginner is. So each factor type gets the scoring logic that fits its actual shape.</p>
+
+    <div class="method">
+      <div class="method-head"><h3>Exact-match with a soft miss</h3><span class="num">Industry · Goal · Skill · Format</span></div>
+      <p>If your answer is in the course's accepted list, it scores 100. If not, it doesn't score zero &mdash; it takes a fixed penalty specific to that factor, because a skill mismatch should hurt more than an industry mismatch.</p>
+      <div class="formula">score = (answer in course.acceptedList) ? 100 : missPenalty</div>
+      <p class="example"><b>Miss penalties, in this build:</b> skill 25, goal 35, industry 40, format 45 &mdash; the tighter the penalty, the more that factor's mismatch actually matters.</p>
+    </div>
+
+    <div class="method">
+      <div class="method-head"><h3>Ordinal distance</h3><span class="num">Experience Level</span></div>
+      <p>Experience isn't a category, it's a position on a line: Student &rarr; 0-2 &rarr; 2-5 &rarr; 5-10 &rarr; 10+ years. An exact band match scores 100; being one band off costs 30 points, two bands off costs 60, with a floor so it never reads as a total disqualification.</p>
+      <div class="formula">score = inRange ? 100 : max(20, 100 − distance × 30)</div>
+    </div>
+
+    <div class="method" style="margin-bottom:0">
+      <div class="method-head"><h3>Range fit</h3><span class="num">Investment Readiness</span></div>
+      <p>Budget readiness is a 0&ndash;100 slider, not a category, and a course has a target range rather than one value. Inside the range: full score. Below it: a graceful penalty proportional to the gap. Above it &mdash; more budget than needed &mdash; barely penalised at all, since "can spend more" is rarely a real mismatch.</p>
+      <div class="formula">score = inRange ? 100 : (below ? max(20, 100 − gap) : 90)</div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 THE FLOW -->
+<section id="flow">
+  <div class="wrap">
+    <p class="snum mono">03 &middot; The Flow</p>
+    <h2>One profile, six scorers, one ranking.</h2>
+    <p class="lede">All six scorers run independently and in parallel against the same profile &mdash; nothing here is sequential or conditional. The only combination step is the weighted sum at the end.</p>
+    <div class="flow">
+      <svg viewBox="0 0 1040 300" width="1040" height="300">
+        <defs>
+          <marker id="tpah" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" class="flow-arrowhead" />
+          </marker>
+        </defs>
+        <path class="flow-arrow" marker-end="url(#tpah)" d="M132 40 H190 M132 90 H190 M132 140 H190 M132 190 H190 M132 240 H190 M132 270 H190" />
+        <g class="flow-node in"><rect x="4" y="18" width="128" height="44" rx="10" /><text class="t" x="16" y="38">Experience</text><text class="d" x="16" y="52">ORDINAL DISTANCE</text></g>
+        <g class="flow-node in"><rect x="4" y="68" width="128" height="44" rx="10" /><text class="t" x="16" y="88">Industry</text><text class="d" x="16" y="102">EXACT + PENALTY 40</text></g>
+        <g class="flow-node in"><rect x="4" y="118" width="128" height="44" rx="10" /><text class="t" x="16" y="138">Career Goal</text><text class="d" x="16" y="152">EXACT + PENALTY 35</text></g>
+        <g class="flow-node in"><rect x="4" y="168" width="128" height="44" rx="10" /><text class="t" x="16" y="188">Skill to Learn</text><text class="d" x="16" y="202">EXACT + PENALTY 25</text></g>
+        <g class="flow-node in"><rect x="4" y="218" width="128" height="44" rx="10" /><text class="t" x="16" y="238">Learning Format</text><text class="d" x="16" y="252">EXACT + PENALTY 45</text></g>
+        <g class="flow-node in"><rect x="4" y="252" width="128" height="44" rx="10" /><text class="t" x="16" y="272">Investment</text><text class="d" x="16" y="286">RANGE FIT</text></g>
+
+        <g class="flow-node score"><rect x="190" y="18" width="150" height="44" rx="10" /><text class="t" x="204" y="38">expScore × 0.15</text></g>
+        <g class="flow-node score"><rect x="190" y="68" width="150" height="44" rx="10" /><text class="t" x="204" y="88">indScore × 0.10</text></g>
+        <g class="flow-node score"><rect x="190" y="118" width="150" height="44" rx="10" /><text class="t" x="204" y="138">goalScore × 0.20</text></g>
+        <g class="flow-node score"><rect x="190" y="168" width="150" height="44" rx="10" /><text class="t" x="204" y="188">skillScore × 0.25</text></g>
+        <g class="flow-node score"><rect x="190" y="218" width="150" height="44" rx="10" /><text class="t" x="204" y="238">styleScore × 0.15</text></g>
+        <g class="flow-node score"><rect x="190" y="252" width="150" height="44" rx="10" /><text class="t" x="204" y="272">invScore × 0.15</text></g>
+
+        <path class="flow-arrow" marker-end="url(#tpah)" d="M340 40 H420 M340 90 H400 V130 H420 M340 140 H420 M340 188 H400 V150 H420 M340 238 H400 V170 H420 M340 272 H400 V190 H420" />
+        <g class="flow-node out"><rect x="420" y="108" width="180" height="44" rx="10" /><text class="t" x="436" y="128">Weighted sum</text><text class="d" x="436" y="142">= COURSE MATCH %</text></g>
+
+        <path class="flow-arrow" marker-end="url(#tpah)" d="M600 130 H660" />
+        <g class="flow-node out"><rect x="660" y="108" width="150" height="44" rx="10" /><text class="t" x="676" y="128">Sort descending</text><text class="d" x="676" y="142">ACROSS ALL COURSES</text></g>
+
+        <path class="flow-arrow" marker-end="url(#tpah)" d="M810 130 H870" />
+        <g class="flow-node out"><rect x="870" y="90" width="166" height="80" rx="10" /><text class="t" x="886" y="118">Top match →</text><text class="t" x="886" y="136">Future Career Card</text><text class="d" x="886" y="152">RANK 1 SURFACED</text></g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 04 WORKED EXAMPLE -->
+<section id="worked">
+  <div class="wrap">
+    <p class="snum mono">04 &middot; Worked Example</p>
+    <h2>One profile, all six courses scored.</h2>
+    <p class="lede">A 2-5 year Technology professional, aiming for a promotion, wanting to learn AI/Data, in a Bootcamp format, 75% investment-ready. Run against all six courses:</p>
+
+    <div class="calc rank1">
+      <div class="calc-head"><b>1 &middot; Product Leadership Bootcamp</b><span>100%</span></div>
+      <div class="calc-bar"><div style="width:100%"></div></div>
+      <div class="calc-line">(<b>100</b>×0.15) + (<b>100</b>×0.10) + (<b>100</b>×0.20) + (<b>100</b>×0.25) + (<b>100</b>×0.15) + (<b>100</b>×0.15) = <b>100.0%</b></div>
+    </div>
+    <div class="calc">
+      <div class="calc-head"><b>2 &middot; AI Leadership Accelerator</b><span>87%</span></div>
+      <div class="calc-bar"><div style="width:87%"></div></div>
+      <div class="calc-line">(<b>100</b>×0.15) + (<b>100</b>×0.10) + (<b>35</b>×0.20) + (<b>100</b>×0.25) + (<b>100</b>×0.15) + (<b>100</b>×0.15) = <b>87.0%</b></div>
+    </div>
+    <div class="calc">
+      <div class="calc-head"><b>3 &middot; Data Analytics Mastery</b><span>87%</span></div>
+      <div class="calc-bar"><div style="width:87%"></div></div>
+      <div class="calc-line">(<b>100</b>×0.15) + (<b>100</b>×0.10) + (<b>35</b>×0.20) + (<b>100</b>×0.25) + (<b>100</b>×0.15) + (<b>100</b>×0.15) = <b>87.0%</b></div>
+    </div>
+    <div class="calc">
+      <div class="calc-head"><b>4 &middot; Career Transition Bootcamp</b><span>74%</span></div>
+      <div class="calc-bar"><div style="width:74%"></div></div>
+      <div class="calc-line">(<b>100</b>×0.15) + (<b>40</b>×0.10) + (<b>100</b>×0.20) + (<b>25</b>×0.25) + (<b>100</b>×0.15) + (<b>90</b>×0.15) = <b>73.8%</b></div>
+    </div>
+    <div class="calc">
+      <div class="calc-head"><b>5 &middot; Executive Leadership Program</b><span>56%</span></div>
+      <div class="calc-bar"><div style="width:56%"></div></div>
+      <div class="calc-line">(<b>70</b>×0.15) + (<b>100</b>×0.10) + (<b>35</b>×0.20) + (<b>25</b>×0.25) + (<b>45</b>×0.15) + (<b>100</b>×0.15) = <b>55.5%</b></div>
+    </div>
+    <div class="calc" style="margin-bottom:0">
+      <div class="calc-head"><b>6 &middot; Strategic Business Innovation</b><span>50%</span></div>
+      <div class="calc-bar"><div style="width:50%"></div></div>
+      <div class="calc-line">(<b>70</b>×0.15) + (<b>40</b>×0.10) + (<b>35</b>×0.20) + (<b>25</b>×0.25) + (<b>45</b>×0.15) + (<b>100</b>×0.15) = <b>49.5%</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 WHY THIS SHAPE -->
+<section id="why" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">05 &middot; Why This Shape, Not a "Smarter" One</p>
+    <h2>No LLM, no permutation search &mdash; on purpose.</h2>
+    <div class="g2" style="margin-bottom:20px">
+      <div class="pcard">
+        <p class="tag mono">Why not brute-force permutations</p>
+        <p>With 6 factors and up to 6 options each, an exhaustive "score every combination" approach scores nothing extra &mdash; the visitor only ever has one actual profile. What matters is scoring that one profile against every course correctly, which is O(courses × factors), not combinatorial.</p>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Why not an LLM call</p>
+        <p>This runs live at an event, on a booth screen, with people queued behind the visitor. A weighted-sum calculation is instant and deterministic &mdash; the same answers always produce the same ranking, which matters when the output is printed onto a physical Future Career Card.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <p><b>The actual difficulty wasn't the math.</b> It was picking miss-penalties and ranges that felt fair across genuinely different course catalogues &mdash; a beginner-friendly bootcamp and an executive program shouldn't be scored by the same experience curve, so each course carries its own accepted ranges rather than one global rule.</p>
+    </div>
+    <div class="chips">
+      <span class="chip">Weighted scoring</span>
+      <span class="chip">Ordinal distance</span>
+      <span class="chip">Range fit</span>
+      <span class="chip">Deterministic ranking</span>
+      <span class="chip">React</span>
+      <span class="chip">Vercel</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#systems">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

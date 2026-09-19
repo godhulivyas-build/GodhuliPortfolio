@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Attendance Analysis &middot; Godhuli Vyas</title>
+<meta name="description" content="Attendance Analysis: cohort attendance trends, a comprehensive final-grading model, and data-backed recommendations, built entirely with traceable spreadsheet formulas." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#7c5cff; --a2:#f5b942; --a3:#ff7a59;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(124,92,255,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(245,185,66,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a2);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),var(--a2));border-color:transparent;color:#140c04}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px;background:#0a0a10}
+.shot img{width:100%;display:block}
+.shot-cap{padding:10px 16px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line);background:var(--bg-2)}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a2);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+
+.pcard{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.pcard .tag{color:var(--a2);margin:0 0 8px}
+.pcard h3{font-size:16px;margin-bottom:10px}
+.pcard ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:6px;line-height:1.5}
+
+/* metrics */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media(max-width:700px){.stats{grid-template-columns:1fr}}
+.stats div{background:var(--bg-2);padding:18px}
+.stats b{display:block;font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:17px;color:var(--a2)}
+.stats span{display:block;font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:6px;line-height:1.4}
+
+/* risks / workbook table */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--surface),#0a0a10)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:14px 12px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text)}
+td.decision{color:var(--a2)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+.numlist{margin:0;padding-left:20px;color:var(--muted);font-size:14.5px;display:grid;gap:14px;line-height:1.6}
+.numlist b{color:var(--text);font-weight:500}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Data Analysis &middot; Cohort Attendance &amp; Grading</p>
+    <h1>Attendance analysis <em>&mdash; insights, trends, performance.</em></h1>
+    <p class="dek">Given a term's worth of raw learner data, spread across five linked tabs, the task was to explain how attendance moved through the term, compute a fair comprehensive final grade for every learner, and turn both into recommendations backed by the numbers, not opinion.</p>
+    <dl class="meta">
+      <div><dt>Format</dt><dd>Formula-driven spreadsheet</dd></div>
+      <div><dt>Inputs</dt><dd>5 linked tabs</dd></div>
+      <div><dt>Output</dt><dd>Trends + final grades + recos</dd></div>
+      <div><dt>Principle</dt><dd>Every number traceable</dd></div>
+    </dl>
+    <div class="cta">
+      <a class="btn primary" href="https://docs.google.com/spreadsheets/d/1ktrKuGerawqks4Dgxqusy1GT_eU_dvVPvduXRJuDjbo/edit?usp=sharing" target="_blank" rel="noopener">Open the workbook <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- 01 PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <p class="snum mono">01 &middot; Problem Statement</p>
+    <h2>Three questions, one dataset.</h2>
+    <p class="lede">The brief: analyze the learner data provided across the workbook and answer three questions, output as a clean, formatted spreadsheet, using formulas throughout so every answer traces back to a source cell.</p>
+    <div class="shot">
+      <img src="assets/img/thumb-attendance.webp" alt="Attendance Analysis dashboard: attendance by type, attendance by mode, count of learners, top learners table, and average final score" loading="lazy" />
+      <div class="shot-cap">The dashboard view built from the analysis</div>
+    </div>
+    <div class="callout" style="margin-top:20px">
+      <p><b>1.</b> How does learner attendance change over the course of the term? What factors influence the trend?</p>
+      <p><b>2.</b> Calculate the final grade (AA, A, B, C, etc.) for every learner &mdash; a comprehensive read of performance across subjects, not just one quiz.</p>
+      <p><b>3.</b> Recommend how to improve attendance and scores, with the data backing every recommendation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 WORKBOOK -->
+<section id="workbook">
+  <div class="wrap">
+    <p class="snum mono">02 &middot; Workbook Overview</p>
+    <h2>Five tabs, one linked model.</h2>
+    <p class="lede">The raw data arrived split across five tabs; the analysis lives in formulas that pull across all of them rather than in pasted values.</p>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Tab</th><th>What it holds</th></tr></thead>
+        <tbody>
+          <tr><td>Learner Attendance</td><td>Attendance detail for every learner, across every session</td></tr>
+          <tr><td>Session Details</td><td>Subject, instructor and session type for each session, in term sequence</td></tr>
+          <tr><td>Session Mode</td><td>Delivery mode (online / offline) for each session</td></tr>
+          <tr><td>Quiz Scores</td><td>Raw post-session quiz scores out of 20; absentees can still attempt, with a 5-mark deduction</td></tr>
+          <tr><td>Grading Criteria &amp; Weightage</td><td>The relative grading bands used to convert scores into a final grade</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 03 APPROACH -->
+<section id="approach">
+  <div class="wrap">
+    <p class="snum mono">03 &middot; Approach</p>
+    <h2>What the dashboard actually shows.</h2>
+    <div class="g2">
+      <div class="pcard">
+        <p class="tag mono">Attendance trend</p>
+        <ul>
+          <li>Attendance by session type (Practical, Theory, Workshop) to see where drop-off concentrates</li>
+          <li>Attendance by delivery mode (online vs. offline) as a likely driver of the trend</li>
+          <li>Read against the term timeline, not just an overall average</li>
+        </ul>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Final grading</p>
+        <ul>
+          <li>Post-session quiz scores rolled up per learner across all subjects</li>
+          <li>Absentee scores correctly carry their 5-mark deduction before aggregation</li>
+          <li>Aggregate mapped to the relative grading bands (AA, A, B, C&hellip;) from the Grading Criteria tab</li>
+        </ul>
+      </div>
+    </div>
+    <div class="stats" style="margin-top:16px">
+      <div><b>Attendance by type</b><span>Practical / Theory / Workshop</span></div>
+      <div><b>Attendance by mode</b><span>Online / Offline split</span></div>
+      <div><b>Final grade</b><span>Per-learner, cross-subject</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 RECOMMENDATIONS -->
+<section id="recos" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">04 &middot; Recommendations</p>
+    <h2>What the data says to change.</h2>
+    <ol class="numlist">
+      <li><b>Fix the weak session types first.</b> Attendance is not flat across session types &mdash; whichever type shows the steepest drop (workshops, in this dataset) is where scheduling, timing or format should change first, since fixing the largest gap moves the average the most.</li>
+      <li><b>Treat mode as a lever, not a constant.</b> With attendance split nearly evenly between online and offline, the format that shows the better attendance-to-score correlation should be favoured for sessions the data shows learners are most likely to skip.</li>
+      <li><b>Target interventions at the bottom of the grade curve, not the whole cohort.</b> Because the deduction for absent-but-attempted quizzes is already baked in, low final grades that also carry low attendance are the clearest, most defensible group to prioritise for outreach.</li>
+    </ol>
+    <div class="chips">
+      <span class="chip">Session-type scheduling</span>
+      <span class="chip">Mode selection</span>
+      <span class="chip">Targeted outreach</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

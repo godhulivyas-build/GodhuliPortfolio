@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kasparro Audit &middot; Godhuli Vyas</title>
+<meta name="description" content="Auditing an AI-visibility audit: 20 confirmed errors found in a client report, triaged, and a Consistency Gate tool specced to catch them automatically next time." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#f0a920; --a2:#4fd18a; --a3:#ff6a5a;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(240,169,32,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(79,209,138,.06), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a1);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),#ffd27a);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.verdict-badge{display:inline-flex;align-items:center;gap:9px;margin:20px 0 0;padding:9px 16px;border-radius:100px;
+  color:#1a1200;background:linear-gradient(100deg,#ffd27a,var(--a1));font-size:11px;letter-spacing:.1em;
+  box-shadow:0 0 32px rgba(240,169,32,.25);width:fit-content;text-transform:uppercase;font-family:"JetBrains Mono",monospace}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a1);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-top:8px}
+@media(max-width:700px){.stats{grid-template-columns:1fr}}
+.stats div{background:var(--bg-2);padding:20px 18px}
+.stats b{display:block;font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:28px;color:var(--a1)}
+.stats span{display:block;font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:8px;line-height:1.5}
+
+/* material problems */
+.problem{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;
+  padding:22px;margin-bottom:14px;display:grid;grid-template-columns:44px 1fr;gap:18px}
+.problem .n{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:32px;color:var(--a3)}
+.problem h3{font-size:17px;margin-bottom:8px}
+.problem p{color:var(--muted);font-size:13.5px;margin:0;line-height:1.6}
+
+/* error table */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--surface),#0a0a10)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:14px 12px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text)}
+td.count{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:17px;color:var(--a1)}
+td.ids{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--dim)}
+tr.total td{color:var(--text);font-weight:500;border-top:2px solid var(--line-2)}
+
+/* four quadrant */
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.quad{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.quad h3{font-size:13px;margin-bottom:10px;font-family:"JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase}
+.quad.know h3{color:var(--a2)}
+.quad.suggest h3{color:var(--a1)}
+.quad.guess h3{color:#c9a4ff}
+.quad.unknown h3{color:var(--dim)}
+.quad p{color:var(--muted);font-size:13px;margin:0;line-height:1.6}
+
+/* next actions */
+.actiongroup{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px}
+.actiongroup .tag{color:var(--a1);margin:0 0 10px}
+.actiongroup ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:8px;line-height:1.55}
+
+/* consistency gate flow */
+.flow{overflow-x:auto;padding-bottom:8px;margin-top:8px}
+.flow svg{display:block;min-width:820px}
+.flow-node rect{fill:rgba(255,255,255,.03);stroke:var(--line)}
+.flow-node.gate rect{stroke:var(--a1);fill:rgba(240,169,32,.08)}
+.flow-node text.t{fill:var(--text);font-family:Inter,sans-serif;font-size:10.5px}
+.flow-node text.d{fill:var(--dim);font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.06em}
+.flow-arrow{stroke:var(--a1);stroke-width:1.4;fill:none}
+.flow-arrowhead{fill:var(--a1)}
+
+/* severity table */
+.sev-badge{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;padding:3px 9px;border-radius:100px;display:inline-block}
+.sev-blocker{background:rgba(255,106,90,.15);color:var(--a3);border:1px solid rgba(255,106,90,.3)}
+.sev-review{background:rgba(240,169,32,.15);color:var(--a1);border:1px solid rgba(240,169,32,.3)}
+.sev-warning{background:rgba(255,184,77,.12);color:#ffb84d;border:1px solid rgba(255,184,77,.28)}
+.sev-passed{background:rgba(79,209,138,.14);color:var(--a2);border:1px solid rgba(79,209,138,.3)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+.notedbox{background:rgba(240,169,32,.06);border:1px solid rgba(240,169,32,.25);border-radius:12px;padding:16px 20px;margin-top:20px}
+.notedbox p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Kasparro &middot; Auditing an AI-Visibility Audit</p>
+    <h1>Don't ship the audit. <em>Audit the audit.</em></h1>
+    <p class="dek">A client report claimed Orivane won 87% of AI-search mentions. Before it went out, I checked the underlying workbook against its own execution logs and found 20 confirmed errors, three of which quietly inflated the client's best result. Then I specced the tool that catches this automatically next time.</p>
+    <dl class="meta">
+      <div><dt>Client</dt><dd>Orivane (air purifier brand)</dd></div>
+      <div><dt>Audit surface</dt><dd>AI-search brand visibility</dd></div>
+      <div><dt>Errors found</dt><dd>20, of 20 tested</dd></div>
+      <div><dt>Output</dt><dd>Verdict + Consistency Gate PRD</dd></div>
+    </dl>
+    <div class="verdict-badge">Verdict: Partially re-run</div>
+  </div>
+</header>
+
+<!-- 01 THE VERDICT -->
+<section id="verdict">
+  <div class="wrap">
+    <p class="snum mono">01 &middot; The Verdict</p>
+    <h2>Fix part of it. Don't send it. Don't redo it all.</h2>
+    <p class="lede">Four problems need brand-new tests &mdash; they can't be fixed by editing a spreadsheet. The other sixteen just need correcting on existing data.</p>
+    <div class="stats">
+      <div><b>20 / 20</b><span>Confirmed errors, out of everything checked</span></div>
+      <div><b>4</b><span>Need a full re-run, not a data fix</span></div>
+      <div><b>16</b><span>Fixable by correcting the existing record</span></div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p>Two tests were logged as "answered from memory only," but the system's own execution data shows it actually looked things up online and attached sources. <b>The log contradicts itself.</b> One test has the opposite problem: logged as having searched, with zero sources actually attached. One question was never run on the target model at all, and one "test" was an accidental duplicate of another.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 MOST MATERIAL PROBLEMS -->
+<section id="material">
+  <div class="wrap">
+    <p class="snum mono">02 &middot; Most Material Problems</p>
+    <h2>Three errors that change what "winning" means.</h2>
+    <p class="lede">The math errors are serious too, but these three are worse &mdash; they make specific quoted results unusable in front of a client.</p>
+    <div class="problem">
+      <div class="n">1</div>
+      <div><h3>The one clean #1 result may not be real</h3><p>The audit's only clear #1 ranking, in a search where nobody named the brand, comes from a run whose own log contradicts itself about how the answer was produced. Until it's re-run, it can't be shown to a client as proof.</p></div>
+    </div>
+    <div class="problem">
+      <div class="n">2</div>
+      <div><h3>Five "proof" links don't actually back the claim</h3><p>Five citations tagged as directly supporting a claim say otherwise on inspection. Worst case: one claims proof that a product "removes all wildfire smoke," but the same source admits it has no real testing behind it.</p></div>
+    </div>
+    <div class="problem">
+      <div class="n">3</div>
+      <div><h3>Two mislabelled tests inflated the win count</h3><p>Two prompts that named the brand directly were coded as if it hadn't been mentioned &mdash; inflating the reported "non-branded win" count by three results that shouldn't have counted that way.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 FULL ERROR LIST -->
+<section id="errors">
+  <div class="wrap">
+    <p class="snum mono">03 &middot; Full Error Breakdown</p>
+    <h2>All twenty, for the record.</h2>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>What went wrong</th><th>Count</th><th>Where</th></tr></thead>
+        <tbody>
+          <tr><td>Test question miscategorised</td><td class="count">2</td><td class="ids">CMP-01, CMP-02</td></tr>
+          <tr><td>Source type doesn't match its own text</td><td class="count">2</td><td class="ids">CIT-013, CIT-021</td></tr>
+          <tr><td>Same source labelled two different types</td><td class="count">1</td><td class="ids">CIT-011, CIT-027</td></tr>
+          <tr><td>Claimed proof link isn't real proof</td><td class="count">5</td><td class="ids">MAP-006, 009, 013, 021, 023</td></tr>
+          <tr><td>Health claim treated as proven when it isn't</td><td class="count">1</td><td class="ids">MAP-014</td></tr>
+          <tr><td>Quoted source text is misleading</td><td class="count">1</td><td class="ids">CIT-020</td></tr>
+          <tr><td>Label contradicts the actual answer text</td><td class="count">1</td><td class="ids">RUN-016</td></tr>
+          <tr><td>System log contradicts itself</td><td class="count">3</td><td class="ids">RUN-004, RUN-013, RUN-011</td></tr>
+          <tr><td>Same test counted twice</td><td class="count">1</td><td class="ids">RUN-029, RUN-030</td></tr>
+          <tr><td>One test never run on target model</td><td class="count">1</td><td class="ids">PF-02</td></tr>
+          <tr><td>Wrong math base used for summary rates</td><td class="count">1</td><td class="ids">Prelim Summary</td></tr>
+          <tr><td>Sources counted with duplicates included</td><td class="count">1</td><td class="ids">34 vs. 17</td></tr>
+          <tr class="total"><td>Total</td><td class="count">20</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 04 CORRECTED INTELLIGENCE -->
+<section id="corrected">
+  <div class="wrap">
+    <p class="snum mono">04 &middot; Corrected Client Intelligence</p>
+    <h2>What we know, think, guess, and don't know.</h2>
+    <p class="lede">Four confidence levels, kept visibly separate, rather than one number presented as fact.</p>
+    <div class="g2">
+      <div class="quad know">
+        <h3>Know for sure</h3>
+        <p>The brand was mentioned in 25 of 27 valid tests (93%), not the 26 of 30 (87%) first reported &mdash; that number wrongly included 2 broken tests and 1 duplicate. Two website claims don't match the brand's own verified specs.</p>
+      </div>
+      <div class="quad suggest">
+        <h3>The data suggests</h3>
+        <p>When nobody says the brand name out loud, presence is inconsistent, not strong: missing in some runs, ranked fourth in others, appearing at varying ranks elsewhere. The one #1 result is the one that can't yet be trusted.</p>
+      </div>
+      <div class="quad guess">
+        <h3>Best guess (not proven)</h3>
+        <p>The contradiction on the #1 result might just be a logging glitch, not the system secretly searching when it wasn't meant to &mdash; can't confirm without a genuine re-run with full log visibility.</p>
+      </div>
+      <div class="quad unknown">
+        <h3>Still don't know</h3>
+        <p>How the brand compares to competitors (no verified facts on file for any). What a real re-run of the broken tests would show. This audit says nothing about search rankings, traffic, or revenue.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 NEXT ACTIONS -->
+<section id="actions">
+  <div class="wrap">
+    <p class="snum mono">05 &middot; Prioritised Next Actions</p>
+    <h2>Three places to fix, three different risks.</h2>
+    <div class="actiongroup">
+      <p class="tag mono">Audit platform</p>
+      <ul>
+        <li>Re-run the three broken tests to settle whether the best result is real, and fill the coverage gap.</li>
+        <li>Fix every mislabelled test and source, then recalculate every reported number so it traces back to real data.</li>
+      </ul>
+    </div>
+    <div class="actiongroup">
+      <p class="tag mono">Client website</p>
+      <ul>
+        <li>Fix or remove the two claims that directly contradict the brand's own verified specs.</li>
+        <li>Review the claims linking the product to health outcomes &mdash; the biggest reputational risk if wrong.</li>
+      </ul>
+    </div>
+    <div class="actiongroup">
+      <p class="tag mono">Independent authority</p>
+      <ul>
+        <li>Decide whether to pursue the certification the website already implies.</li>
+        <li>Take a fresh copy of the live website before the next audit, to confirm these errors are still present.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 06 PRODUCT DECISION -->
+<section id="decision">
+  <div class="wrap">
+    <p class="snum mono">06 &middot; Product Decision</p>
+    <h2>Build one tool. Leave two things unresolved.</h2>
+    <p class="lede">An automatic check that catches these kinds of contradictions before a report is ever published &mdash; five parts, nine checks, the miscounted-numbers fix ships first.</p>
+    <div class="stats">
+      <div><b>5 parts</b><span>Covering nine distinct checks</span></div>
+      <div><b>9&ndash;12 wk</b><span>Total build time estimate</span></div>
+      <div><b>20 / 20</b><span>Design goal: every known error type caught</span></div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p><b>Not building yet:</b> automatic health-claim scanning, live website checking, or any tool that fixes data on its own without a human. This is a design goal, not a proven track record &mdash; it hasn't been measured on a brand-new audit yet.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 07 THE CONSISTENCY GATE -->
+<section id="gate" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">07 &middot; The Consistency Gate (PRD)</p>
+    <h2>Five checks, before Preliminary can become Approved.</h2>
+    <p class="lede">Audit exports can currently reach "Preliminary" with duplicate runs, provenance contradictions, incorrect labels, broken citations and wrong summary metrics &mdash; caught manually today, one row at a time. The gate validates every export automatically before it can move from <b style="color:var(--text)">Preliminary → Reconciled → Approved</b>, while a person stays responsible for every correction.</p>
+
+    <div class="flow">
+      <svg viewBox="0 0 1160 140" width="1160" height="140">
+        <defs>
+          <marker id="kah" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" class="flow-arrowhead" />
+          </marker>
+        </defs>
+        <path class="flow-arrow" marker-end="url(#kah)" d="M154 60 H180" />
+        <path class="flow-arrow" marker-end="url(#kah)" d="M354 60 H380" />
+        <path class="flow-arrow" marker-end="url(#kah)" d="M554 60 H580" />
+        <path class="flow-arrow" marker-end="url(#kah)" d="M754 60 H780" />
+        <path class="flow-arrow" marker-end="url(#kah)" d="M954 60 H980" />
+        <g class="flow-node"><rect x="4" y="38" width="150" height="44" rx="10" /><text class="t" x="18" y="58">Export generated</text><text class="d" x="18" y="72">PRELIMINARY</text></g>
+        <g class="flow-node gate"><rect x="180" y="38" width="174" height="44" rx="10" /><text class="t" x="194" y="58">Run Identity</text><text class="d" x="194" y="72">DUPLICATES · COVERAGE</text></g>
+        <g class="flow-node gate"><rect x="380" y="38" width="174" height="44" rx="10" /><text class="t" x="394" y="58">Provenance</text><text class="d" x="394" y="72">LOGS VS. DECLARED MODE</text></g>
+        <g class="flow-node gate"><rect x="580" y="38" width="174" height="44" rx="10" /><text class="t" x="594" y="58">Label &harr; Evidence</text><text class="d" x="594" y="72">SUPPORTED · CONTRADICTED</text></g>
+        <g class="flow-node gate"><rect x="780" y="38" width="174" height="44" rx="10" /><text class="t" x="794" y="58">Citation &harr; Evidence</text><text class="d" x="794" y="72">EXCERPT ACCURACY</text></g>
+        <g class="flow-node"><rect x="980" y="38" width="176" height="44" rx="10" /><text class="t" x="994" y="58">Reconciled / Approved</text><text class="d" x="994" y="72">SUMMARY METRICS RE-CALC</text></g>
+      </svg>
+    </div>
+
+    <p class="lede" style="margin:28px 0 12px">Approval requires zero unresolved Blockers and zero unresolved Reviews; Warnings may remain.</p>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Severity</th><th>Meaning</th><th>Release impact</th></tr></thead>
+        <tbody>
+          <tr><td><span class="sev-badge sev-blocker">BLOCKER</span></td><td>Deterministic contradiction</td><td>Stops Approved until fixed or overridden</td></tr>
+          <tr><td><span class="sev-badge sev-review">REVIEW</span></td><td>AI-assisted, likely contradiction</td><td>Requires a recorded human decision</td></tr>
+          <tr><td><span class="sev-badge sev-warning">WARNING</span></td><td>Partial or unclear evidence</td><td>Shown to analyst; does not block</td></tr>
+          <tr><td><span class="sev-badge sev-passed">PASSED</span></td><td>Deterministic check is clean</td><td>Continue</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p>AI-assisted checks never display "Passed" &mdash; a clean judgment-call check remains <b>not flagged, not verified</b>. Blocker overrides require PM sign-off, a mandatory reason and timestamp, with an append-only audit trail. The tool never changes labels, numbers or text itself; it flags, a human fixes the source, and the gate re-runs.</p>
+    </div>
+    <div class="chips">
+      <span class="chip">Deterministic + AI-assisted checks</span>
+      <span class="chip">Append-only audit trail</span>
+      <span class="chip">Human stays the fixer</span>
+    </div>
+    <div class="notedbox">
+      <p><b>V1 scope.</b> Includes workbook consistency, execution provenance, evidence/citation validation and summary metrics. Excludes live website checking and health-outcome claim scanning &mdash; both listed explicitly as "not building yet."</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

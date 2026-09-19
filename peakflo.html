@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Peakflo AP/AR Teardown · Godhuli Vyas</title>
+<meta name="description" content="Product teardown of Peakflo's Invoice-to-Cash and Procure-to-Pay workflows: friction mapped, root causes traced, agentic fixes scored on RICE." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#7c5cff; --a2:#00e0c6; --a3:#ff7a59; --warn:#ffb84d;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(124,92,255,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(0,224,198,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+/* back bar */
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+/* masthead */
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a2);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:62ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+
+/* sections */
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 36px}
+
+/* callout */
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a2);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout b{color:var(--text);font-weight:500}
+
+/* product overview cards */
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+.pcard{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:22px}
+.pcard .tag{color:var(--a2);margin:0 0 10px}
+.pcard h3{font-size:19px;margin-bottom:8px}
+.pcard p{color:var(--muted);font-size:14px;margin:0;line-height:1.55}
+
+/* personas */
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:520px){.g4{grid-template-columns:1fr}}
+.persona{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:18px}
+.persona .role{color:var(--a3);margin:0 0 4px}
+.persona h4{font-size:17px;margin-bottom:14px}
+.persona dl{margin:0;display:grid;gap:10px}
+.persona dt{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin:0}
+.persona dd{margin:3px 0 0;font-size:13px;color:var(--muted);line-height:1.5}
+
+/* AS-IS workflow diagram */
+.flowblock{margin-top:8px}
+.flowblock h3{font-size:16px;color:var(--text);margin-bottom:4px}
+.flowblock .sub{color:var(--dim);font-size:13px;margin:0 0 18px}
+.flow{overflow-x:auto;padding-bottom:8px}
+.flow svg{display:block;min-width:760px}
+.flow-stats{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:16px}
+.flow-stats div{flex:1;background:var(--bg-2);padding:14px 16px;text-align:center}
+.flow-stats b{display:block;font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:22px;
+  background:linear-gradient(120deg,var(--a2),var(--a1));-webkit-background-clip:text;background-clip:text;color:transparent}
+.flow-stats span{display:block;font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);margin-top:6px}
+.flow-node rect{fill:rgba(255,255,255,.03);stroke:var(--line)}
+.flow-node text.t{fill:var(--text);font-family:Inter,sans-serif;font-size:11px}
+.flow-node text.d{fill:var(--dim);font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.06em}
+.flow-arrow{stroke:var(--a1);stroke-width:1.4;fill:none}
+.flow-arrowhead{fill:var(--a2)}
+
+/* friction problems */
+.problem{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;
+  padding:24px;margin-bottom:16px}
+.problem-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.sev{font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;padding:4px 10px;border-radius:100px}
+.sev.critical{background:rgba(255,90,90,.14);color:#ff8080;border:1px solid rgba(255,90,90,.3)}
+.sev.high{background:rgba(255,184,77,.14);color:var(--warn);border:1px solid rgba(255,184,77,.3)}
+.sev.medium{background:rgba(0,224,198,.12);color:var(--a2);border:1px solid rgba(0,224,198,.3)}
+.problem h3{font-size:19px}
+.problem p{color:var(--muted);font-size:14.5px;margin:0 0 12px;line-height:1.6}
+.rc{border-top:1px solid var(--line);padding-top:12px;margin-top:12px;display:grid;gap:10px}
+.rc div{font-size:13.5px;color:var(--muted)}
+.rc b{color:var(--text);font-weight:500;display:block;margin-bottom:3px;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+
+/* solutions */
+.solution{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--a1);border-radius:14px;
+  padding:24px;margin-bottom:18px;position:relative;overflow:hidden}
+.solution::before{content:"";position:absolute;inset:0;background:radial-gradient(360px circle at 0% 0%,rgba(124,92,255,.1),transparent 60%);pointer-events:none}
+.sol-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;position:relative}
+.sol-tag{color:var(--a1);margin:0 0 6px}
+.solution h3{font-size:21px}
+.sol-target{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:20px;color:var(--a2);white-space:nowrap}
+.solution p{color:var(--muted);font-size:14.5px;line-height:1.6;position:relative}
+.steps{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:8px;position:relative}
+.steps li{display:flex;gap:10px;font-size:13.5px;color:var(--muted);align-items:baseline}
+.steps li::before{content:attr(data-n);font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--a2);flex:0 0 16px}
+.tech{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-family:"JetBrains Mono",monospace;
+  font-size:11.5px;color:var(--dim);line-height:1.8;position:relative}
+.tech b{color:var(--a2);font-weight:400;text-transform:uppercase;letter-spacing:.08em;font-size:9.5px;display:block;margin-bottom:6px}
+
+/* RICE table */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--surface),#0a0a10)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;min-width:680px}
+th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:16px 14px 10px;border-bottom:1px solid var(--line)}
+td{padding:14px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text)}
+td.score{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:19px;color:var(--a2)}
+td.pri{font-family:"JetBrains Mono",monospace;font-size:11px}
+td.pri.p0{color:#ff8080}
+td.pri.p1{color:var(--warn)}
+td.pri.p2{color:var(--a2)}
+
+/* roadmap */
+.phase{display:grid;grid-template-columns:110px 1fr;gap:20px;padding:20px 0;border-bottom:1px solid var(--line)}
+.phase:last-child{border-bottom:0}
+@media(max-width:600px){.phase{grid-template-columns:1fr;gap:8px}}
+.phase .wk{color:var(--a2);font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em}
+.phase h4{font-size:16px;margin-bottom:6px}
+.phase p{color:var(--muted);font-size:14px;margin:0;line-height:1.6}
+.phase-outcome{margin-top:20px;padding:16px 20px;background:rgba(0,224,198,.06);border:1px solid rgba(0,224,198,.25);
+  border-radius:12px;font-size:13.5px;color:var(--muted)}
+.phase-outcome b{color:var(--a2);font-weight:500}
+
+/* investigation */
+.invest{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.invest li{background:var(--bg-2);padding:16px 20px;display:flex;gap:14px;font-size:14px;color:var(--muted)}
+.invest b{font-family:"JetBrains Mono",monospace;color:var(--dim);flex:0 0 20px}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Product Teardown · 2026</p>
+    <h1>Peakflo <em>AP/AR</em><br />Product Analysis</h1>
+    <p class="dek">A structured breakdown of Peakflo's Invoice-to-Cash and Procure-to-Pay workflows: mapping friction in multi-stakeholder approval chains, quantifying business impact, and proposing agentic AI solutions with RICE-based prioritisation.</p>
+    <dl class="meta">
+      <div><dt>Author</dt><dd>Godhuli Vyas</dd></div>
+      <div><dt>Company</dt><dd>Peakflo &middot; YC W22</dd></div>
+      <div><dt>Focus</dt><dd>AP/AR Automation, Agentic Workflows</dd></div>
+      <div><dt>Location</dt><dd>Bengaluru, India</dd></div>
+    </dl>
+  </div>
+</header>
+
+<!-- 01 PRODUCT OVERVIEW -->
+<section id="overview">
+  <div class="wrap">
+    <p class="snum mono">01 &middot; Product Overview</p>
+    <h2>Two workflows, one ledger.</h2>
+    <p class="lede">Peakflo automates both sides of the cash cycle: money going out and money coming in, wired into the ERP a finance team already trusts.</p>
+    <div class="g3">
+      <div class="pcard">
+        <p class="tag mono">Core Product</p>
+        <h3>Procure-to-Pay</h3>
+        <p>Automates purchase requests, multi-level approvals, PO creation, three-way invoice matching, and payment execution in a single workflow.</p>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Core Product</p>
+        <h3>Invoice-to-Cash</h3>
+        <p>Manages invoice generation, delivery, collections follow-up, payment reconciliation, and cash posting, reducing Days Sales Outstanding.</p>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Infrastructure</p>
+        <h3>ERP Integrations</h3>
+        <p>Bidirectional sync with NetSuite, Xero, QuickBooks, and SAP, connecting invoice status, payment data, and general ledger entries.</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:20px">
+      <p><b>Market context.</b> Mid-market finance teams ($5M&ndash;$500M revenue) in Southeast Asia and India still process invoices via email chains, spreadsheets, and manual approval routing, creating reconciliation backlogs, late payment penalties, and zero real-time cash visibility. Peakflo's core thesis is eliminating these operational gaps with AI-native automation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 PERSONAS -->
+<section id="personas">
+  <div class="wrap">
+    <p class="snum mono">02 &middot; User Personas</p>
+    <h2>Four people, one invoice.</h2>
+    <p class="lede">Every friction point below traces back to one of these four users failing to get what they need from the system in time.</p>
+    <div class="g4">
+      <div class="persona">
+        <p class="role mono">AP Manager</p>
+        <h4>Priya &middot; Finance Lead, 150-person company</h4>
+        <dl>
+          <div><dt>Goal</dt><dd>Process 200+ vendor invoices monthly, zero duplicate payments, full audit trail.</dd></div>
+          <div><dt>Pain</dt><dd>Chases approvals via email for 3&ndash;5 days per invoice; no SLA enforcement mechanism.</dd></div>
+          <div><dt>Metric</dt><dd>Invoice processing time, on-time payment rate, approval cycle time.</dd></div>
+        </dl>
+      </div>
+      <div class="persona">
+        <p class="role mono">CFO</p>
+        <h4>Rahul &middot; Chief Financial Officer</h4>
+        <dl>
+          <div><dt>Goal</dt><dd>Real-time cash flow visibility; identify early payment discount opportunities.</dd></div>
+          <div><dt>Pain</dt><dd>ERP dashboard shows 8-hour stale data; misses 2&ndash;3% early payment discounts regularly.</dd></div>
+          <div><dt>Metric</dt><dd>DSO, cash conversion cycle, working capital efficiency.</dd></div>
+        </dl>
+      </div>
+      <div class="persona">
+        <p class="role mono">Vendor / Supplier</p>
+        <h4>Arjun &middot; Accounts Receivable</h4>
+        <dl>
+          <div><dt>Goal</dt><dd>Track invoice status without calling; get paid within agreed payment terms.</dd></div>
+          <div><dt>Pain</dt><dd>No self-serve portal; re-submits invoices when there's no response, causing duplicates.</dd></div>
+          <div><dt>Metric</dt><dd>Payment cycle time, dispute resolution rate.</dd></div>
+        </dl>
+      </div>
+      <div class="persona">
+        <p class="role mono">Finance Ops Analyst</p>
+        <h4>Sneha &middot; Operations Analyst</h4>
+        <dl>
+          <div><dt>Goal</dt><dd>Monthly reconciliation completed within 2 days of period close.</dd></div>
+          <div><dt>Pain</dt><dd>Manually exports ERP data, cross-references with bank statements in Excel every month-end.</dd></div>
+          <div><dt>Metric</dt><dd>Reconciliation time, exception rate, close cycle duration.</dd></div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 AS-IS WORKFLOW -->
+<section id="asis">
+  <div class="wrap">
+    <p class="snum mono">03 &middot; AS-IS Workflow Map</p>
+    <h2>How an invoice moves today.</h2>
+    <p class="lede">Both flows were mapped end to end before a single fix was proposed &mdash; this is the process as it actually runs, not as anyone intended it to.</p>
+
+    <div class="flowblock">
+      <h3>Procure-to-Pay &mdash; Current State</h3>
+      <p class="sub">How a vendor invoice moves from submission to payment today</p>
+      <div class="flow">
+        <svg viewBox="0 0 1180 150" width="1180" height="150">
+          <defs>
+            <marker id="ah1" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0 0 L8 4 L0 8 z" class="flow-arrowhead" />
+            </marker>
+          </defs>
+          <!-- connecting arrows -->
+          <path class="flow-arrow" marker-end="url(#ah1)" d="M144 75 H166" />
+          <path class="flow-arrow" marker-end="url(#ah1)" d="M304 75 H326" />
+          <path class="flow-arrow" marker-end="url(#ah1)" d="M464 75 H486" />
+          <path class="flow-arrow" marker-end="url(#ah1)" d="M624 75 H646" />
+          <path class="flow-arrow" marker-end="url(#ah1)" d="M784 75 H806" />
+          <path class="flow-arrow" marker-end="url(#ah1)" d="M944 75 H966" />
+          <!-- nodes -->
+          <g class="flow-node"><rect x="4" y="52" width="140" height="46" rx="10" /><text class="t" x="16" y="72">Purchase request</text><text class="t" x="16" y="86">via email</text><text class="d" x="16" y="106">DAY 0</text></g>
+          <g class="flow-node"><rect x="164" y="52" width="140" height="46" rx="10" /><text class="t" x="176" y="72">Manager approval</text><text class="t" x="176" y="86">(email reply)</text><text class="d" x="176" y="106">DAY 1&ndash;3</text></g>
+          <g class="flow-node"><rect x="324" y="52" width="140" height="46" rx="10" /><text class="t" x="336" y="72">Manual PO</text><text class="t" x="336" y="86">creation in ERP</text><text class="d" x="336" y="106">DAY 3&ndash;4</text></g>
+          <g class="flow-node"><rect x="484" y="52" width="140" height="46" rx="10" /><text class="t" x="496" y="72">Vendor PDF</text><text class="t" x="496" y="86">invoice (email)</text><text class="d" x="496" y="106">DAY 4&ndash;6</text></g>
+          <g class="flow-node"><rect x="644" y="52" width="140" height="46" rx="10" /><text class="t" x="656" y="72">Manual PO</text><text class="t" x="656" y="86">matching</text><text class="d" x="656" y="106">DAY 6&ndash;8</text></g>
+          <g class="flow-node"><rect x="804" y="52" width="140" height="46" rx="10" /><text class="t" x="816" y="72">Multi-level email</text><text class="t" x="816" y="86">approval</text><text class="d" x="816" y="106">DAY 8&ndash;14</text></g>
+          <g class="flow-node"><rect x="964" y="52" width="212" height="46" rx="10" /><text class="t" x="976" y="72">Manual payment sched.</text><text class="t" x="976" y="86">&rarr; reconciliation</text><text class="d" x="976" y="106">DAY 14&ndash;30</text></g>
+        </svg>
+      </div>
+      <div class="flow-stats">
+        <div><b>14&ndash;21</b><span>Days average cycle time</span></div>
+        <div><b>8&ndash;12</b><span>Manual touchpoints per invoice</span></div>
+        <div><b>0%</b><span>Automated SLA enforcement</span></div>
+      </div>
+    </div>
+
+    <div class="flowblock" style="margin-top:44px">
+      <h3>Invoice-to-Cash &mdash; Current State</h3>
+      <p class="sub">How customer invoices are collected and reconciled today</p>
+      <div class="flow">
+        <svg viewBox="0 0 1180 150" width="1180" height="150">
+          <defs>
+            <marker id="ah2" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+              <path d="M0 0 L8 4 L0 8 z" class="flow-arrowhead" />
+            </marker>
+          </defs>
+          <path class="flow-arrow" marker-end="url(#ah2)" d="M144 75 H166" />
+          <path class="flow-arrow" marker-end="url(#ah2)" d="M304 75 H326" />
+          <path class="flow-arrow" marker-end="url(#ah2)" d="M464 75 H486" />
+          <path class="flow-arrow" marker-end="url(#ah2)" d="M624 75 H646" />
+          <path class="flow-arrow" marker-end="url(#ah2)" d="M784 75 H806" />
+          <path class="flow-arrow" marker-end="url(#ah2)" d="M944 75 H966" />
+          <g class="flow-node"><rect x="4" y="52" width="140" height="46" rx="10" /><text class="t" x="16" y="72">Invoice created</text><text class="t" x="16" y="86">in ERP</text><text class="d" x="16" y="106">DAY 0</text></g>
+          <g class="flow-node"><rect x="164" y="52" width="140" height="46" rx="10" /><text class="t" x="176" y="72">Sent via email</text><text class="d" x="176" y="106">DAY 1</text></g>
+          <g class="flow-node"><rect x="324" y="52" width="140" height="46" rx="10" /><text class="t" x="336" y="72">Customer internal</text><text class="t" x="336" y="86">delay</text><text class="d" x="336" y="106">DAY 5&ndash;20</text></g>
+          <g class="flow-node"><rect x="484" y="52" width="140" height="46" rx="10" /><text class="t" x="496" y="72">Manual follow-up</text><text class="t" x="496" y="86">calls / email</text><text class="d" x="496" y="106">DAY 20&ndash;40</text></g>
+          <g class="flow-node"><rect x="644" y="52" width="140" height="46" rx="10" /><text class="t" x="656" y="72">Payment</text><text class="t" x="656" y="86">received</text><text class="d" x="656" y="106">DAY 40&ndash;60</text></g>
+          <g class="flow-node"><rect x="804" y="52" width="140" height="46" rx="10" /><text class="t" x="816" y="72">Manual invoice</text><text class="t" x="816" y="86">matching</text><text class="d" x="816" y="106">DAY 60</text></g>
+          <g class="flow-node"><rect x="964" y="52" width="212" height="46" rx="10" /><text class="t" x="976" y="72">Spreadsheet</text><text class="t" x="976" y="86">reconciliation</text><text class="d" x="976" y="106">MONTH-END</text></g>
+        </svg>
+      </div>
+      <div class="flow-stats">
+        <div><b>45&ndash;60</b><span>Days average DSO</span></div>
+        <div><b>3&ndash;5</b><span>Manual follow-ups per invoice</span></div>
+        <div><b>8hr+</b><span>ERP data lag for CFO</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 FRICTION MAP -->
+<section id="friction">
+  <div class="wrap">
+    <p class="snum mono">04 &middot; Friction Map</p>
+    <h2>Three problems, traced to root cause.</h2>
+    <p class="lede">Not three symptoms &mdash; three specific breakdowns, each with a mechanism and a rupee number attached.</p>
+
+    <div class="problem">
+      <div class="problem-head"><span class="sev critical">Critical Impact</span><h3>No Automated Approval Escalation</h3></div>
+      <p>Invoices stall in multi-level approval hierarchies when approvers are unavailable, on leave, travelling, or overloaded. There is no trigger that fires when an SLA window is breached. AP managers manually track outstanding approvals and send ad-hoc reminders via email, with no visibility into where an invoice is blocked or why.</p>
+      <div class="rc">
+        <div><b>Root cause</b>Approval routing logic is static. The system assigns approvers but does not enforce a time-bound escalation path. No event fires on SLA breach.</div>
+        <div><b>Business impact</b>Average 3&ndash;5 day delay per invoice. For a company processing 200 invoices/month, this compounds to 600&ndash;1,000 delayed processing days monthly, directly increasing Days Payable Outstanding and straining vendor relationships.</div>
+      </div>
+    </div>
+
+    <div class="problem">
+      <div class="problem-head"><span class="sev high">High Impact</span><h3>Duplicate Invoice Detection Gap</h3></div>
+      <p>Vendors re-submit invoices due to network timeouts, lack of confirmation, or accounting errors. Without AI-based similarity detection across invoice fields, AP teams process duplicates or catch them during month-end reconciliation, weeks after the payment has been made and the error has cascaded into financial reporting.</p>
+      <div class="rc">
+        <div><b>Root cause</b>Invoice ingestion relies on manual PO number lookup rather than multi-field similarity scoring across vendor ID, amount, date range, and line item hash.</div>
+        <div><b>Business impact</b>Industry average duplicate payment rate is 0.1&ndash;0.5% of invoice volume. At $10M monthly payables, this represents $10,000&ndash;$50,000 in overpayments per month before reconciliation correction, plus the operational cost of recovery and vendor dispute resolution.</div>
+      </div>
+    </div>
+
+    <div class="problem">
+      <div class="problem-head"><span class="sev medium">Medium Impact</span><h3>Batch ERP Sync Creates Stale Decision Data</h3></div>
+      <p>Invoice status, payment confirmations, and approval outcomes sync to ERP (NetSuite, Xero, QuickBooks) on a batch schedule, hourly or end-of-day. Finance teams and CFOs operate on data that is 1&ndash;8 hours old during the sync window. Early payment discount windows (typically 48 hours) are consistently missed when the payables position is not visible in real time.</p>
+      <div class="rc">
+        <div><b>Root cause</b>The sync layer is batch-based rather than event-driven. No webhook fires when an invoice changes status; instead, changes accumulate for the next scheduled sync cycle.</div>
+        <div><b>Business impact</b>Early payment discounts of 2&ndash;3% on eligible invoices are routinely missed. At $2M monthly eligible payables, that is $40,000&ndash;$60,000 in uncaptured savings annually. CFO dashboards show a trailing position, not current cash exposure.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 05 SOLUTIONS -->
+<section id="solutions">
+  <div class="wrap">
+    <p class="snum mono">05 &middot; Proposed Solutions</p>
+    <h2>TO-BE: three agentic fixes.</h2>
+    <p class="lede">Each fix targets one root cause directly, not the symptom around it.</p>
+
+    <div class="solution">
+      <div class="sol-head">
+        <div><p class="sol-tag mono">Solution 01 &middot; P0 &middot; Highest Priority</p><h3>Agentic AI Auto-Escalation Trigger</h3></div>
+        <div class="sol-target">60% &darr; approval cycle time</div>
+      </div>
+      <p>Build an event-driven agentic workflow that monitors approval SLA compliance in real time. When a defined threshold is breached, the system automatically escalates to the next approver tier, generates a context-aware notification, and logs the action for audit, eliminating the manual tracking burden from AP teams entirely.</p>
+      <ul class="steps">
+        <li data-n="1"><span>Invoice status = "pending approval" + elapsed time exceeds configurable SLA threshold (default: 24h).</span></li>
+        <li data-n="2"><span>Agentic trigger fires: LLM generates escalation message with invoice context, urgency level, and approver history.</span></li>
+        <li data-n="3"><span>Approval re-routed to next tier via REST API; notification sent via email, Slack, and WhatsApp simultaneously.</span></li>
+        <li data-n="4"><span>Escalation logged with timestamp, reason code, and prior approver chain for compliance audit trail.</span></li>
+      </ul>
+      <div class="tech"><b>Technical approach</b>Event trigger on SLA breach &rarr; LLM-generated notification (context-aware) &rarr; Approval routing API &rarr; Multi-channel webhook (email/Slack/WhatsApp) &rarr; Audit log write</div>
+    </div>
+
+    <div class="solution">
+      <div class="sol-head">
+        <div><p class="sol-tag mono">Solution 02 &middot; P1 &middot; High Priority</p><h3>AI-Powered Duplicate Invoice Detection</h3></div>
+        <div class="sol-target">94% &darr; duplicate payment rate</div>
+      </div>
+      <p>On every invoice ingestion event, run a multi-field similarity check against the full invoice history using embedding-based matching. Invoices above an 85% similarity confidence score are routed to an exception queue for human review before entering the payment pipeline, preventing overpayments at the point of entry rather than catching them at month-end.</p>
+      <ul class="steps">
+        <li data-n="1"><span>Extract invoice fingerprint: vendor ID + amount + date range (&plusmn;7 days) + line item hash.</span></li>
+        <li data-n="2"><span>Lightweight embedding model computes cosine similarity against open and closed invoice history.</span></li>
+        <li data-n="3"><span>Score &ge; 85%: routed to exception queue with match explanation; score below threshold: normal processing continues.</span></li>
+      </ul>
+      <div class="tech"><b>Technical approach</b>Invoice ingestion webhook &rarr; embedding model (metadata-only, not full-document LLM) &rarr; cosine similarity scoring &rarr; confidence threshold routing &rarr; exception queue UI with match reason</div>
+    </div>
+
+    <div class="solution">
+      <div class="sol-head">
+        <div><p class="sol-tag mono">Solution 03 &middot; P2 &middot; Medium Priority</p><h3>Event-Driven ERP Sync</h3></div>
+        <div class="sol-target">8hr &rarr; &lt;2min lag</div>
+      </div>
+      <p>Replace the batch sync layer with a webhook-triggered, event-driven sync architecture. Every invoice status change (approved, paid, rejected, disputed) fires an immediate API call to the connected ERP, with an idempotent retry queue ensuring no event is dropped on API failure. This makes the CFO cash flow dashboard current to the minute, not the hour.</p>
+      <ul class="steps">
+        <li data-n="1"><span>Invoice status change event fires in Peakflo (any state transition).</span></li>
+        <li data-n="2"><span>Webhook dispatched immediately to ERP API endpoint (NetSuite / Xero / QuickBooks).</span></li>
+        <li data-n="3"><span>Sync confirmed; idempotent retry queue handles API failures with exponential backoff.</span></li>
+      </ul>
+      <div class="tech"><b>Technical approach</b>State change event &rarr; outbound webhook &rarr; ERP REST API (per integration) &rarr; idempotent retry queue &rarr; sync status audit log &rarr; CFO dashboard real-time feed</div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 RICE -->
+<section id="rice">
+  <div class="wrap">
+    <p class="snum mono">06 &middot; Prioritisation</p>
+    <h2>Scored on RICE.</h2>
+    <p class="lede">Reach &times; Impact &times; Confidence &divide; Effort. The math, not the gut feel, sets the order.</p>
+    <div class="tscroll">
+      <table>
+        <thead><tr><th>Solution</th><th>Reach</th><th>Impact</th><th>Confidence</th><th>Effort</th><th>RICE</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Auto-Escalation Trigger</td>
+            <td>High &mdash; all AP users across accounts</td>
+            <td>High &mdash; directly unblocks invoice cycle</td>
+            <td>High &mdash; SLA data already tracked in system</td>
+            <td>Medium &mdash; 3&ndash;4 week sprint</td>
+            <td class="score">240</td>
+            <td class="pri p0">P0</td>
+          </tr>
+          <tr>
+            <td>Duplicate Invoice Detection</td>
+            <td>Medium &mdash; AP and Finance teams</td>
+            <td>High &mdash; prevents irreversible overpayments</td>
+            <td>High &mdash; embedding-based matching is proven</td>
+            <td>Medium &mdash; 3&ndash;4 week sprint</td>
+            <td class="score">200</td>
+            <td class="pri p1">P1</td>
+          </tr>
+          <tr>
+            <td>Event-Driven ERP Sync</td>
+            <td>High &mdash; all users with ERP connected</td>
+            <td>Medium &mdash; visibility improvement, not prevention</td>
+            <td>Medium &mdash; ERP API rate limits vary by provider</td>
+            <td>High &mdash; 6&ndash;8 week sprint</td>
+            <td class="score">120</td>
+            <td class="pri p2">P2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 07 ROADMAP -->
+<section id="roadmap">
+  <div class="wrap">
+    <p class="snum mono">07 &middot; Implementation Roadmap</p>
+    <h2>Four weeks to a staged pilot.</h2>
+    <div class="phase">
+      <div class="wk mono">Weeks 1&ndash;2</div>
+      <div><h4>Phase 1 &middot; Discovery</h4><p>Structured discovery sessions with AP managers across customer segments. Map the full invoice lifecycle end to end in at least 3 accounts, recording every manual step, handoff, and decision point. Establish metric baselines: current average approval cycle time, duplicate invoice rate, and ERP sync lag by customer tier. Non-negotiable before any build decision.</p></div>
+    </div>
+    <div class="phase">
+      <div class="wk mono">Week 3</div>
+      <div><h4>Phase 2 &middot; PRD</h4><p>Specify escalation trigger conditions, configurable SLA thresholds per approval tier, notification channel logic (email / Slack / WhatsApp), audit trail data model, and rollback mechanism for incorrectly escalated invoices. Detailed enough that engineering can scope without a meeting, acceptance criteria written before a single line of code.</p></div>
+    </div>
+    <div class="phase">
+      <div class="wk mono">Week 4</div>
+      <div><h4>Phase 3 &middot; Sprint Kickoff</h4><p>Decompose the PRD into sprint-ready epics and user stories with explicit acceptance criteria. Instrument metric baselines in analytics. Identify 2 pilot customers for controlled beta. Target: first internal demo of the escalation trigger in staging by end of week 4, with failure modes tested, not just the happy path.</p></div>
+    </div>
+    <div class="phase-outcome"><b>Phase 3 outcome:</b> PRD signed off &middot; Sprint 1 started &middot; Baselines instrumented &middot; Auto-escalation in staging &middot; 2 pilot customers confirmed</div>
+  </div>
+</section>
+
+<!-- 08 INVESTIGATION -->
+<section id="investigate" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">08 &middot; Open Questions</p>
+    <h2>What I'd want to know next.</h2>
+    <p class="lede">A teardown from the outside has limits. These are the five things I'd verify before writing a line of the real spec.</p>
+    <ol class="invest">
+      <li><b>01</b>What is the actual average approval cycle time across customer accounts today, and is SLA breach data tracked per approval tier or only at the invoice level?</li>
+      <li><b>02</b>What percentage of customers have 3+ level approval hierarchies, and are tier configurations managed per customer, per invoice amount threshold, or both?</li>
+      <li><b>03</b>Is the ERP sync layer fully batch-based, or have any status events (e.g. payment confirmations) already been partially migrated to webhooks?</li>
+      <li><b>04</b>Has duplicate invoice detection appeared as a recurring support category, and is there data on the frequency or dollar-value of overpayment incidents reported by customers?</li>
+      <li><b>05</b>How is the agentic AI workflow infrastructure architected: are prompts and routing logic managed centrally, or configured per customer workflow instance?</li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

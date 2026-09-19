@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Growth Accounting &middot; Godhuli Vyas</title>
+<meta name="description" content="Growth Accounting teardown: weekly active users decomposed into new, retained, resurrected and churned, with Quick Ratio as the health check, built in Excel with pivot tables and formulas." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#7c5cff; --a2:#22c98a; --a3:#f5b942;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(124,92,255,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(34,201,138,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a2);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.shot{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px;background:#0a0a10}
+.shot img{width:100%;display:block}
+.shot-cap{padding:10px 16px;font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--dim);border-top:1px solid var(--line);background:var(--bg-2)}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+@media(max-width:820px){.g4{grid-template-columns:repeat(2,1fr)}}
+
+.pcard{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.pcard .tag{color:var(--a2);margin:0 0 8px}
+.pcard h3{font-size:16px;margin-bottom:10px}
+.pcard ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:6px;line-height:1.5}
+
+/* metric cards */
+.metric{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:12px}
+.metric-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap}
+.metric h3{font-size:16px}
+.metric .num{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.08em;color:var(--dim);
+  border:1px solid var(--line);border-radius:100px;padding:3px 10px}
+.metric p{margin:0 0 10px;color:var(--muted);font-size:14px}
+.formula{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--a2);background:var(--sunk);
+  border:1px solid var(--line);border-radius:8px;padding:10px 14px;overflow-x:auto}
+
+/* chain diagram */
+.chain{overflow-x:auto;padding-bottom:8px;margin-top:8px}
+.chain svg{display:block;min-width:1000px}
+.chain-node rect{fill:rgba(255,255,255,.03);stroke:var(--line)}
+.chain-node.new rect{stroke:var(--a2);fill:rgba(34,201,138,.08)}
+.chain-node.ret rect{stroke:var(--a1);fill:rgba(124,92,255,.08)}
+.chain-node.res rect{stroke:var(--a3);fill:rgba(245,185,66,.08)}
+.chain-node.wau rect{stroke:var(--line-2);fill:rgba(255,255,255,.05)}
+.chain-node text.t{fill:var(--text);font-family:Inter,sans-serif;font-size:11px}
+.chain-node text.d{fill:var(--dim);font-family:"JetBrains Mono",monospace;font-size:8px;letter-spacing:.06em}
+.chain-arrow{stroke:var(--a1);stroke-width:1.4;fill:none}
+.chain-arrowhead{fill:var(--a2)}
+
+/* quick ratio bar */
+.qr-scale{display:flex;border-radius:100px;overflow:hidden;border:1px solid var(--line);height:34px;margin-top:14px}
+.qr-scale div{display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase}
+.qr-scale .declining{flex:1;background:rgba(255,122,89,.16);color:var(--a3)}
+.qr-scale .flat{flex:1;background:rgba(245,185,66,.16);color:var(--a3)}
+.qr-scale .growing{flex:1.4;background:rgba(34,201,138,.16);color:var(--a2)}
+.qr-marker{position:relative}
+.qr-here{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--a3);margin-top:8px}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a2);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">Data Analysis &middot; Growth Accounting</p>
+    <h1>Growth accounting <em>&mdash; where the growth actually comes from.</em></h1>
+    <p class="dek">A top-line "users are up" chart hides more than it shows. This teardown decomposes weekly active users into new, retained and resurrected users, then uses the Quick Ratio to check whether that growth is healthy or just masking churn underneath.</p>
+    <dl class="meta">
+      <div><dt>Tools</dt><dd>Excel, pivot tables, formulas</dd></div>
+      <div><dt>Framework</dt><dd>Growth Accounting</dd></div>
+      <div><dt>Base metric</dt><dd>Weekly Active Users</dd></div>
+      <div><dt>Health check</dt><dd>Quick Ratio</dd></div>
+    </dl>
+  </div>
+</header>
+
+<!-- 01 THE CHART -->
+<section id="chart">
+  <div class="wrap">
+    <p class="snum mono">01 &middot; The Chart</p>
+    <h2>Every bar, decomposed.</h2>
+    <p class="lede">Each bar is one week's Weekly Active Users, split into new users (first time active), retained users (active in consecutive weeks), and resurrected users (returning after a gap) &mdash; so the chart shows what's <i class="serif">driving</i> growth, not just the trend line.</p>
+    <div class="shot">
+      <img src="assets/img/thumb-growth.webp" alt="Growth Accounting teardown cover: a stacked bar chart of weekly active users split into new, retained and resurrected users, trending upward" loading="lazy" />
+      <div class="shot-cap">Weekly growth accounting chart</div>
+    </div>
+  </div>
+</section>
+
+<!-- 02 DATA & METHOD -->
+<section id="data">
+  <div class="wrap">
+    <p class="snum mono">02 &middot; Data &amp; Method</p>
+    <h2>Device-level activity, rolled up weekly.</h2>
+    <p class="lede">The source data is device-level: one record per unique device active in a given week. Duplicate (Device_ID, Week) records were removed before any calculation, so the WAU count is never inflated.</p>
+    <div class="g2">
+      <div class="pcard">
+        <p class="tag mono">Key fields</p>
+        <ul>
+          <li><b style="color:var(--text)">Device_ID</b> &mdash; unique user/device identifier</li>
+          <li><b style="color:var(--text)">Week / Week_Num</b> &mdash; week label and chronological index</li>
+          <li><b style="color:var(--text)">First_Week</b> &mdash; first week the device appeared</li>
+          <li><b style="color:var(--text)">Is_New_User</b> &mdash; helper flag for first-time users</li>
+        </ul>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Core identity</p>
+        <p style="color:var(--muted);font-size:14px;margin:0 0 10px">The whole model rests on one accounting identity, computed per week:</p>
+        <div class="formula">WAU(t) = New + Retained + Resurrected</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 METRIC DEFINITIONS -->
+<section id="metrics">
+  <div class="wrap">
+    <p class="snum mono">03 &middot; Metric Definitions &amp; Formulas</p>
+    <h2>Five metrics, each traceable to a formula.</h2>
+    <div class="metric">
+      <div class="metric-head"><h3>Weekly Active Users</h3><span class="num">Pivot table</span></div>
+      <p>Rows: Week &middot; Values: count of unique Device_ID.</p>
+    </div>
+    <div class="metric">
+      <div class="metric-head"><h3>New Users</h3><span class="num">Helper column</span></div>
+      <p>Users whose current week equals their first-ever active week, then filtered where Is_New_User = 1.</p>
+      <div class="formula">=IF(Week_Num = First_Week, 1, 0)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-head"><h3>Retained Users</h3><span class="num">Derived</span></div>
+      <p>Users active this week who are not new.</p>
+      <div class="formula">Retained = WAU − New</div>
+    </div>
+    <div class="metric">
+      <div class="metric-head"><h3>Resurrected Users</h3><span class="num">Derived</span></div>
+      <p>Users returning after a gap in activity. Negative values mean no resurrection that week, floored at zero.</p>
+      <div class="formula">Resurrected = MAX(0, WAU − New − Retained)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-head"><h3>Churned Users</h3><span class="num">Derived</span></div>
+      <p>Users active last week who did not return this week.</p>
+      <div class="formula">Churned = MAX(0, WAU(prev week) − Retained)</div>
+    </div>
+    <div class="metric" style="margin-bottom:0">
+      <div class="metric-head"><h3>Quick Ratio</h3><span class="num">Health check</span></div>
+      <p>Whether growth is outrunning churn, or just offsetting it.</p>
+      <div class="formula">Quick Ratio = (New + Resurrected) / Churned</div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 QUICK RATIO -->
+<section id="quickratio">
+  <div class="wrap">
+    <p class="snum mono">04 &middot; Reading the Quick Ratio</p>
+    <h2>~1&ndash;1.2, in this dataset.</h2>
+    <p class="lede">The scale below is the read on any Quick Ratio value &mdash; and where this cohort actually landed.</p>
+    <div class="qr-scale">
+      <div class="declining">&lt; 1 &middot; Declining</div>
+      <div class="flat">&asymp; 1 &middot; Flat / fragile</div>
+      <div class="growing">&gt; 1 &middot; Growing</div>
+    </div>
+    <p class="qr-here">&uarr; This cohort sits at ~1&ndash;1.2 &mdash; just inside "growing," but barely. New and resurrected users are only marginally outpacing churn.</p>
+  </div>
+</section>
+
+<!-- 05 INSIGHTS -->
+<section id="insights" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">05 &middot; Business Insight &amp; Recommendation</p>
+    <h2>Growth is real, but it's borrowed.</h2>
+    <div class="g3" style="margin-bottom:20px">
+      <div class="pcard">
+        <p class="tag mono">Trajectory</p>
+        <p style="color:var(--muted);font-size:13.5px;margin:0">Moderate, inconsistent growth &mdash; positive overall but not compounding week over week. Early traction, limited stickiness.</p>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Drivers</p>
+        <p style="color:var(--muted);font-size:13.5px;margin:0">Driven mostly by new acquisition. Churn stays consistently high; retention is stable but flat, not improving &mdash; weak habit formation.</p>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Resurrection</p>
+        <p style="color:var(--muted);font-size:13.5px;margin:0">Sporadic, suggesting some latent value in the product &mdash; but nowhere near enough to offset churn on its own.</p>
+      </div>
+    </div>
+    <div class="callout">
+      <p><b>Recommendation:</b> Fix retention before scaling acquisition. Reducing early-stage churn would lift the Quick Ratio directly, letting new-user growth compound instead of leaking out the bottom.</p>
+      <p>Concretely: onboarding, early activation, and repeat-usage triggers &mdash; the three levers most likely to convert a first session into a habit.</p>
+    </div>
+    <div class="chips">
+      <span class="chip">Onboarding</span>
+      <span class="chip">Early activation</span>
+      <span class="chip">Repeat-usage triggers</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

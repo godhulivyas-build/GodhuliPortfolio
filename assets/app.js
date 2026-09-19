@@ -474,6 +474,16 @@
       clearTimeout(scrollTimer);
       scrollTimer = setTimeout(function () { aim.r = 0; kick(); }, 900);
     }, { passive: true });
+
+    /* click the play button: swap in the video, autoplaying */
+    var playBtn = $('#portraitPlay'), videoBox = $('#portraitVideo');
+    if (playBtn && videoBox) {
+      playBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        videoBox.innerHTML = '<iframe src="https://drive.google.com/file/d/1hGLctFiTh3vqwMrpFqbJsNpXWdhTwyq0/preview?autoplay=1" allow="autoplay" allowfullscreen></iframe>';
+        box.classList.add('playing');
+      });
+    }
   }
 
   /* reveals */

@@ -373,19 +373,38 @@ window.PORTFOLIO = {
     {
       id: 'harness',
       tier: 'Production',
-      title: 'Three-Agent Content Harness',
+      title: 'Five-Agent Content Harness',
       org: 'CupShup · internal, production',
       preview: 'harness',
-      thesis: 'Generation was never the hard part. The hard part was building an evaluator I trusted enough to take myself out of the approval step.',
+      thesis: 'A single model asked to just write a draft gives generic copy, factual errors and bad formatting. Splitting the job into five narrow agents behind one orchestrator fixed all three at once.',
       bullets: [
-        'Three agents, one orchestrator: extraction structures keyword and intent data from the Ahrefs API, generation drafts on Claude against that brief plus the brand corpus, and a judge scores the result.',
-        'The judge is an LLM scoring against a weighted rubric, not a vibe check. Rubric weights, the failure taxonomy and the 75 threshold were tuned against a hand-graded sample first.',
-        'Below 75, the draft routes back to generation with the exact dimension it failed, so the loop is diagnostic rather than a blind retry. At or above 75 it publishes with no human approval step.',
-        'I fixed the data before building the agents: keyword variants deduplicated on intent and SERP overlap, so the extraction agent was not structuring noise.'
+        'Scout queries the Ahrefs API for real keyword volume and search intent. Copywriter drafts against that brief plus the brand voice corpus. Optimizer inserts H-tags, meta descriptions and internal links. Illustrator generates visual prompts for DALL-E/Napkin AI. Critic grades the final copy against a factual positioning rubric.',
+        'The quality loop: below a 75% threshold, the Orchestrator rejects the draft and routes it back to the Copywriter with the specific error, not a blind retry. At or above 75%, it moves to human review.',
+        'A Single Source of Truth markdown index for brand parameters eliminated factual discrepancies, like conflicting city counts, before the Critic ever had to catch them.',
+        'Production cycle time fell 90%, from 6 hours to 45 minutes of human review, while draft rejection rates dropped to 8%.'
       ],
-      metrics: [{ n: '60→99%', l: 'Site health, Ahrefs' }, { n: '75', l: 'Judge threshold' }],
+      metrics: [{ n: '90%', l: 'Faster production cycle' }, { n: '8%', l: 'Draft rejection rate' }],
       stack: ['Claude', 'Ahrefs API', 'LLM-as-a-Judge', 'Weighted rubric', 'Orchestrator routing'],
       links: [{ label: 'Runs on cupshup.co.in', url: 'https://www.cupshup.co.in/' }]
+    },
+    {
+      id: 'cupshupplatform',
+      tier: 'Live',
+      title: 'CupShup AI Platform, Positioning & Onboarding',
+      org: 'CupShup · Client-facing enablement',
+      preview: 'cupshup',
+      thesis: 'A 20+ tool platform is useless if the first-time user cannot find their way in. I built the pages that explain it, then sat with clients until they could use it themselves.',
+      bullets: [
+        'Built and positioned the platform product pages for CupShup’s AI Marketing Platform across SEO, SMM, Email and WhatsApp automation modules.',
+        'Sat directly with brand stakeholders to diagnose their marketing gaps, demo the tool mechanics, and record custom video walkthroughs for each client.',
+        'This high-touch onboarding lowered user friction, accelerated client activation, and drove feature adoption among early adopters.'
+      ],
+      metrics: [{ n: '20+', l: 'Tools positioned' }, { n: '4', l: 'Automation modules' }],
+      stack: ['Product positioning', 'Client enablement', 'Video walkthroughs', 'CupShup platform'],
+      links: [
+        { label: 'Platform', url: 'https://www.cupshup.co.in/platform' },
+        { label: 'User guide video', url: 'https://app.trupeer.ai/view/hkKnoDnEJ/cupshup-ai-dashboard-user-guide' }
+      ]
     },
     {
       id: 'p2p',

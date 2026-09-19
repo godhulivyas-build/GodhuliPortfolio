@@ -64,8 +64,8 @@
         '<path class="rig-line d2" d="M338 53 H366" stroke="url(#rigG)" marker-end="url(#rigA)"/>' +
         '<path class="rig-line d3" d="M438 78 V150 H140 V178" stroke="url(#rigG)" marker-end="url(#rigA)"/>' +
         '<path class="rig-retry" d="M400 78 V120 H262 V88" marker-end="url(#rigR)"/>' +
-        '<text class="rig-note" x="272" y="112">&lt; 75 · retry with the reason</text>' +
-        '<text class="rig-note ok" x="150" y="144">≥ 75 · ships with no approval step</text>' +
+        '<text class="rig-note" x="272" y="112">&lt; 75% · retry with the reason</text>' +
+        '<text class="rig-note ok" x="150" y="144">≥ 75% · moves to human review</text>' +
         '<g class="rig-node"><rect x="20" y="28" width="128" height="50" rx="12"/>' +
           '<text class="rig-t" x="38" y="50">Extract</text><text class="rig-s" x="38" y="66">AHREFS · INTENT</text></g>' +
         '<g class="rig-node"><rect x="186" y="28" width="152" height="50" rx="12"/>' +
@@ -73,7 +73,7 @@
         '<g class="rig-node judge"><rect x="376" y="28" width="124" height="50" rx="12"/>' +
           '<text class="rig-t" x="394" y="50">Judge</text><text class="rig-s" x="394" y="66">WEIGHTED RUBRIC</text></g>' +
         '<g class="rig-node out"><rect x="40" y="186" width="210" height="46" rx="12"/>' +
-          '<text class="rig-t" x="58" y="206">Published</text><text class="rig-s" x="58" y="222">NO HUMAN IN THE LOOP</text></g>' +
+          '<text class="rig-t" x="58" y="206">Human review</text><text class="rig-s" x="58" y="222">THEN PUBLISHED</text></g>' +
       '</svg></div>',
     p2p:
       '<div class="pv pv-p2p">' +

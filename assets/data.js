@@ -241,6 +241,15 @@ window.PORTFOLIO = {
       link: 'peakflo.html'
     },
     {
+      id: 'cashkaro',
+      type: 'Case study',
+      title: 'CashKaro Recall Engine',
+      note: 'Reframed a missed-cashback problem from awareness to timing, then corrected an earlier draft’s inflated math before speccing the fix.',
+      facts: ['Deterministic, no AI in the loop', 'Bot-contamination check built in'],
+      img: '',
+      link: 'cashkaro.html'
+    },
+    {
       id: 'zomato',
       type: 'Case study',
       title: 'Zomato Product Strategy & Growth',

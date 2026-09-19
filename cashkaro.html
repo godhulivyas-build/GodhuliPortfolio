@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CashKaro Recall Engine &middot; Godhuli Vyas</title>
+<meta name="description" content="CashKaro case study: reframing a missed-cashback problem from awareness to timing, correcting an earlier draft's inflated math, and speccing a deterministic Recall Engine instead of reaching for AI." />
+<meta name="theme-color" content="#07070a" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#07070a; --bg-2:#0b0b11; --surface:#101017; --sunk:#0c0c13;
+  --line:rgba(255,255,255,.09); --line-2:rgba(255,255,255,.2);
+  --text:#ececf1; --muted:#8d8da0; --dim:#5d5d72;
+  --a1:#ff6a3d; --a2:#2dd4bf; --a3:#f5b942;
+  --r:16px; --maxw:980px;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-weight:300;line-height:1.65;font-size:16.5px;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(900px 600px at 85% -6%, rgba(255,106,61,.14), transparent 60%),
+             radial-gradient(700px 500px at 0% 30%, rgba(45,212,191,.08), transparent 60%);
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:2}
+a{color:inherit}
+h1,h2,h3,h4{font-weight:400;letter-spacing:-.02em;line-height:1.12;margin:0}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase}
+.serif{font-family:"Instrument Serif",Georgia,serif;font-style:italic}
+
+.backbar{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);
+  background:rgba(7,7,10,.85);border-bottom:1px solid var(--line);padding:14px 0}
+.backbar a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--muted);font-size:13px;transition:color .2s}
+.backbar a:hover{color:var(--text)}
+
+header{padding:56px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--a1);margin:0 0 16px}
+h1{font-size:clamp(32px,5.4vw,54px);letter-spacing:-.03em}
+h1 em{font-style:italic;font-family:"Instrument Serif",Georgia,serif;
+  background:linear-gradient(100deg,var(--a1),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.dek{color:var(--muted);font-size:17px;max-width:64ch;margin:18px 0 0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-top:32px}
+@media(max-width:700px){.meta{grid-template-columns:repeat(2,1fr)}}
+.meta div{background:var(--bg-2);padding:16px 18px}
+.meta dt{color:var(--dim);font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;margin:0}
+.meta dd{margin:6px 0 0;font-size:14.5px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:100px;text-decoration:none;
+  font-size:13.5px;border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn:hover{transform:translateY(-1px);border-color:var(--line-2)}
+.btn.primary{background:linear-gradient(100deg,var(--a1),var(--a3));border-color:transparent;color:#1a0900}
+
+section{padding:64px 0;border-bottom:1px solid var(--line)}
+.snum{color:var(--dim);margin:0 0 8px}
+h2{font-size:clamp(24px,3.6vw,34px);margin-bottom:8px}
+.lede{color:var(--muted);max-width:64ch;font-size:15.5px;margin:0 0 32px}
+
+.callout{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-left:3px solid var(--a1);
+  border-radius:12px;padding:20px 24px;margin-top:8px}
+.callout p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.callout p+p{margin-top:12px}
+.callout b{color:var(--text);font-weight:500}
+
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:820px){.g3{grid-template-columns:1fr}}
+
+.pcard{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.pcard .tag{color:var(--a1);margin:0 0 8px}
+.pcard h3{font-size:16px;margin-bottom:10px}
+.pcard ul{margin:0;padding-left:18px;color:var(--muted);font-size:13.5px;display:grid;gap:6px;line-height:1.5}
+.pcard p{color:var(--muted);font-size:13.5px;margin:0}
+
+/* evidence ranking */
+.evidence{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin-bottom:10px;display:grid;grid-template-columns:32px 1fr;gap:14px}
+.evidence .n{font-family:"Instrument Serif",Georgia,serif;font-style:italic;font-size:24px;color:var(--a1)}
+.evidence h3{font-size:14.5px;margin-bottom:6px}
+.evidence p{color:var(--muted);font-size:13px;margin:0;line-height:1.55}
+.evidence .weight{font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+
+/* correction rows */
+.correction{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;margin-bottom:10px}
+.correction .row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+@media(max-width:700px){.correction .row{grid-template-columns:1fr}}
+.correction .before,.correction .after{padding:12px 14px;border-radius:10px;font-size:13px;line-height:1.5}
+.correction .before{background:rgba(255,106,61,.06);border:1px solid rgba(255,106,61,.22);color:var(--muted)}
+.correction .after{background:rgba(45,212,191,.06);border:1px solid rgba(45,212,191,.22);color:var(--muted)}
+.correction .label{font-family:"JetBrains Mono",monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;display:block}
+.correction .before .label{color:var(--a1)}
+.correction .after .label{color:var(--a2)}
+.correction h3{font-size:15px;margin-bottom:4px}
+
+/* recall engine job cards */
+.jobcard{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:20px}
+.jobcard .tag{color:var(--a2);margin:0 0 8px}
+.jobcard h3{font-size:16px;margin-bottom:8px}
+.jobcard p{color:var(--muted);font-size:13.5px;margin:0;line-height:1.55}
+
+/* rollout table */
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--surface),#0a0a10)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
+th{text-align:left;font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);font-weight:400;padding:14px 12px 10px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--text)}
+td.decision{color:var(--a2)}
+td.kill{color:var(--a1)}
+
+/* reachability matrix */
+.matrix{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:900px){.matrix{grid-template-columns:repeat(2,1fr)}}
+.mcell{background:linear-gradient(180deg,var(--surface),#0a0a10);border:1px solid var(--line);border-radius:14px;padding:16px}
+.mcell.reach{border-color:rgba(45,212,191,.3)}
+.mcell.noreach{border-color:rgba(255,106,61,.3)}
+.mcell h4{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;margin-bottom:8px}
+.mcell.reach h4{color:var(--a2)}
+.mcell.noreach h4{color:var(--a1)}
+.mcell p{color:var(--muted);font-size:12.5px;margin:0;line-height:1.5}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+  border:1px solid var(--line);border-radius:100px;padding:6px 12px;background:rgba(255,255,255,.02)}
+
+footer{padding:56px 0 60px;text-align:center}
+footer p{color:var(--dim);font-size:13px;margin:0 0 18px}
+footer a.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--text);
+  border:1px solid var(--line);border-radius:100px;padding:12px 22px;font-size:13.5px;transition:.25s}
+footer a.back:hover{border-color:var(--line-2);transform:translateY(-1px)}
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <div class="wrap">
+    <a href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</div>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow mono">CashKaro &middot; Case Study &middot; Recall Engine</p>
+    <h1>CashKaro watches your shopping, <em>so you don't have to remember us.</em></h1>
+    <p class="dek">The brief said existing users still buy eligible purchases without going through CashKaro. The easy read is "awareness problem." The actual read, after splitting the leak into its real parts and correcting an earlier draft's inflated math, is a timing problem with a much smaller, much more honest fix.</p>
+    <dl class="meta">
+      <div><dt>Product</dt><dd>CashKaro, existing users</dd></div>
+      <div><dt>Reframe</dt><dd>Awareness &rarr; timing</dd></div>
+      <div><dt>Fix proposed</dt><dd>Recall Engine, deterministic</dd></div>
+      <div><dt>AI in the loop</dt><dd>None, on purpose</dd></div>
+    </dl>
+    <div class="cta">
+      <a class="btn primary" href="https://cashback-fidelity-finder.lovable.app/" target="_blank" rel="noopener">Open the visualisation <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- 01 PROBLEM -->
+<section id="problem">
+  <div class="wrap">
+    <p class="snum mono">The Problem</p>
+    <h2>CashKaro is built to be checked, not to be present.</h2>
+    <p class="lede">Existing users do not have an awareness problem. They have a timing problem. CashKaro is a coupon in a drawer at home &mdash; you know it's there, but by the time you're on the retailer's checkout page, you've forgotten the drawer. You pay. The cashback never happens.</p>
+    <div class="callout">
+      <p><b>Two different diseases, only one is ours to cure.</b> "I have never heard of CashKaro" is an awareness problem and belongs to marketing. "I know CashKaro, I just didn't think of it while buying" is a timing problem &mdash; and that second one is what this case study is about.</p>
+    </div>
+    <p class="lede" style="margin-top:28px">But a missed purchase is one of three things, not two. Splitting it into "orders CashKaro saw" versus "orders it lost" is incomplete, and the incompleteness is the most important thing here: the lost journeys hold two populations that look identical in the data and need opposite treatment.</p>
+    <div class="g2">
+      <div class="pcard">
+        <p class="tag mono">The recoverable case</p>
+        <h3>Stalled, still deciding</h3>
+        <p>User clicked out and did not buy &mdash; distracted, still comparing, waiting for a sale. A memory problem, and a well-timed nudge genuinely recovers this order.</p>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">The dangerous case</p>
+        <h3>Bought, but tracking broke</h3>
+        <p>User clicked out, bought, and the tracking failed &mdash; a retailer app killed the cookie, an extension overwrote the affiliate code, an adblocker stripped the parameters, or a later link took last-click. This user already paid. A nudge telling them to "complete your purchase" tells a paying customer their cashback failed.</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px">
+      <p><b>Why this matters more than it looks.</b> For a cashback brand, wrongly implying a customer's money didn't track is the most expensive message you can send &mdash; it attacks the one thing the product is for. The size of the "already paid" group isn't an edge case for careful copy to absorb. It's a gating variable that decides whether the feature should ship at all, and nobody currently knows it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 02 EVIDENCE & MATH -->
+<section id="evidence">
+  <div class="wrap">
+    <p class="snum mono">The Evidence, and What the Math Actually Says</p>
+    <h2>Ranked by how much weight it can carry.</h2>
+    <p class="lede">Not every data point deserves the same trust. Ranking the evidence first, before building any model on top of it, is what keeps the forecast honest.</p>
+    <div class="evidence">
+      <span class="n">1</span>
+      <div><h3>CashKaro's own user conversations <span class="weight">Primary</span></h3><p>Existing users, including people who have transacted before, still make eligible purchases without going through CashKaro. This is the problem speaking for itself, not a proxy for it.</p></div>
+    </div>
+    <div class="evidence">
+      <span class="n">2</span>
+      <div><h3>The company's own funnel <span class="weight">Primary, but unmeasured</span></h3><p>Click-outs happen; a fraction never becomes a tracked order. The size of that fraction, and its split between "still deciding" and "tracking broke," is unknown &mdash; measuring it is the entire point of the first rollout phase.</p></div>
+    </div>
+    <div class="evidence">
+      <span class="n">3</span>
+      <div><h3>Industry cart-abandonment benchmarks <span class="weight">Demoted</span></h3><p>Used as loose colour only, not as support: published averages don't disclose device or geography caveats, and cart abandonment is the wrong construct &mdash; it measures "added to cart, didn't buy," while the real leak measures "clicked out, no order tracked," which also includes purchases that did happen.</p></div>
+    </div>
+
+    <h2 style="margin-top:36px">The math box collapses.</h2>
+    <p class="lede">An earlier draft carried several assumption ranges treated as independent. They weren't: baseline orders, click-out volume and conversion rate are related by one identity, so only two of those numbers are actually free to move &mdash; and the draft's stated ranges for them were not mutually consistent with each other.</p>
+    <div class="callout">
+      <p><b>The one load-bearing number was never derived.</b> The draft asserted the nudge-recovery rate outright, with no derivation, and that single unsupported number carried the entire business case. It can instead be built bottom-up: recovery rate = (nudge click-through rate) &times; (tap-to-tracked-order rate), using real push-notification benchmarks for both terms rather than a guess. The rebuilt range sits far below what the draft assumed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 03 HONEST FORECAST -->
+<section id="forecast">
+  <div class="wrap">
+    <p class="snum mono">The Honest Forecast</p>
+    <h2>Adding the variable the draft skipped.</h2>
+    <p class="lede">The draft's headline lift was computed as if every stalled click-out were genuinely recoverable. It isn't. A third variable &mdash; the share of stalls that are truly "still deciding" rather than "tracking broke" &mdash; has to sit inside the formula, not outside it.</p>
+    <div class="correction">
+      <h3>What changed once the missing variable went in</h3>
+      <div class="row">
+        <div class="before"><span class="label">Draft's claim</span>A confident double-digit lift, asserted as the headline number, with the recovery share treated as if it were 100% genuine memory-recoverable demand.</div>
+        <div class="after"><span class="label">Corrected</span>A much more modest central case, with the recovery rate rebuilt from real push benchmarks and the "already paid" share added as its own variable instead of assumed away.</div>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:24px">This doesn't kill the idea. It states it correctly: Recall Engine is a cheap, well-targeted experiment with a modest expected return and a real chance of failing its own kill-line in most tested scenarios. That's exactly the profile that deserves a measured test before anything larger gets funded &mdash; and it's a stronger case than the draft's, because it survives contact with the benchmarks instead of avoiding them.</p>
+
+    <div class="correction">
+      <h3>The browser extension, re-scored</h3>
+      <div class="row">
+        <div class="before"><span class="label">Draft's verdict</span>Dropped the browser extension because India is framed as an overwhelmingly mobile market.</div>
+        <div class="after"><span class="label">Corrected</span>A meaningful share of Indian traffic is still desktop, and the extension isn't a proposal &mdash; it's a product CashKaro already ships. Correct verdict: not "drop, too small," but "already shipped; check whether it's one of the things breaking our own attribution."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 RECALL ENGINE -->
+<section id="recall">
+  <div class="wrap">
+    <p class="snum mono">Recall Engine</p>
+    <h2>Three jobs, one nudge, deterministic rules.</h2>
+    <p class="lede">Priya researches for days, buys a handful of big-ticket things a quarter, and already knows CashKaro. She just never remembers it at the moment she pays. The engine remembers for her, and the last screen does the real work: a confirmed cashback amount, tracked.</p>
+    <div class="g3">
+      <div class="jobcard"><p class="tag mono">Remind</p><h3>Your cashback is waiting</h3><p>Fired only after a fixed minimum delay tied to how long the retailer could plausibly take to report the order &mdash; never before that window closes, category-tuned after it.</p></div>
+      <div class="jobcard"><p class="tag mono">Re-arm</p><h3>A fresh tracking window</h3><p>The tap re-opens attribution rather than just showing a message, since some retailers' windows only extend if the item is re-touched inside them.</p></div>
+      <div class="jobcard"><p class="tag mono">Defend</p><h3>Protect last-click</h3><p>A creator's affiliate link tapped while researching currently takes last-click by default; the re-tap puts CashKaro back in line before checkout.</p></div>
+    </div>
+    <div class="callout" style="margin-top:20px">
+      <p><b>The rule that protects paying customers.</b> Never claim "no order" before the retailer could possibly have reported one. And the copy never asserts a negative: "Still deciding? Your cashback is waiting" for the recoverable case, and, separately, "Already bought? Your cashback may still be tracking, check here" for the already-paid case. The product never tells a customer their money is gone, because it can't actually know that.</p>
+    </div>
+    <p class="lede" style="margin-top:24px">Capped at two nudges a week, biased toward the largest stalled journey, since a researcher comparing three retailers for one purchase generates three click-outs, not three separate reasons to be nudged.</p>
+  </div>
+</section>
+
+<!-- 05 MEASUREMENT & ROLLOUT -->
+<section id="rollout">
+  <div class="wrap">
+    <p class="snum mono">Measurement &amp; Rollout</p>
+    <h2>One number decides everything else.</h2>
+    <p class="lede"><b style="color:var(--text)">North Star:</b> incremental tracked orders per existing user per quarter, nudged minus a held-out control. Nothing else counts as success on its own.</p>
+    <div class="g2">
+      <div class="pcard">
+        <p class="tag mono">Leading indicators</p>
+        <ul><li>Nudge to tap</li><li>Tap to click-out</li><li>Click-out to tracked order</li></ul>
+      </div>
+      <div class="pcard">
+        <p class="tag mono">Guardrails</p>
+        <ul><li>Push opt-out rate and uninstalls</li><li>Support tickets mentioning nudges</li><li>Non-nudged tracked orders inside the nudged group must not fall &mdash; if they do, the product is renting orders, not building a habit</li></ul>
+      </div>
+    </div>
+    <div class="tscroll" style="margin-top:20px">
+      <table>
+        <thead><tr><th>Stage</th><th>What happens</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>First cohort</td><td>Push allowed only to users with a proven stalled click-out in a qualifying category.</td><td>Proven intent, reachable channel, exactly the behaviour being nudged.</td></tr>
+          <tr><td>Safety window</td><td>A short observation period before scaling.</td><td class="decision">Safety only: opt-outs, complaints, mistimed nudges, and the first read on the already-paid share.</td></tr>
+          <tr><td>Powered test</td><td>A held-out control for one full quarter.</td><td class="decision">First stage with real statistical power on the North Star.</td></tr>
+          <tr><td>Scale / Iterate / Kill</td><td>Decided by the North Star result against a pre-set bar.</td><td class="kill">Kill if lift stays near zero after a full quarter, or if opt-outs and complaints spike, or if the already-paid share turns out to dominate the stalled group.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:20px">
+      <p><b>Where AI sits: nowhere in this loop, on purpose.</b> Triggers, the reporting-lag floor, category delays, caps and copy are all deterministic rules &mdash; cheaper, testable, and auditable when a nudge misfires at a paying customer. Machine learning earns a place later, predicting per-user send time once real volume exists. An LLM adds nothing inside this loop today.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 06 THE LAYER ABOVE -->
+<section id="above" style="border-bottom:0">
+  <div class="wrap">
+    <p class="snum mono">The Layer Above: Channels, Bots, and Who's Actually Reachable</p>
+    <h2>A correction to my own framing.</h2>
+    <p class="lede">I had been calling everyone who never opened CashKaro "invisible." That's too pessimistic, and tagging inbound traffic properly is what exposes the error &mdash; it splits one lumped-together group into two very different ones.</p>
+    <div class="matrix">
+      <div class="mcell noreach"><h4>Never arrived</h4><p>No visit, no tag, no row. Genuinely invisible, and genuinely unreachable by anything built into the product. That's a marketing-budget question, not a product one.</p></div>
+      <div class="mcell reach"><h4>Visited, zero click-outs</h4><p>Visible and reachable, and never once looked at. The fix isn't the Recall Engine &mdash; there's no click-out to react to. It's a nudge at a different moment: on exit, or at the start of the next session.</p></div>
+      <div class="mcell reach"><h4>Clicked out, no order</h4><p>Reachable. Recall Engine, as specced above.</p></div>
+      <div class="mcell reach"><h4>Clicked out, order broke</h4><p>Reachable, but never nudge toward "complete your purchase." Attribution repair and helping them find their missing cashback instead.</p></div>
+    </div>
+
+    <h2 style="margin-top:36px">The bot-share check that could invalidate the whole case.</h2>
+    <p class="lede">Every number in this analysis is divided by click-out volume. If a meaningful share of what's counted as click-outs are actually scrapers, crawlers or automated coupon tools, the denominator is inflated, the conversion rate looks worse than it is, and the opportunity looks bigger than it is. A coupon-and-cashback property is exactly the kind of site that attracts automated scraping, and nobody currently knows what that share is.</p>
+    <div class="callout">
+      <p><b>Filtering bot traffic is the cheapest item on the entire list, and it can invalidate the headline on its own.</b> It belongs before the experiment runs, not after.</p>
+    </div>
+    <p class="lede" style="margin-top:20px">The revised order of work, once this is accounted for: filter bots first, because it's free and it can kill the project on its own. Then study the "visited, never clicked out" group, since it's already visible and already reachable and has never been examined. Then run the Recall Engine experiment on the recoverable group. Then size the truly invisible group with a consented panel. Recall Engine is still worth building &mdash; it just moved from first in line to third, and it got there by arithmetic rather than by preference.</p>
+    <div class="chips">
+      <span class="chip">Evidence ranking</span>
+      <span class="chip">Bottom-up derivation</span>
+      <span class="chip">Deterministic rules</span>
+      <span class="chip">Guardrail-first rollout</span>
+      <span class="chip">Bot contamination check</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Written by Godhuli Vyas &middot; godhulivyas@gmail.com &middot; linkedin.com/in/godhuli-vyas</p>
+    <a class="back" href="index.html#assets">&#8592; Back to the portfolio</a>
+  </div>
+</footer>
+
+</body>
+</html>

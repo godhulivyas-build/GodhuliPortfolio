@@ -482,6 +482,11 @@
         e.stopPropagation();
         videoBox.innerHTML = '<iframe src="https://drive.google.com/file/d/1hGLctFiTh3vqwMrpFqbJsNpXWdhTwyq0/preview?autoplay=1" allow="autoplay" allowfullscreen></iframe>';
         box.classList.add('playing');
+        videoBox.style.opacity = '1';
+        videoBox.style.pointerEvents = 'auto';
+        videoBox.style.zIndex = '6';
+        playBtn.style.opacity = '0';
+        playBtn.style.pointerEvents = 'none';
       });
     }
   }

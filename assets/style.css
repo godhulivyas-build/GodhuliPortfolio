@@ -249,7 +249,11 @@ td.num{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--a2);whi
 .gal .a{grid-column:span 7;aspect-ratio:16/8}
 .gal .b{grid-column:span 5;aspect-ratio:16/11}
 .gal .c,.gal .d,.gal .e{grid-column:span 4;aspect-ratio:4/3}
-@media(max-width:760px){.gal figure{grid-column:span 12!important;aspect-ratio:4/3!important}}
+@media(max-width:760px){
+  .gal{display:flex;overflow-x:auto;scroll-snap-type:x proximity;gap:10px;max-width:100%;
+    -webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .gal figure{flex:0 0 78vw;grid-column:unset!important;aspect-ratio:4/3!important;scroll-snap-align:start}
+}
 
 /* ---------------- footer ---------------- */
 footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-index:2}
@@ -350,7 +354,11 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-
 
 /* photos inside a sheet */
 .sheet-photos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
-@media(max-width:520px){.sheet-photos{grid-template-columns:1fr}}
+@media(max-width:520px){
+  .sheet-photos{display:flex;grid-template-columns:unset;overflow-x:auto;scroll-snap-type:x proximity;
+    gap:10px;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+  .sheet-photos figure{flex:0 0 72vw;scroll-snap-align:start}
+}
 .sheet-photos figure{margin:0;position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;aspect-ratio:4/3;background:#0b0b11}
 .sheet-photos img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.45) contrast(1.05);transition:filter .5s var(--ease)}
 .sheet-photos figure:hover img{filter:none}
@@ -435,7 +443,13 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-
 @keyframes vcolDown{from{transform:translateY(-50%)}to{transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.path-collage .vcol{animation:none}}
 @media(max-width:1200px){.path-collage{width:220px}.path-collage .vcol img{height:104px}}
-@media(max-width:900px){.path-wrap{flex-direction:column}.path-collage{display:none}}
+@media(max-width:900px){
+  .path-wrap{flex-direction:column}
+  .path-collage{position:static;display:flex;flex-direction:row;width:100%;height:132px;
+    overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;margin-top:18px}
+  .path-collage .vcol{flex-direction:row;animation:none!important}
+  .path-collage .vcol img{width:150px;height:120px;flex-shrink:0;scroll-snap-align:start}
+}
 
 /* saarthi replica, english build */
 .pv-saarthi .pv-lang{margin-left:auto;font-size:6.5px;opacity:.6}

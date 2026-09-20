@@ -404,7 +404,7 @@ window.PORTFOLIO = {
       title: 'Five-Agent Content Harness',
       org: 'CupShup · internal, production',
       preview: 'harness',
-      thesis: 'A single model asked to just write a draft gives generic copy, factual errors and bad formatting. Splitting the job into five narrow agents behind one orchestrator fixed all three at once.',
+      thesis: 'One AI writing everything gave generic, error-prone content. Splitting the job across five specialised AI agents fixed that.',
       bullets: [
         'Scout queries the Ahrefs API for real keyword volume and search intent. Copywriter drafts against that brief plus the brand voice corpus. Optimizer inserts H-tags, meta descriptions and internal links. Illustrator generates visual prompts for DALL-E/Napkin AI. Critic grades the final copy against a factual positioning rubric.',
         'The quality loop: below a 75% threshold, the Orchestrator rejects the draft and routes it back to the Copywriter with the specific error, not a blind retry. At or above 75%, it moves to human review.',
@@ -421,7 +421,7 @@ window.PORTFOLIO = {
       title: 'CupShup AI Platform, Positioning & Onboarding',
       org: 'CupShup · Client-facing enablement',
       preview: 'cupshup',
-      thesis: 'A 20+ tool platform is useless if the first-time user cannot find their way in. I built the pages that explain it, then sat with clients until they could use it themselves.',
+      thesis: 'A 20+ tool platform is only useful if people can find their way in. I built the pages that explain it, then helped clients actually use it.',
       bullets: [
         'Built and positioned the platform product pages for CupShup’s AI Marketing Platform across SEO, SMM, Email and WhatsApp automation modules.',
         'Sat directly with brand stakeholders to diagnose their marketing gaps, demo the tool mechanics, and record custom video walkthroughs for each client.',
@@ -459,7 +459,7 @@ window.PORTFOLIO = {
       org: 'Website rebuild + technical SEO · CupShup',
       preview: 'cupshup',
       thumb: 'assets/img/thumb-cupshup-platform.webp',
-      thesis: 'Rebuilt the site around new personas, then fixed the crawl beneath it.',
+      thesis: 'Rebuilt the website around who actually visits it, then fixed the technical issues underneath.',
       bullets: [
         'Research translated into information architecture, layout and UI/UX choices, not just a reskin.',
         'Technical audit across 8,296 internal URLs and 457,581 links; issues classified by severity and tracked to closure until Ahrefs health read 99.',
@@ -494,7 +494,7 @@ window.PORTFOLIO = {
       org: 'Voice-first agri logistics · Polygnan Fellowship',
       preview: 'saarthi',
       thumb: 'assets/img/thumb-saarthi-app.png',
-      thesis: '300+ field conversations pointed at one root cause: 70% of observed supply-chain delay was manual phone coordination.',
+      thesis: 'Talked to 300+ farmers and traders. Found one root cause behind most delays: everyone coordinating by phone calls.',
       bullets: [
         'Scoped the MVP to dispatch and deliberately cut price discovery.',
         'Indic speech-to-text and TTS via Sarvam AI, so low-literacy users transact by voice instead of by form.',
@@ -516,7 +516,7 @@ window.PORTFOLIO = {
       title: 'ethOS',
       org: 'RAG intelligence product · v0 shipped solo',
       preview: 'ethos',
-      thesis: 'Four-stage RAG grounded in the user’s own sources. Wrong answers traced to chunk boundaries, never to the model.',
+      thesis: 'An AI job-matching tool that only answers from real listings, never a guess. If it’s ever wrong, you can see exactly which listing caused it.',
       bullets: [
         'OAuth 2.0 ingestion → LangChain orchestration → GPT-4o reasoning → Pinecone vector search.',
         'FastAPI + PostgreSQL backend, Next.js front end on Vercel.',
@@ -535,7 +535,7 @@ window.PORTFOLIO = {
       title: 'Produscope AI',
       org: 'Five-agent financial planning',
       preview: 'produscope',
-      thesis: '"Can I afford this?" is four questions at once. One long prompt handles that badly; five narrow agents handle it well.',
+      thesis: '"Can I afford this?" is really four questions at once. Five focused AI agents answer it better than one long prompt.',
       bullets: [
         'Five specialists, one coordinator: Projection owns the 12-month forward savings path, Cost of Living owns baseline burn, Affordability owns the specific purchase, Goal Coach owns ETAs against actual surplus, Life Events owns what a change in circumstance shifts.',
         'Each remit is narrow enough that its output is checkable independently. That is the whole reason the decomposition works, and the same principle later became the judge layer at CupShup.',
@@ -556,7 +556,7 @@ window.PORTFOLIO = {
       title: 'DocAssist',
       org: 'Clinical documentation assistant · 1M1B',
       preview: 'docassist',
-      thesis: 'Summarisation and multi-turn Q&A over clinical notes: 15 minutes down to under 10 seconds at 90% relevance.',
+      thesis: 'Turns long clinical notes into quick summaries and answers doctors’ follow-up questions — 15 minutes of reading down to under 10 seconds.',
       bullets: [
         'Mistral served via Groq: the latency tradeoff that made real-time use viable.',
         'Validated with 15+ hospital users before it was called done.',
@@ -576,7 +576,7 @@ window.PORTFOLIO = {
       title: 'Enquiry-to-CRM Agent',
       org: 'CupShup · internal, production',
       preview: 'whatsapp',
-      thesis: 'An inbound WhatsApp enquiry is parsed, qualified, routed and nurtured, untouched by anyone.',
+      thesis: 'A WhatsApp enquiry comes in, and AI reads it, qualifies it and routes it — no human touches it.',
       bullets: [
         'n8n orchestrates Meta WhatsApp Business API, Brevo and Supabase as one loop.',
         'UTM attribution carried through, so the source of every closed deal is recoverable.',
@@ -592,6 +592,7 @@ window.PORTFOLIO = {
       title: 'TimesPro Visionary Corner',
       org: 'Client build · matching product',
       preview: 'timespro',
+      thumb: 'assets/img/thumb-timespro-app.webp',
       thesis: 'A two-minute AI career check-in that returns a personalised Future Career Card.',
       bullets: [
         'Profile-and-course matching shipped end to end across servicing, ops and finance.',

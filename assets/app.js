@@ -322,7 +322,7 @@
       var live = (s.links || []).filter(function (l) { return /live|dashboard|cupshup/i.test(l.label); })[0];
       card.innerHTML =
         '<button class="sys-open" data-id="' + esc(s.id) + '" aria-label="Open build note: ' + esc(s.title) + '"></button>' +
-        '<div class="pv-frame big"><span class="pv-dots"></span>' + (PREVIEW[s.preview] || '') + '</div>' +
+        '<div class="pv-frame big">' + (s.thumb ? '<img class="pv-shot" src="' + esc(s.thumb) + '" alt="" loading="lazy" />' : '<span class="pv-dots"></span>' + (PREVIEW[s.preview] || '')) + '</div>' +
         '<div class="syscard-body">' +
           '<h3>' + esc(s.title) + '</h3>' +
           '<p class="sys-thesis">' + esc(s.thesis) + '</p>' +

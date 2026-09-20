@@ -492,6 +492,7 @@ window.PORTFOLIO = {
       title: 'Saarthi',
       org: 'Voice-first agri logistics · Polygnan Fellowship',
       preview: 'saarthi',
+      thumb: 'assets/img/thumb-saarthi-app.png',
       thesis: '300+ field conversations pointed at one root cause: 70% of observed supply-chain delay was manual phone coordination.',
       bullets: [
         'Scoped the MVP to dispatch and deliberately cut price discovery.',
@@ -504,8 +505,8 @@ window.PORTFOLIO = {
       stack: ['Sarvam AI (Indic STT/TTS)', 'React', 'Vercel', 'Dispatch workflow'],
       links: [
         { label: 'Live product', url: 'https://saarthimvp.vercel.app/' },
-        { label: 'Pitch deck', url: 'https://canva.link/ekqtdk11n8zd097' },
-        { label: 'Farmer walkthrough video', url: 'https://youtu.be/AYJJxBXKOrc?si=y-hs5BQlVFcPH-Sf' }
+        { label: 'Pitch deck', url: 'https://canva.link/h81hmy0v3v79vx1' },
+        { label: 'Farmer walkthrough video', url: 'https://youtu.be/AYJJxBXKOrc?si=2C1YyUZiIIjzw7cx' }
       ]
     },
     {
@@ -597,7 +598,10 @@ window.PORTFOLIO = {
       ],
       metrics: [{ n: '2 min', l: 'To a personalised result' }, { n: '6 factors', l: 'Independently scored, weighted' }],
       stack: ['React', 'Vercel', 'Client requirements', 'Weighted matching engine'],
-      links: [{ label: 'Read the technical breakdown', url: 'timespro.html' }]
+      links: [
+        { label: 'Live product', url: 'https://timespro-vision-cafe.vercel.app/' },
+        { label: 'Read the technical breakdown', url: 'timespro.html' }
+      ]
     }
   ],
 

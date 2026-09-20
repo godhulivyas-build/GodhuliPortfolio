@@ -341,15 +341,6 @@ window.PORTFOLIO = {
       link: 'https://www.cupshup.co.in/'
     },
     {
-      id: 'ethos-asset',
-      type: 'Case study',
-      title: 'ethOS PRD & Teardown',
-      note: 'Zero agency spam. A 0–100 quality score on every listing.',
-      facts: ['4-stage RAG', '0–100 scoring', 'Live product'],
-      img: 'assets/img/thumb-ethos.png',
-      link: 'ethos.html'
-    },
-    {
       id: 'salon',
       type: 'PRD',
       title: 'QuickServe',
@@ -516,8 +507,10 @@ window.PORTFOLIO = {
       title: 'ethOS',
       org: 'RAG intelligence product · v0 shipped solo',
       preview: 'ethos',
+      thumb: 'assets/img/thumb-ethos.png',
       thesis: 'An AI job-matching tool that only answers from real listings, never a guess. If it’s ever wrong, you can see exactly which listing caused it.',
       bullets: [
+        'Zero agency spam: every listing is scored 0–100 before it ever reaches a user.',
         'OAuth 2.0 ingestion → LangChain orchestration → GPT-4o reasoning → Pinecone vector search.',
         'FastAPI + PostgreSQL backend, Next.js front end on Vercel.',
         'Converts unstructured listings into a 0–100 quality score across funding, compensation, remote flexibility and recruiter activity.'
@@ -526,6 +519,7 @@ window.PORTFOLIO = {
       stack: ['LangChain', 'GPT-4o', 'Pinecone', 'FastAPI', 'PostgreSQL', 'Next.js'],
       links: [
         { label: 'Live product', url: 'https://ethosinternshipfinder.vercel.app/' },
+        { label: 'Read the full PRD', url: 'ethos.html' },
         { label: 'GitHub', url: 'https://github.com/godhulivyas-build' }
       ]
     },

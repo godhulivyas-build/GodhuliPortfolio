@@ -544,6 +544,7 @@ window.PORTFOLIO = {
       metrics: [{ n: '5 agents', l: 'Specialists plus a reconciler' }, { n: 'IIT-G', l: 'Presented, PM Fellowship' }],
       stack: ['Multi-agent reasoning', 'Output reconciliation', 'Runway modelling', 'Privacy-first design', 'Lovable'],
       links: [
+        { label: 'Live prototype', url: 'https://finance-buddyai.lovable.app/' },
         { label: 'Read the full PRD', url: 'produscope.html' }
       ]
     },
@@ -562,6 +563,7 @@ window.PORTFOLIO = {
       metrics: [{ n: '15min→10s', l: 'Turnaround' }, { n: 'Top 25', l: 'Pan-India, Unleash LLM Challenge' }],
       stack: ['Mistral', 'Groq', 'Rubric eval', 'Failure-mode taxonomy'],
       links: [
+        { label: 'Demo video', url: 'https://drive.google.com/file/d/1ZGi5UvTm7qNwh-bhKQcpu6Adle6jmVXx/view' },
         { label: 'README', url: 'https://github.com/godhulivyas-build/DocAssist/blob/main/README.md' },
         { label: 'GitHub', url: 'https://github.com/godhulivyas-build' }
       ]

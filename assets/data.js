@@ -458,6 +458,7 @@ window.PORTFOLIO = {
       title: 'cupshup.co.in',
       org: 'Website rebuild + technical SEO · CupShup',
       preview: 'cupshup',
+      thumb: 'assets/img/thumb-cupshup-platform.webp',
       thesis: 'Rebuilt the site around new personas, then fixed the crawl beneath it.',
       bullets: [
         'Research translated into information architecture, layout and UI/UX choices, not just a reskin.',

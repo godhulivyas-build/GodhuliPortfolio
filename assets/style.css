@@ -267,6 +267,7 @@ footer{padding:52px 0 40px;border-top:1px solid var(--line);position:relative;z-
 
 /* ---------------- sheet ---------------- */
 .sheet{position:fixed;inset:0;z-index:100;display:flex;justify-content:flex-end}
+.sheet[hidden]{display:none}
 .sheet-back{position:absolute;inset:0;background:rgba(5,5,8,.74);backdrop-filter:blur(4px);opacity:0;transition:opacity .28s}
 .sheet.on .sheet-back{opacity:1}
 .sheet-panel{position:relative;width:min(640px,100%);height:100%;overflow-y:auto;

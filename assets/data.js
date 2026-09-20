@@ -412,6 +412,7 @@ window.PORTFOLIO = {
       title: 'CupShup AI Platform, Positioning & Onboarding',
       org: 'CupShup · Client-facing enablement',
       preview: 'cupshup',
+      thumb: 'assets/img/thumb-cupshupplatform.png',
       thesis: 'A 20+ tool platform is only useful if people can find their way in. I built the pages that explain it, then helped clients actually use it.',
       bullets: [
         'Built and positioned the platform product pages for CupShup’s AI Marketing Platform across SEO, SMM, Email and WhatsApp automation modules.',

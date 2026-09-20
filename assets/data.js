@@ -269,24 +269,6 @@ window.PORTFOLIO = {
       link: 'https://www.cupshup.co.in/case-studies/paper-boat-zero-prebiotic-soda-launch'
     },
     {
-      id: 'optimist',
-      type: 'Case study',
-      title: 'Optimist Smart AC Canter Campaign',
-      note: 'CupShup client case study for a smart AC canter activation across Delhi NCR.',
-      facts: ['Client campaign', 'Delhi NCR'],
-      img: '',
-      link: 'https://www.cupshup.co.in/case-studies/optimist-smart-ac-canter-campaign-delhi-ncr'
-    },
-    {
-      id: 'deconstruct',
-      type: 'Case study',
-      title: 'Deconstruct Sunscreen Mall Activation',
-      note: 'CupShup client case study for a mall-based sampling activation in Bangalore.',
-      facts: ['Client campaign', 'Bangalore'],
-      img: '',
-      link: 'https://www.cupshup.co.in/case-studies/deconstruct-sunscreen-mall-activation-bangalore'
-    },
-    {
       id: 'pintola',
       type: 'Case study',
       title: 'Pintola Canter Activation',

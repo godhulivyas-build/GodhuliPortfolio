@@ -10,6 +10,31 @@
     });
   }
 
+  /* generic horizontal auto-scroll for photo strips on mobile, pausing on touch/interaction */
+  function autoScrollX(el, speed) {
+    if (!el || reduce) return;
+    var paused = false, resumeTimer = null;
+    function tick() {
+      if (!paused && window.innerWidth <= 900) {
+        var max = el.scrollWidth - el.clientWidth;
+        if (max > 1) {
+          el.scrollLeft += speed;
+          if (el.scrollLeft >= max - 1) el.scrollLeft = 0;
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    function pause() {
+      paused = true;
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(function () { paused = false; }, 4000);
+    }
+    el.addEventListener('pointerdown', pause);
+    el.addEventListener('touchstart', pause, { passive: true });
+    el.addEventListener('wheel', pause, { passive: true });
+    requestAnimationFrame(tick);
+  }
+
   /* ---------------- product preview replicas (pure CSS/HTML) --------------- */
   var PREVIEW = {
     saarthi:
@@ -174,6 +199,7 @@
     cursor = order.indexOf(id);
     lastFocus = document.activeElement;
     sheetBody.innerHTML = sheetHTML(it);
+    autoScrollX($('.sheet-photos', sheetBody), 0.5);
     sheet.hidden = false;
     document.body.classList.add('locked');
     requestAnimationFrame(function () { sheet.classList.add('on'); });
@@ -191,6 +217,7 @@
     if (!order.length) return;
     cursor = (cursor + d + order.length) % order.length;
     sheetBody.innerHTML = sheetHTML(itemById(order[cursor]));
+    autoScrollX($('.sheet-photos', sheetBody), 0.5);
     sheetBody.scrollTop = 0;
     $('.sheet-panel', sheet).scrollTop = 0;
   }
@@ -322,9 +349,6 @@
       var first = track.querySelector('.syscard');
       return first ? first.getBoundingClientRect().width + 18 : track.clientWidth;
     }
-    function scrollToCard(i) {
-      track.scrollTo({ left: i * cardWidth(), behavior: reduce ? 'auto' : 'smooth' });
-    }
     function currentIndex() {
       return Math.round(track.scrollLeft / cardWidth());
     }
@@ -334,20 +358,17 @@
       if (prevBtn) prevBtn.disabled = idx === 0;
       if (nextBtn) nextBtn.disabled = idx === D.systems.length - 1;
     }
-    if (prevBtn) prevBtn.addEventListener('click', function () { pauseAuto(); scrollToCard(Math.max(0, currentIndex() - 1)); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { pauseAuto(); scrollToCard(Math.min(D.systems.length - 1, currentIndex() + 1)); });
-    var scrollTimer;
-    track.addEventListener('scroll', function () {
-      clearTimeout(scrollTimer);
-      scrollTimer = setTimeout(updateDots, 80);
-    }, { passive: true });
-    dotsWrap.addEventListener('click', pauseAuto);
-    updateDots();
 
-    /* continuous auto-scroll, pausing on any user interaction */
-    var autoPaused = false, resumeTimer = null;
+    /* single loop owns every scrollLeft change: auto-drift, or easing to a
+       manually requested target. Native scrollTo({behavior:'smooth'}) was
+       fighting the auto-drift loop and silently no-op'ing alternate clicks. */
+    var autoPaused = false, resumeTimer = null, target = null;
     function tick() {
-      if (!autoPaused) {
+      if (target !== null) {
+        var diff = target - track.scrollLeft;
+        if (Math.abs(diff) < 1) { track.scrollLeft = target; target = null; }
+        else { track.scrollLeft += diff * 0.18; }
+      } else if (!autoPaused) {
         track.scrollLeft += 0.6;
         var maxScroll = track.scrollWidth - track.clientWidth;
         if (track.scrollLeft >= maxScroll - 1) track.scrollLeft = 0;
@@ -359,8 +380,22 @@
       clearTimeout(resumeTimer);
       resumeTimer = setTimeout(function () { autoPaused = false; }, 6000);
     }
-    track.addEventListener('pointerdown', pauseAuto);
-    track.addEventListener('wheel', pauseAuto, { passive: true });
+    function scrollToCard(i) {
+      pauseAuto();
+      target = reduce ? (track.scrollLeft = i * cardWidth(), null) : i * cardWidth();
+    }
+    if (prevBtn) prevBtn.addEventListener('click', function () { scrollToCard(Math.max(0, currentIndex() - 1)); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { scrollToCard(Math.min(D.systems.length - 1, currentIndex() + 1)); });
+    var scrollTimer;
+    track.addEventListener('scroll', function () {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(updateDots, 80);
+    }, { passive: true });
+    dotsWrap.addEventListener('click', pauseAuto);
+    updateDots();
+
+    track.addEventListener('pointerdown', function () { target = null; pauseAuto(); });
+    track.addEventListener('wheel', function () { target = null; pauseAuto(); }, { passive: true });
     track.addEventListener('mouseenter', function () { autoPaused = true; });
     track.addEventListener('mouseleave', function () { autoPaused = false; });
     if (!reduce) requestAnimationFrame(tick);
@@ -502,6 +537,8 @@
   /* ---------------------------- boot ------------------------------------- */
   buildTimeline();
   buildPathCollage();
+  autoScrollX($('.gal'), 0.5);
+  autoScrollX($('#pathCollage'), 0.5);
   buildSystems();
   buildAssets();
   portrait();

@@ -409,19 +409,20 @@ window.PORTFOLIO = {
     {
       id: 'cupshupplatform',
       tier: 'Live',
-      title: 'CupShup AI Platform, Positioning & Onboarding',
-      org: 'CupShup · Client-facing enablement',
+      title: 'CupShup AI Platform: Built, Positioned & Taken to Market',
+      org: 'CupShup · Platform + GTM',
       preview: 'cupshup',
       thumb: 'assets/img/thumb-cupshupplatform.png',
-      thesis: 'A 20+ tool platform is only useful if people can find their way in. I built the pages that explain it, then helped clients actually use it.',
+      thesis: 'A 20+ tool platform is only useful if people can find it and actually use it. I built the pages that explain it, ran the GTM that got it in front of the right users, and sat with clients until they could use it themselves.',
       bullets: [
-        'Built and positioned the platform product pages for CupShup’s AI Marketing Platform across SEO, SMM, Email and WhatsApp automation modules.',
-        'Sat directly with brand stakeholders to diagnose their marketing gaps, demo the tool mechanics, and record custom video walkthroughs for each client.',
-        'This high-touch onboarding lowered user friction, accelerated client activation, and drove feature adoption among early adopters.',
-        'Drafted the product pitch email sent to D2C founders explaining how the platform’s automated crawl diagnostics work, for the SEO Site Audit tool.'
+        'Built and positioned the platform product pages across SEO, SMM, Email and WhatsApp automation modules.',
+        'Ran the email GTM for all 20+ tools: segmented the list into buckets by fit before every send, so each tool reached the audience most likely to use it.',
+        'Took each launch straight to that audience to judge, not a curated demo crowd — real feedback from day one, which became the first-user pipeline for every accelerator since.',
+        'Sat directly with brand stakeholders to diagnose their gaps, demo the tool mechanics, and record custom video walkthroughs for each client.',
+        'Drafted the product pitch email sent to D2C founders explaining the SEO Site Audit tool’s automated crawl diagnostics.'
       ],
-      metrics: [{ n: '20+', l: 'Tools positioned' }, { n: '4', l: 'Automation modules' }],
-      stack: ['Product positioning', 'Client enablement', 'Video walkthroughs', 'CupShup platform'],
+      metrics: [{ n: '20+', l: 'AI tools built & launched' }, { n: '4', l: 'Suites, platform + GTM' }],
+      stack: ['Product positioning', 'Email GTM', 'List segmentation', 'Client enablement', 'Video walkthroughs', 'CupShup platform'],
       links: [
         { label: 'Platform', url: 'https://www.cupshup.co.in/platform' },
         { label: 'User guide video', url: 'https://app.trupeer.ai/view/hkKnoDnEJ/cupshup-ai-dashboard-user-guide' }
@@ -461,23 +462,6 @@ window.PORTFOLIO = {
       metrics: [{ n: '65 → 92%', l: 'Organic traffic contribution' }, { n: '60 → 99', l: 'Ahrefs site health' }],
       stack: ['Ahrefs', 'Technical SEO', 'IA & UX', 'Supabase', 'SQL', 'Power BI', 'Mixpanel'],
       links: [{ label: 'Live site', url: 'https://www.cupshup.co.in/' }]
-    },
-    {
-      id: 'aiaccelerators',
-      tier: 'Live',
-      title: '20+ AI Accelerators, GTM',
-      org: 'Product launches · CupShup',
-      preview: 'cupshup',
-      thesis: 'Building an AI tool is the easy half. Getting the first real user to try it is the other half, and nobody hands that to you.',
-      bullets: [
-        'Ran the go-to-market for 20+ AI accelerators across SEO, Social, WhatsApp and Influencer suites, end to end via email.',
-        'Segmented the list into buckets by fit before any send, so each tool reached the audience most likely to actually use it.',
-        'Took each launch straight to that audience to judge, not a curated demo crowd, so the feedback was real from day one.',
-        'That loop became the first-user pipeline for every accelerator since: launch, judge, iterate.'
-      ],
-      metrics: [{ n: '20+', l: 'AI accelerators launched' }, { n: '4', l: 'Suites, segmented GTM' }],
-      stack: ['Email GTM', 'List segmentation', 'Product launches', 'CupShup platform'],
-      links: [{ label: 'cupshup.co.in', url: 'https://www.cupshup.co.in/' }]
     },
     {
       id: 'saarthi',

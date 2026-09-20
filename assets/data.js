@@ -265,7 +265,7 @@ window.PORTFOLIO = {
       title: 'Paper Boat Zero Prebiotic Soda Launch',
       note: 'CupShup client case study for the Paper Boat Zero prebiotic soda launch.',
       facts: ['Client campaign', 'Published on cupshup.co.in'],
-      img: '',
+      img: 'assets/img/thumb-paperboat.jpg',
       link: 'https://www.cupshup.co.in/case-studies/paper-boat-zero-prebiotic-soda-launch'
     },
     {

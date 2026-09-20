@@ -57,6 +57,9 @@ h1,h2,h3,h4{font-weight:400;letter-spacing:-.022em;line-height:1.08;margin:0;tex
 .btn:hover{transform:translateY(-2px);border-color:var(--line-2)}
 .btn.primary{background:linear-gradient(100deg,var(--a1),#5b4bd6);border-color:transparent;box-shadow:var(--glow);color:#fff}
 .btn.primary:hover{box-shadow:0 0 80px rgba(124,92,255,.55)}
+.btn-icon{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;
+  border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.03);transition:.25s var(--ease)}
+.btn-icon:hover{transform:translateY(-1px);border-color:var(--line-2);color:var(--a1)}
 
 /* ---------------- masthead ---------------- */
 header{padding:84px 0 0}

@@ -272,9 +272,9 @@ window.PORTFOLIO = {
       id: 'pintola',
       type: 'Case study',
       title: 'Pintola Canter Activation',
-      note: 'CupShup client case study for an FMCG sampling canter activation across India.',
+      note: 'How Pintola reached 3.5M via a canter-truck FMCG sampling activation across India.',
       facts: ['Client campaign', 'FMCG sampling'],
-      img: '',
+      img: 'assets/img/thumb-pintola.jpg',
       link: 'https://www.cupshup.co.in/case-studies/pintola-canter-activation-fmcg-sampling-india'
     },
     {

@@ -334,7 +334,7 @@
   /* ---------------------------- systems carousel --------------------------- */
   document.addEventListener('click', function (e) {
     var b = e.target.closest('[data-open-id]');
-    if (b) openSheet(b.dataset.openId, D.systems.map(function (s) { return s.id; }));
+    if (b) { if (b.tagName === 'A') e.preventDefault(); openSheet(b.dataset.openId, D.systems.map(function (s) { return s.id; })); }
   });
 
 
@@ -737,9 +737,9 @@
         text: 'Google Developer Groups are student-led communities that learn Google technologies together. I started our chapter from zero, grew it to 1,000+ members, and ran 20+ workshops and events on AI, cloud and web with Google speakers.',
         items: [
           { img: I('gdg-team.webp'), title: 'GDG chapter website', sub: 'gdsc-sui.vercel.app', href: 'https://gdsc-sui.vercel.app/' },
-          { img: I('gdg-chapter-lead.png'), title: 'Photos and videos of all events', sub: 'Google Drive', href: 'https://drive.google.com/drive/folders/1rIubQ6POrn3Jbw1XGZtFcusWieZ78csN' }
+          { img: I('gdg-chapter-lead.png'), fit: 'contain', title: 'Photos and videos of all events', sub: 'Google Drive', href: 'https://drive.google.com/drive/folders/1rIubQ6POrn3Jbw1XGZtFcusWieZ78csN' }
         ] },
-      { short: 'Zomato', k: 'Case competition', t: 'Zomato: help new restaurants get found', proves: 'I can find the real problem, propose a fix and build it.', stat: ['1st RU', 'pan-India, 2023'],
+      { short: 'Zomato', k: 'Case competition', t: 'Zomato: help new restaurants get found', proves: 'I can find the real problem, propose a fix and build it.', stat: ['1st RU', 'runner-up, pan-India, 2023'],
         text: '1st runner-up, pan-India. A New + Verified section for new restaurants, then a working prototype.',
         items: [
           /* video: paste the Zomato Loom URL here and a "Watch the video" pill appears on the tile */
@@ -776,7 +776,7 @@
           { img: I('school-visit.png'), title: 'Sarkari School: school and community visit', sub: 'Photos and work, Google Drive', href: 'https://drive.google.com/drive/folders/1C8nTwSaMFNJTRyjEvnTxOD1uk0S2FG7?usp=sharing' }
         ] }
     ];
-    var COL = ['#4a78d8', '#e23744', '#8b73dc', '#2f9e6f', '#d98a1d', '#c64f8f'];
+    var COL = ['#4a78d8', '#e23744', '#8b73dc', '#23805a', '#a85f08', '#c64f8f'];
     var n = P.length, cur = -1, wide = function () { return window.innerWidth > 900; };
     var NUMS = function (i) { return (i < 9 ? '0' : '') + (i + 1); };
     function cube(c) {
@@ -802,8 +802,8 @@
       }).join('');
       return '<div class="pfx-tile" style="--k:' + k + ';grid-row:' + (k + 1) + ' / span 2">' +
         '<div class="pfx-cap"><a class="pfx-lt"' + attrs + '><b>' + esc(it.title) + '</b><span>' + esc(it.sub) + ' ' + (ext ? '↗' : '→') + '</span></a><i class="pfx-num">' + NUMS(k) + '</i></div>' +
-        '<div class="pfx-img' + (it.fit === 'contain' ? ' fitc' : '') + '"><a class="pfx-ia"' + attrs + (it.embed ? ' data-embed="' + esc(it.embed) + '"' : '') + ' tabindex="-1" aria-hidden="true">' +
-        (it.img ? '<img src="' + esc(it.img) + '" alt="" loading="lazy"' + (it.pos ? ' style="object-position:' + esc(it.pos) + '"' : '') + ' />' : '') + (!it.img && it.ph ? '<span class="pfx-ph"><b>' + esc(it.ph) + '</b><em>Tutorial videos</em></span>' : '') + (it.play ? '<span class="pfx-play"><i>▶</i></span>' : '') + '</a>' +
+        '<div class="pfx-img' + (it.fit === 'contain' ? ' fitc' : '') + '"><a class="pfx-ia"' + attrs + (it.embed ? ' data-embed="' + esc(it.embed) + '" aria-label="Play: ' + esc(it.title) + '"' : ' tabindex="-1" aria-hidden="true"') + '>' +
+        (it.img ? '<img src="' + esc(it.img) + '" alt=""' + (it.pos ? ' style="object-position:' + esc(it.pos) + '"' : '') + ' />' : '') + (!it.img && it.ph ? '<span class="pfx-ph"><b>' + esc(it.ph) + '</b><em>Tutorial videos</em></span>' : '') + (it.play ? '<span class="pfx-play"><i>▶</i></span>' : '') + '</a>' +
         (pills ? '<div class="pfx-pills">' + pills + '</div>' : '') + '</div></div>';
     }
 
@@ -812,16 +812,22 @@
     function measure() {
       var gw = right.querySelector('.pfx-gw'), g = right.querySelector('.pfx-grid');
       if (!gw || !g) return;
-      right.style.removeProperty('--cw');
+      right.style.removeProperty('--cw'); right.style.removeProperty('--rh');
+      right.classList.remove('tight');
       if (!wide()) { right.style.setProperty('--ov', 0); return; }
       var rows = g.children.length + 1, avail = gw.clientHeight - 6, base = parseFloat(getComputedStyle(g).gridAutoRows) || 190, use = base;
-      if (rows * base > avail) use = Math.max(Math.min(base, avail / rows), 150);
-      if (use < base) right.style.setProperty('--cw', (use / 0.8).toFixed(1) + 'px');
+      var floor = window.innerWidth <= 1100 ? 96 : (window.innerHeight <= 760 ? 124 : 150);
+      if (rows * base > avail) use = Math.max(Math.min(base, avail / rows), floor);
+      if (use < base) {
+        /* keep the columns wide and shorten the rows, so titles wrap to two lines at most */
+        right.style.setProperty('--rh', use.toFixed(1) + 'px');
+        if (use < 140) right.classList.add('tight');
+      }
       right.style.setProperty('--ov', Math.max(0, rows * use - avail + 14).toFixed(0));
     }
 
     function draw(i) {
-      if (i === cur) return; cur = i;
+      if (i === cur) return; cur = i; lastIdx = i;
       var p = P[i], c = COL[i % COL.length], sh = shades(c);
       sec.style.setProperty('--pc', c);
       items.forEach(function (el, k) {
@@ -839,12 +845,17 @@
       measure();
     }
 
-    var natural = 0, hovering = false, hoverY = 0;
+    var natural = 0, hovering = false, hoverY = 0, lastScroll = 0, jumpLock = null, jumpTo = 0, jumpT = 0, lastIdx = 0, wasWide = wide();
     function onScroll() {
       if (!wide()) return;
       var r = sec.getBoundingClientRect(), span = sec.offsetHeight - window.innerHeight;
       var pr = Math.min(0.9999, Math.max(0, -r.top / span));
       var idx = Math.floor(pr * n), lp = pr * n - idx;
+      sec.style.setProperty('--prog', pr.toFixed(3));
+      if (jumpLock !== null) {
+        if (Math.abs(window.pageYOffset - jumpTo) < 3 || Date.now() - jumpT > 2500) jumpLock = null;
+        else return;
+      }
       if (idx !== natural) { natural = idx; hovering = false; }
       if (hovering && Math.abs(window.pageYOffset - hoverY) > 40) hovering = false;   /* scrolling ends a hover preview */
       if (!hovering) {
@@ -855,28 +866,37 @@
       sec.style.setProperty('--prog', pr.toFixed(3));
     }
     var raf = 0;
-    window.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(function () { raf = 0; onScroll(); }); }, { passive: true });
-    window.addEventListener('resize', function () { cur = -1; onScroll(); if (!wide()) draw(Math.max(0, natural)); });
+    window.addEventListener('scroll', function () { lastScroll = Date.now(); if (!raf) raf = requestAnimationFrame(function () { raf = 0; onScroll(); }); }, { passive: true });
+    ['wheel', 'touchstart', 'keydown'].forEach(function (ev) { window.addEventListener(ev, function () { jumpLock = null; }, { passive: true }); });
+    window.addEventListener('resize', function () {
+      var w = wide();
+      if (w !== wasWide) { wasWide = w; cur = -1; if (w) onScroll(); else draw(lastIdx); }
+      else { measure(); if (w) onScroll(); }
+    });
     dial.addEventListener('mouseover', function (e) {
       var it = e.target.closest('.pfx-it');
+      if (Date.now() - lastScroll < 300) return;
       if (it && wide()) { hovering = true; hoverY = window.pageYOffset; draw(+it.dataset.i); }
     });
     function jump(i) {
       if (!wide()) { draw(i); return; }
       var top = sec.getBoundingClientRect().top + window.pageYOffset, span = sec.offsetHeight - window.innerHeight;
-      window.scrollTo({ top: top + (i + 0.04) / n * span, behavior: 'smooth' });
+      jumpTo = Math.round(top + (i + 0.04) / n * span);
+      hovering = false; draw(i);
+      jumpLock = Math.abs(window.pageYOffset - jumpTo) < 3 ? null : i; jumpT = Date.now();
+      window.scrollTo({ top: jumpTo, behavior: 'smooth' });
     }
     dial.addEventListener('click', function (e) { var it = e.target.closest('.pfx-it'); if (it) jump(+it.dataset.i); });
     dial.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('pfx-it')) { e.preventDefault(); jump(+e.target.dataset.i); } });
     if (down) down.addEventListener('click', function () {
       if (!wide()) return;
       if (natural < n - 1) jump(natural + 1);
-      else window.scrollTo({ top: sec.getBoundingClientRect().top + window.pageYOffset + sec.offsetHeight, behavior: 'smooth' });
+      else document.getElementById('field').scrollIntoView({ behavior: 'smooth' });
     });
 
     /* the reel opens in a lightbox instead of squeezing a phone-sized embed into a small cell */
-    var lb = null;
-    function closeLb() { if (!lb) return; lb.hidden = true; lb.querySelector('iframe').src = 'about:blank'; document.body.style.overflow = ''; }
+    var lb = null, lastFocus = null;
+    function closeLb() { if (!lb) return; lb.hidden = true; if (lastFocus && lastFocus.focus) lastFocus.focus(); lb.querySelector('iframe').src = 'about:blank'; document.body.style.overflow = ''; }
     function openLb(src, label) {
       if (!lb) {
         lb = document.createElement('div'); lb.className = 'pfx-lb'; lb.hidden = true;
@@ -885,7 +905,8 @@
         lb.addEventListener('click', function (e) { if (e.target === lb || e.target.closest('.pfx-lbc')) closeLb(); });
         document.addEventListener('keydown', function (e) { if (!lb.hidden && e.key === 'Escape') closeLb(); });
       }
-      var f = lb.querySelector('iframe'); f.title = label; f.src = src; lb.hidden = false; document.body.style.overflow = 'hidden';
+      var f = lb.querySelector('iframe'); lastFocus = document.activeElement; f.title = label; f.src = src; lb.hidden = false; document.body.style.overflow = 'hidden';
+      lb.querySelector('.pfx-lbc').focus();
     }
     right.addEventListener('click', function (e) {
       var a = e.target.closest('.pfx-ia[data-embed]');
@@ -1150,18 +1171,23 @@
   function saarthiFx() {
     var cs = document.querySelectorAll('.sf .cnt');
     if (!cs.length || !('IntersectionObserver' in window) || reduce) return;
+    cs.forEach(function (el) { el.textContent = '0' + (el.dataset.suf || ''); });
     function run(el) {
       var to = +el.dataset.to, suf = el.dataset.suf || '', t0 = performance.now();
       (function f(t) {
-        var p = Math.min(1, (t - t0) / 1100);
+        var p = Math.max(0, Math.min(1, (t - t0) / 1100));
         el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))) + suf;
         if (p < 1) requestAnimationFrame(f);
       })(t0);
     }
     var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); run(e.target); } });
-    }, { threshold: 0.6 });
-    cs.forEach(function (el) { io.observe(el); });
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        var c = e.target.querySelector('.cnt'); if (c) run(c);
+      });
+    }, { threshold: 0.3 });
+    cs.forEach(function (el) { io.observe(el.closest('.sf-beat') || el); });
   }
 
   /* ---------------------------- boot ------------------------------------- */

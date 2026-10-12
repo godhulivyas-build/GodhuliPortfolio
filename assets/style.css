@@ -1603,7 +1603,7 @@ a.vw-tile{cursor:pointer}
 
 
 /* ===== proof of work v3: inset card, zigzag grid of label cell + image cell ===== */
-.pfx{--pc:#8b73dc;--nav-h:60px;--gx:clamp(12px,3.4vw,64px);--ln:rgba(255,255,255,.55);height:calc(100vh + 6 * 72vh);position:relative;background:var(--bg);color:#fff;z-index:2}
+.pfx{padding:0;scroll-margin-top:0;--pc:#8b73dc;--nav-h:60px;--gx:clamp(12px,3.4vw,64px);--ln:rgba(255,255,255,.55);height:calc(100vh + 6 * 72vh);position:relative;background:var(--bg);color:#fff;z-index:2}
 .pfx-pin{position:sticky;top:0;height:100vh;box-sizing:border-box;padding:calc(var(--nav-h) + 10px) var(--gx) 14px}
 .pfx-card{position:relative;isolation:isolate;height:100%;display:grid;grid-template-columns:minmax(280px,34%) minmax(0,1fr);border-radius:22px;overflow:hidden;background:var(--pc);transition:background .7s var(--ease);box-shadow:0 30px 70px rgba(0,0,0,.45)}
 .pfx-ring{position:absolute;left:-30vw;top:50%;width:56vw;height:56vw;margin-top:-28vw;border-radius:50%;border:1px solid rgba(255,255,255,.35);pointer-events:none;z-index:1}
@@ -1614,9 +1614,10 @@ a.vw-tile{cursor:pointer}
 .pfx-rule{display:block;width:70px;height:5px;background:#fff;margin:16px 0 12px}
 .pfx-deck{margin:0;max-width:30ch;font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.85)}
 .pfx-dial{list-style:none;margin:auto 0;padding:0 0 0 clamp(20px,3.4vw,60px);position:relative}
-.pfx-it{display:flex;align-items:baseline;gap:12px;padding:8px 0;cursor:pointer;color:#fff;font-weight:600;font-size:clamp(16px,1.6vw,21px);letter-spacing:-.01em;opacity:calc(1 - var(--ad,0) * .2);transform:translateX(calc(var(--ad,0) * var(--ad,0) * 7px));transition:transform .5s var(--ease),opacity .4s,color .3s;white-space:nowrap;position:relative}
+.pfx-it{display:flex;align-items:baseline;gap:12px;padding:8px 0;cursor:pointer;color:#fff;font-weight:600;font-size:clamp(16px,1.6vw,21px);letter-spacing:-.01em;opacity:max(.55,calc(1 - var(--ad,0) * .12));transform:translateX(min(56px,calc(var(--ad,0) * var(--ad,0) * 7px)));transition:transform .5s var(--ease),opacity .4s,color .3s;white-space:nowrap;position:relative}
 .pfx-it .pfx-n{font-size:10px;letter-spacing:.12em;opacity:.7;width:22px}
-.pfx-it:not(.on){color:rgba(255,255,255,.62);font-weight:500}
+.pfx-it:not(.on){color:rgba(255,255,255,.84);font-weight:500}
+.pfx-it:focus-visible{opacity:1;outline:2px solid #fff;outline-offset:4px;border-radius:4px}
 .pfx-it.on{color:#fff;font-weight:800;font-size:clamp(20px,2.1vw,28px)}
 .pfx-it.on::before{content:"";position:absolute;left:-26px;top:50%;width:14px;height:14px;margin-top:-7px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.28)}
 .pfx-it:hover{color:#fff;opacity:1}
@@ -1899,3 +1900,59 @@ a.vw-tile{cursor:pointer}
   .pc-photo{max-width:260px}
   .pc-nav{padding-left:0}
 }
+
+/* ===== QA fixes ===== */
+.pfx-k,.pfx-count,.pfx-deck,.pfx-tx,.pfx-stat span,.pfx-lt span{opacity:1;color:rgba(255,255,255,.96)}
+.pfx-lt span{font-size:12px}
+.pfx-right.tight .pfx-lt b{font-size:11.5px;line-height:1.2}
+.pfx-right.tight .pfx-lt span{font-size:11px}
+.pfx-right.tight .pfx-num{font-size:30px}
+.pfx-right.tight .pfx-cap{padding:0 10px 7px}
+.pfx-lbx{width:min(400px,calc(100vw - 40px))}
+.pfx-ia:focus-visible{outline:3px solid #fff;outline-offset:-3px}
+@media(max-width:900px){
+  .rm-stop{left:auto!important}
+  .hz-wrap{overflow-x:clip}
+  #systems{overflow-x:clip}
+  .pfx-right.cnt1 .pfx-grid{background:none}
+  .pfx-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pfx-lt b{overflow-wrap:anywhere}
+  .pfx-cap{min-height:108px}
+  .pfx-tile{grid-row:span 2!important;grid-template-rows:subgrid}
+}
+
+/* Saarthi */
+.sf-h{line-height:1.3}
+.sf-story{margin-top:30px}
+.sf-bubble{padding:0 .32em .04em .3em}
+.sf-doodles{left:50%;right:auto;width:1060px;margin-left:-530px}
+.dz-shovel{left:-110px}
+.dz-can{right:-120px}
+.dz-flower{left:-100px}
+.dz-shears{right:-105px}
+.dz-curl{left:-30px}
+.dz-dash{right:-10px}
+@media(max-width:1340px){.sf-doodles{display:none}}
+.sf-chip b{font-variant-numeric:tabular-nums;display:inline-block;min-width:3.3ch}
+.sf-chip b[data-to="70"]{min-width:2.5ch}
+.sf .sa-lite h4{color:#fff}
+.sf .sa-logo{overflow:hidden}
+.sf .sa-logo:not(.wide) img{max-width:32px;max-height:32px;width:auto;height:auto}
+.sf .sa-shots figcaption{font-size:10px}
+.sf-steps i{font-size:10.5px}
+.sf-steps li>span:last-child{color:rgba(255,255,255,.86)}
+.sf-story .sf-pols{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:860px){.sf-pols{max-width:520px;margin-inline:auto;gap:12px}}
+/* road scene: loop starts when it scrolls in, wheels and road follow the truck */
+.sf-scene .b,.sf-scene .truck,.sf-scene .wh,.sf-scene .load{animation-play-state:paused}
+.sf-scene.in .b,.sf-scene.in .truck,.sf-scene.in .wh,.sf-scene.in .load{animation-play-state:running}
+@keyframes wheelGo{0%,12%{transform:rotate(0)}70%,100%{transform:rotate(4140deg)}}
+.sf-scene .wh{animation:wheelGo 9s ease-in-out infinite}
+@keyframes roadBack{to{stroke-dashoffset:15}}
+.sf-scene .road{animation-name:roadBack}
+@media(prefers-reduced-motion:reduce){
+  .sf-scene .truck{transform:translateX(120px)}
+  .sf-scene .b{opacity:1}
+}
+.pfx-ph{padding-bottom:12px}
+.pfx-ph ~ .pfx-play{transform:translateY(-14px)}

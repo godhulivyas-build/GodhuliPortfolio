@@ -7,6 +7,7 @@ window.PORTFOLIO = {
   timeline: [
     {
       id: 'sage',
+      hidden: true,
       year: '2022',
       when: 'Aug 2022 → Jun 2026',
       title: 'B.Tech, Computer Science',
@@ -20,6 +21,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'claylab',
+      hidden: true,
       year: '2023',
       when: 'Apr 2023 → Jun 2026',
       title: 'Mentor, and my first product to own',
@@ -36,6 +38,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'competitions',
+      hidden: true,
       year: '2023',
       when: '2023',
       title: 'Pan-India runner-up, twice',
@@ -53,7 +56,11 @@ window.PORTFOLIO = {
       photos: [
         { src: 'assets/img/casequest-winners.png', cap: 'Sunstone CaseQuest, official results' }
       ],
-      links: []
+      links: [
+        { label: 'Zomato live prototype', url: 'https://ujain-foodie-quest.lovable.app/home' },
+        { label: 'Zomato case deck (Canva)', url: 'https://www.canva.com/design/DAG8mu7o9rY/DTWzUeCL7TMKbI49mBdh3A/view' },
+        { label: 'Zomato teardown (PDF)', url: 'teardowns/zomato.pdf' }
+      ]
     },
     {
       id: '1m1b',
@@ -80,6 +87,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'gdg',
+      hidden: true,
       year: '2024',
       feature: true,
       when: 'Dec 2024 → Jun 2025',
@@ -90,16 +98,21 @@ window.PORTFOLIO = {
       bullets: [
         '20+ workshops across AI/ML, Cloud and Web, with Google speakers and industry mentors.',
         'Built and led a core team across ops, marketing, partnerships and event logistics.',
-        'Ran it like a product: audience, retention, programming calendar.'
+        'Ran it like a product: audience, retention, programming calendar.',
+        'Events documented in the chapter Drive: Orientation, Hack Tour, Robotics (IIT Bombay), Git and GitHub, JavaScript, Build with AI sessions, Central DAO, AI in Startups, debugshala x Webdev AI, and Applied School.'
       ],
       metrics: [{ n: '1,000+', l: 'Members, from zero' }, { n: '20+', l: 'Events run' }],
       stack: ['Community', 'Program design', 'Partnerships', 'Google Cloud'],
       photos: [
         { src: 'assets/img/gdg-chapter-lead.png', cap: 'Chapter Lead, GDG On Campus' },
         { src: 'assets/img/gdg-welcome-board.png', cap: 'Cloud Community Days 2025, Indore' },
-        { src: 'assets/img/gdg-sage-group.png', cap: 'SAGE University chapter, full team' }
+        { src: 'assets/img/gdg-sage-group.png', cap: 'SAGE University chapter, full team' },
+        { src: 'assets/img/gdg-team.webp', cap: 'GDG on Campus core team' }
       ],
-      links: [{ label: 'GDG chapter site', url: 'https://gdsc-sui.vercel.app/' }]
+      links: [
+        { label: 'All event photos and videos (Drive)', url: 'https://drive.google.com/drive/folders/1rIubQ6POrn3Jbw1XGZtFcusWieZ78csN' },
+        { label: 'GDG chapter site', url: 'https://gdsc-sui.vercel.app/' }
+      ]
     },
     {
       id: 'aampannaa',
@@ -188,6 +201,7 @@ window.PORTFOLIO = {
     },
     {
       id: 'selected',
+      hidden: true,
       year: '2026',
       when: '2026',
       title: 'Saarthi, and who backed it',
@@ -224,22 +238,85 @@ window.PORTFOLIO = {
   /* --- asset library: teardowns, case studies, PRDs, analyses --- */
   assets: [
     {
+      id: 'zenskar-pdf',
+      type: 'Case study',
+      title: 'Zenskar PMM Assignment',
+      note: 'A research agent I built, 7 hypotheses from customer calls, and a new positioning and homepage copy.',
+      facts: ['13 slides', 'Walkthrough on Loom'],
+      img: 'assets/img/td-zenskar.png',
+      link: 'teardowns/zenskar.pdf'
+    },
+    {
+      id: 'saarthi-pdf',
+      type: 'Product teardown',
+      title: 'Saarthi',
+      note: 'Voice-first agri-logistics app: Five Whys, journey on real screens, v1 to v2, GTM, metrics.',
+      facts: ['15 slides','Real app screens'],
+      img: 'assets/img/td-saarthi.png',
+      link: 'teardowns/saarthi.pdf'
+    },
+    {
+      id: 'ethos-pdf',
+      type: 'PRD',
+      title: 'ethOS',
+      note: 'Startup internship finder: scored feed, filters, mobile, how it works, proposed metrics.',
+      facts: ['11 slides','Real app screens'],
+      img: 'assets/img/td-ethos.png',
+      link: 'teardowns/ethos.pdf'
+    },
+    {
+      id: 'docassist-pdf',
+      type: 'Product teardown',
+      title: 'DocAssist',
+      note: 'Clinical notes summariser: architecture, flow and results.',
+      facts: ['12 slides','Top 25 pan-India'],
+      img: 'assets/img/td-docassist.png',
+      link: 'teardowns/docassist.pdf'
+    },
+    {
+      id: 'produscope-pdf',
+      type: 'PRD',
+      title: 'Produscope AI',
+      note: 'Five-agent money planner with no bank link: public screens and agent design.',
+      facts: ['10 slides'],
+      img: 'assets/img/td-produscope.png',
+      link: 'teardowns/produscope.pdf'
+    },
+    {
+      id: 'timespro-pdf',
+      type: 'Product teardown',
+      title: 'TimesPro Visionary Corner',
+      note: 'Two-minute career check-in and the weighted matching engine.',
+      facts: ['10 slides','Live product'],
+      img: 'assets/img/td-timespro.png',
+      link: 'teardowns/timespro.pdf'
+    },
+    {
+      id: 'harness-pdf',
+      type: 'Product teardown',
+      title: 'Five-Agent Content Harness',
+      note: 'The AI-SEO pipeline for the content team: agents, quality loop, impact.',
+      facts: ['9 slides'],
+      img: 'assets/img/td-harness.png',
+      link: 'teardowns/harness.pdf'
+    },
+    {
       id: 'minisense',
       type: 'PRD',
       title: 'MiniSense',
       note: 'Answers backed by computed numbers and real quotes. Never a guess.',
       facts: ['Full PRD, FR1–FR11', 'Live product'],
-      img: 'assets/img/thumb-minisense.webp',
-      link: 'minisense.html'
+      img: 'assets/img/td-minisense.png',
+      link: 'teardowns/minisense.pdf'
     },
     {
       id: 'peakflo',
-      type: 'Case study',
+      type: 'Product teardown',
       title: 'Peakflo AP/AR Product Analysis',
       note: 'AP/AR flows mapped, friction found, fixes scored on RICE.',
       facts: ['14–21 day P2P cycle mapped', '3 fixes, RICE-scored', 'P0 target: 60% shorter approval cycle'],
-      img: 'assets/img/thumb-peakflo.webp',
-      link: 'peakflo.html'
+      img: 'assets/img/td-peakflo.png',
+      link: 'teardowns/peakflo.pdf'
     },
     {
       id: 'tulu',
@@ -247,8 +324,8 @@ window.PORTFOLIO = {
       title: 'Tulu Health App Growth',
       note: 'Reframed a growth ask from acquisition to activation, caught a data-integrity trap first, then shipped a working fix.',
       facts: ['Live prototype, built in Lovable', '42%→26% activation, the real lever'],
-      img: 'assets/img/thumb-tulu.webp',
-      link: 'tulu.html'
+      img: 'assets/img/td-tulu.png',
+      link: 'teardowns/tulu.pdf'
     },
     {
       id: 'composio',
@@ -256,35 +333,8 @@ window.PORTFOLIO = {
       title: 'SaaS Toolkit Research Pipeline',
       note: 'A 4-stage pipeline that researches, verifies and scores 100 SaaS apps, then reports its own 89% accuracy honestly.',
       facts: ['100 apps, ~65s end to end', '70 buildable today, no blockers'],
-      img: 'assets/img/thumb-composio.webp',
-      link: 'composio.html'
-    },
-    {
-      id: 'paperboat',
-      type: 'Case study',
-      title: 'Paper Boat Zero Prebiotic Soda Launch',
-      note: 'CupShup client case study for the Paper Boat Zero prebiotic soda launch.',
-      facts: ['Client campaign', 'Published on cupshup.co.in'],
-      img: 'assets/img/thumb-paperboat.jpg',
-      link: 'https://www.cupshup.co.in/case-studies/paper-boat-zero-prebiotic-soda-launch'
-    },
-    {
-      id: 'pintola',
-      type: 'Case study',
-      title: 'Pintola Canter Activation',
-      note: 'How Pintola reached 3.5M via a canter-truck FMCG sampling activation across India.',
-      facts: ['Client campaign', 'FMCG sampling'],
-      img: 'assets/img/thumb-pintola.jpg',
-      link: 'https://www.cupshup.co.in/case-studies/pintola-canter-activation-fmcg-sampling-india'
-    },
-    {
-      id: 'quickcommerce-blog',
-      type: 'Case study',
-      title: 'Bridging the 10-Minute Delivery Loop',
-      note: 'How D2C brands turn offline sampling into trackable quick-commerce conversions: QR checkouts, habit-zone targeting, and geotagged sales lift.',
-      facts: ['Written for cupshup.co.in', 'Quick-commerce playbook'],
-      img: '',
-      link: 'https://www.cupshup.co.in/blog/ai-tools-that-will-change-marketing-all-over-again'
+      img: 'assets/img/td-composio.png',
+      link: 'teardowns/composio.pdf'
     },
     {
       id: 'cashkaro',
@@ -292,8 +342,8 @@ window.PORTFOLIO = {
       title: 'CashKaro Recall Engine',
       note: 'Reframed a missed-cashback problem from awareness to timing, then corrected an earlier draft’s inflated math before speccing the fix.',
       facts: ['Deterministic, no AI in the loop', 'Bot-contamination check built in'],
-      img: 'assets/img/thumb-cashkaro.webp',
-      link: 'cashkaro.html'
+      img: 'assets/img/td-cashkaro.png',
+      link: 'teardowns/cashkaro.pdf'
     },
     {
       id: 'zomato',
@@ -301,8 +351,8 @@ window.PORTFOLIO = {
       title: 'Zomato Product Strategy & Growth',
       note: 'A discovery fix for new restaurants, later built into a live app.',
       facts: ['1st runner-up, pan-India', 'Live prototype'],
-      img: 'assets/img/thumb-zomato.webp',
-      link: 'zomato.html'
+      img: 'assets/img/td-zomato.png',
+      link: 'teardowns/zomato.pdf'
     },
     {
       id: 'tensortonic',
@@ -310,35 +360,35 @@ window.PORTFOLIO = {
       title: 'TensorTonic GTM',
       note: 'GTM strategy, execution, and expected impact.',
       facts: ['Strategy · execution · impact'],
-      img: 'assets/img/thumb-tensortonic.webp',
-      link: 'https://app.notion.com/p/TensorTonic-GTM-Case-study-3b7684d03c3e8077b791d0dcd10d325d'
+      img: 'assets/img/td-tensortonic.png',
+      link: 'teardowns/tensortonic.pdf'
     },
     {
       id: 'aangan-prd',
-      type: 'Case study',
+      type: 'PRD',
       title: 'Aangan · Family Circle',
       note: 'Privacy-first elderly care at home. No live tracking, no cameras.',
-      facts: ['6 agents', 'Family dashboard + Scam Shield'],
-      img: 'assets/img/thumb-aangan.webp',
-      link: 'https://app.notion.com/p/Aangan_PRD_godhulivyas-3b9684d03c3e8070873bc65c59ac5a02'
+      facts: ['13-slide PRD deck', 'Live prototype + Loom'],
+      img: 'assets/img/td-aangan.png',
+      link: 'teardowns/aangan.pdf'
     },
     {
       id: 'automon-teardown',
-      type: 'Case study',
+      type: 'Product teardown',
       title: 'Automon Dashboard',
       note: 'A no-code monitor that turns triggers into one clear data flow.',
       facts: ['25 triggers', '1,247 data points'],
-      img: '',
-      link: 'https://automon-dash.lovable.app'
+      img: 'assets/img/td-automon.png',
+      link: 'teardowns/automon.pdf'
     },
     {
       id: 'crm-teardown',
-      type: 'Case study',
+      type: 'Product teardown',
       title: 'Enquiry-to-CRM Agent',
       note: 'A WhatsApp agent that never loses a lead\u2019s context.',
       facts: ['n8n orchestration', '4 systems, 1 loop'],
-      img: '',
-      link: 'https://www.cupshup.co.in/'
+      img: 'assets/img/td-crm-agent.png',
+      link: 'teardowns/crm-agent.pdf'
     },
     {
       id: 'salon',
@@ -346,8 +396,8 @@ window.PORTFOLIO = {
       title: 'QuickServe',
       note: 'Rapido, for salon and beauty services. A two-sided marketplace, specified end to end.',
       facts: ['14-section PRD', 'Live product'],
-      img: 'assets/img/thumb-quickserve.webp',
-      link: 'quickserve.html'
+      img: 'assets/img/td-quickserve.png',
+      link: 'teardowns/quickserve.pdf'
     },
     {
       id: 'growth-acct',
@@ -355,8 +405,8 @@ window.PORTFOLIO = {
       title: 'Growth Accounting',
       note: 'Weekly growth decomposed into new, retained, resurrected and churned users, read through the Quick Ratio.',
       facts: ['Excel pivot tables + formulas', 'Quick Ratio health check'],
-      img: 'assets/img/thumb-growth.webp',
-      link: 'growth.html'
+      img: 'assets/img/td-growth.png',
+      link: 'teardowns/growth.pdf'
     },
     {
       id: 'attendance',
@@ -364,8 +414,8 @@ window.PORTFOLIO = {
       title: 'Attendance Analysis',
       note: 'Attendance trends, comprehensive final grading, and data-backed recommendations.',
       facts: ['Formula-driven workbook', 'Live sheet'],
-      img: 'assets/img/thumb-attendance.webp',
-      link: 'attendance.html'
+      img: 'assets/img/td-attendance.png',
+      link: 'teardowns/attendance.pdf'
     },
     {
       id: 'humanness',
@@ -373,8 +423,8 @@ window.PORTFOLIO = {
       title: 'HumanNessAI',
       note: 'A nationwide image-collection platform for India-representative AI data.',
       facts: ['8-metric success framework', 'Live MVP'],
-      img: 'assets/img/thumb-humanness.webp',
-      link: 'humanness.html'
+      img: 'assets/img/td-humanness.png',
+      link: 'teardowns/humanness.pdf'
     },
     {
       id: 'kasparro',
@@ -382,8 +432,8 @@ window.PORTFOLIO = {
       title: 'Kasparro Audit',
       note: 'Found 20 errors in an AI-visibility audit, then specced the tool to catch them automatically.',
       facts: ['20/20 errors confirmed', 'Consistency Gate PRD'],
-      img: 'assets/img/thumb-kasparro.webp',
-      link: 'kasparro.html'
+      img: 'assets/img/td-kasparro.png',
+      link: 'teardowns/kasparro.pdf'
     }
   ],
 

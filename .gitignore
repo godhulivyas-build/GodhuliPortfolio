@@ -1,3 +1,7 @@
 .claude/
 *.tmp
 UsersgodhuAppDataLocalTempclaudeminisense_prd_flat.txt
+.claude/
+*.tmp
+node_modules/
+tools/
